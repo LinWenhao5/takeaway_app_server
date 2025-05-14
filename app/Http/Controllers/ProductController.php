@@ -24,10 +24,23 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0',
-            'image_url' => 'nullable|url',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $product = Product::create($validation);
-        return response()->json($product, 201);
+
+        try {
+           if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filePath = $file->store('images', 'public');
+                $validation['image_url'] = asset('storage/' . $filePath);
+            }
+
+            $product = Product::create($validation);
+            return response()->json($product, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'File upload failed: ' . $e->getMessage()], 500);
+        }
+
+        
     }
 
 
