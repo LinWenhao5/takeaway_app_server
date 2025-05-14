@@ -15,6 +15,43 @@ class ProductController extends Controller
         return Product::all();
     }
 
+    /**
+     * Display a listing of the resource for admin.
+     */
+    public function adminIndex()
+    {
+        try {
+            $products = Product::all();
+            return view('admin.products.index', compact('products'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to load products: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        try {
+            return view('admin.products.create');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to load create form: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Product $product)
+    {
+        try {
+            return view('admin.products.edit', compact('product'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to load edit form: ' . $e->getMessage()]);
+        }
+    }
+
    /**
      * Store a newly created resource in storage.
      */
@@ -35,12 +72,17 @@ class ProductController extends Controller
             }
 
             $product = Product::create($validation);
-            return response()->json($product, 201);
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Product created successfully!', 'product' => $product], 201);
+            }
+            return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'File upload failed: ' . $e->getMessage()], 500);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'File upload failed: ' . $e->getMessage()], 500);
+            }
+            return redirect()->back()->withInput()->withErrors(['error' => 'File upload failed: ' . $e->getMessage()]);
         }
 
-        
     }
 
 
@@ -49,7 +91,11 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return $product;
+        try {
+            return $product;
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch product: ' . $e->getMessage()], 500);
+        }
     }
 
 
@@ -64,8 +110,20 @@ class ProductController extends Controller
             'price' => 'sometimes|required|numeric|min:0',
             'image_url' => 'sometimes|nullable|url',
         ]);
-        $product->update($validation);
-        return response()->json($product, 200);
+        try {
+            $product->update($validation);
+
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Product updated successfully!', 'product' => $product], 200);
+            }
+
+            return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Failed to update product: ' . $e->getMessage()], 500);
+            }
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update product: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -73,7 +131,19 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-        return response()->json(null, 204);
+        try {
+            $product->delete();
+
+            if (request()->expectsJson()) {
+                return response()->json(['message' => 'Product deleted successfully!'], 200);
+            }
+
+            return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
+        } catch (\Exception $e) {
+            if (request()->expectsJson()) {
+                return response()->json(['error' => 'Failed to delete product: ' . $e->getMessage()], 500);
+            }
+            return redirect()->back()->withErrors(['error' => 'Failed to delete product: ' . $e->getMessage()]);
+        }
     }
 }
