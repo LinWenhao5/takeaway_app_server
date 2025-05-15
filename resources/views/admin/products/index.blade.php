@@ -37,7 +37,7 @@
                 @endif
                 </td>
                 <td>
-                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary btn-sm">Edit</a>
                     <delete-confirm
                         action="{{ route('api.products.destroy', $product) }}"
                         title="Delete Product?"

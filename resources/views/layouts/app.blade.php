@@ -9,7 +9,7 @@
 <body>
     <div class="d-flex">
         <nav
-            class="offcanvas offcanvas-start bg-light"
+            class="offcanvas offcanvas-start"
             tabindex="-1"
             id="sidebarMenu"
             aria-labelledby="sidebarMenuLabel"
@@ -32,11 +32,11 @@
                         </a>
                     </li>
                 </ul>
+                <theme-toggle></theme-toggle>
             </div>
         </nav>
 
         <div class="flex-grow-1">
-            <!-- 菜单按钮：所有端都显示 -->
             <button class="btn btn-outline-secondary m-2"
                 type="button"
                 data-bs-toggle="offcanvas"
@@ -72,3 +72,30 @@
     </div>
 </body>
 </html>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('themeToggleBtn');
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('bs-theme');
+    if (savedTheme) html.setAttribute('data-bs-theme', savedTheme);
+
+    function updateBtn() {
+        const current = html.getAttribute('data-bs-theme');
+        btn.classList.toggle('btn-light', current === 'dark');
+        btn.classList.toggle('btn-dark', current === 'light');
+        btn.textContent = current === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+
+    btn.addEventListener('click', function () {
+        const current = html.getAttribute('data-bs-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-bs-theme', next);
+        localStorage.setItem('bs-theme', next);
+        updateBtn();
+    });
+
+    updateBtn();
+});
+</script>

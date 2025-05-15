@@ -38,4 +38,3 @@
 </div>
 @endsection
 
-@vite('resources/js/delete-confirm.js')

@@ -29,6 +29,9 @@ export class DeleteConfirm extends LitElement {
     async handleDelete(e) {
         e.preventDefault();
 
+        const theme = document.documentElement.getAttribute('data-bs-theme');
+        const isDark = theme === 'dark';
+
         const result = await Swal.fire({
             title: this.title,
             text: this.text,
@@ -37,6 +40,8 @@ export class DeleteConfirm extends LitElement {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: this.confirmButtonText,
+            background: isDark ? '#23272b' : '#fff',
+            color: isDark ? '#fff' : '#212529',
         });
 
         if (result.isConfirmed) {
@@ -67,4 +72,6 @@ export class DeleteConfirm extends LitElement {
     }
 }
 
-customElements.define('delete-confirm', DeleteConfirm);
+if (!customElements.get('delete-confirm')) {
+    customElements.define('delete-confirm', DeleteConfirm);
+}
