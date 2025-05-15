@@ -23,16 +23,15 @@
                 <td><img src="{{ $product->image_url }}" alt="Image" width="50"></td>
                 <td>
                     <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form 
-                    action="{{ route('admin.products.destroy', $product) }}" 
-                    method="POST" 
-                    style="display:inline;"
-                    class="delete-form"
+                    <delete-confirm
+                        action="{{ route('api.products.destroy', $product) }}"
+                        title="Delete Product?"
+                        text="Are you sure you want to delete the product '{{ $product->name }}'?"
+                        confirm-button-text="Yes, delete it!"
+                        success-message="Product deleted successfully!"
+                        error-message="Failed to delete the product."
                     >
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
+                    </delete-confirm>
                 </td>
             </tr>
             @endforeach
@@ -40,5 +39,5 @@
     </table>
 </div>
 
-@vite('resources/js/delete-product.js')
+@vite('resources/js/delete-confirm.js')
 @endsection
