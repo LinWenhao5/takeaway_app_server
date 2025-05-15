@@ -5,88 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        body {
-            min-height: 100vh;
-            background: #f8f9fa;
-        }
-        .sidebar {
-            min-width: 200px;
-            max-width: 220px;
-            min-height: 100vh;
-            background: #343a40;
-        }
-        .sidebar .nav-link {
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
-        .sidebar .nav-link.active, .sidebar .nav-link:hover {
-            background: #495057;
-            color: #fff;
-        }
-        .sidebar .navbar-brand {
-            color: #fff;
-        }
-        @media (max-width: 991.98px) {
-            .sidebar {
-                min-width: 100%;
-                max-width: 100%;
-                min-height: auto;
-                position: fixed;
-                z-index: 1040;
-                left: 0;
-                top: 0;
-                height: 100vh;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-            .sidebar.show {
-                transform: translateX(0);
-            }
-            .sidebar-backdrop {
-                display: block;
-            }
-        }
-        .sidebar-backdrop {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1039;
-        }
-        @media (min-width: 992px) {
-            .sidebar-backdrop {
-                display: none !important;
-            }
-        }
-    </style>
 </head>
 <body>
-    <!-- Sidebar backdrop for mobile -->
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <div class="d-flex">
-        <!-- Sidebar -->
-        <nav class="sidebar d-flex flex-column p-3" id="sidebarMenu">
-            <a class="navbar-brand mb-4" href="#">Admin Panel</a>
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                        Products
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('media.library') }}" class="nav-link {{ request()->routeIs('media.library') ? 'active' : '' }}">
-                        Media Library
-                    </a>
-                </li>
-            </ul>
+        <nav
+            class="offcanvas offcanvas-start bg-light"
+            tabindex="-1"
+            id="sidebarMenu"
+            aria-labelledby="sidebarMenuLabel"
+            style="width: 320px;"
+        >
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="sidebarMenuLabel">Admin Panel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body d-flex flex-column p-3">
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('media.library') }}" class="nav-link {{ request()->routeIs('media.library') ? 'active' : '' }}">
+                            Media Library
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
-        <!-- Main content -->
+
         <div class="flex-grow-1">
-            <!-- Mobile toggle button -->
-            <button class="btn btn-outline-secondary d-lg-none m-2" id="sidebarToggle">
+            <!-- 菜单按钮：所有端都显示 -->
+            <button class="btn btn-outline-secondary m-2"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarMenu"
+                aria-controls="sidebarMenu">
                 ☰ Menu
             </button>
+
             <main class="py-4">
                 <div class="container">
                     @yield('breadcrumb')
@@ -112,20 +70,5 @@
             </main>
         </div>
     </div>
-    <script>
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarMenu = document.getElementById('sidebarMenu');
-        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-        if(sidebarToggle && sidebarMenu && sidebarBackdrop) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebarMenu.classList.toggle('show');
-                sidebarBackdrop.style.display = sidebarMenu.classList.contains('show') ? 'block' : 'none';
-            });
-            sidebarBackdrop.addEventListener('click', () => {
-                sidebarMenu.classList.remove('show');
-                sidebarBackdrop.style.display = 'none';
-            });
-        }
-    </script>
 </body>
 </html>
