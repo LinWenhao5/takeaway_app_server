@@ -8,6 +8,7 @@ class MediaSelector extends Component
     public $media;
     public $label;
     public $name;
+    public $selected;
 
     /**
      * Create a new component instance.
@@ -15,12 +16,14 @@ class MediaSelector extends Component
      * @param array $media
      * @param string $label
      * @param string $name
+     * @param array $selected
      */
-    public function __construct($media, $label = 'Select Media', $name = 'media')
+    public function __construct($media, $label = 'Select Media', $name = 'media', $selected = [])
     {
         $this->media = $media;
         $this->label = $label;
         $this->name = $name;
+        $this->selected = $selected;
     }
 
     /**

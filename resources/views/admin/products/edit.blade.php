@@ -19,8 +19,7 @@
             <input type="number" name="price" id="price" class="form-control" value="{{ $product->price }}" required>
         </div>
         <div class="mb-3">
-            <label for="image" class="form-label">Image</label>
-            <input type="file" name="image" id="image" class="form-control">
+            <x-media-selector :media="$media" :selected="$selectedMedia" label="Select Media" name="media" />
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>

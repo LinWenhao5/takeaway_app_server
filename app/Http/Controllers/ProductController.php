@@ -22,7 +22,7 @@ class ProductController extends Controller
     public function adminIndex()
     {
         try {
-            $products = Product::all();
+            $products = Product::with('media')->get();
             return view('admin.products.index', compact('products'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load products: ' . $e->getMessage()]);
@@ -48,7 +48,9 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         try {
-            return view('admin.products.edit', compact('product'));
+            $media = Media::all();
+            $selectedMedia = $product->media->pluck('id')->toArray();
+            return view('admin.products.edit', compact('product', 'media', 'selectedMedia'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load edit form: ' . $e->getMessage()]);
         }
@@ -60,11 +62,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $media = $request->input('media');
-        if (is_string($media)) {
-            $media = json_decode($media, true);
-        }
 
-        $request->merge(['media' => $media]);
+        if (is_string($media)) {
+            $media = array_filter(explode(',', $media));
+        }
         
         $validation = $request->validate([
             'name' => 'required|string|max:255',
@@ -114,14 +115,27 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $media = $request->input('media');
+
+        if (is_string($media)) {
+            $media = array_filter(explode(',', $media));
+        }
+        
+        $request->merge(['media' => $media]);
+
         $validation = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string|max:1000',
             'price' => 'sometimes|required|numeric|min:0',
-            'image_url' => 'sometimes|nullable|url',
+            'media' => 'nullable|array',
+            'media.*' => 'exists:media,id',
         ]);
         try {
             $product->update($validation);
+
+            if ($request->has('media')) {
+                $product->media()->sync($request->media);
+            }
 
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Product updated successfully!', 'product' => $product], 200);
