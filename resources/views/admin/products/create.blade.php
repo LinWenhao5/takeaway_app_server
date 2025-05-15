@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@section('breadcrumb')
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-3">
+        <li class="breadcrumb-item"><a href="{{ route('admin.products.index') }}">Products</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add New</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
 <div class="container">
     <h1 class="mb-4">Add New Product</h1>
