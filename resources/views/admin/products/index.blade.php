@@ -30,11 +30,11 @@
                 <td>{{ $product->price }}</td>
                 <td>
                     @foreach ($product->media->take(2) as $media)
-                        <img src="{{ asset('storage/' . $media->path) }}" alt="Image" width="50" style="margin-right: 4px;">
-                    @endforeach
-                    @if ($product->media->count() > 2)
-                        <span style="font-size: 20px; vertical-align: middle;">...</span>
-                    @endif
+                    <img src="{{ asset('storage/' . $media->path) }}" alt="Image" width="50" style="margin-right: 4px;">
+                @endforeach
+                @if ($product->media->count() > 2)
+                    <span style="font-size: 20px; vertical-align: middle;">...</span>
+                @endif
                 </td>
                 <td>
                     <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning btn-sm">Edit</a>
