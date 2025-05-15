@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Media;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -34,7 +35,8 @@ class ProductController extends Controller
     public function create()
     {
         try {
-            return view('admin.products.create');
+            $media = Media::all();
+            return view('admin.products.create', compact('media'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load create form: ' . $e->getMessage()]);
         }
@@ -57,32 +59,40 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $media = $request->input('media');
+        if (is_string($media)) {
+            $media = json_decode($media, true);
+        }
+
+        $request->merge(['media' => $media]);
+        
         $validation = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'media' => 'nullable|array',
+            'media.*' => 'exists:media,id',
         ]);
 
         try {
-           if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $filePath = $file->store('images', 'public');
-                $validation['image_url'] = asset('storage/' . $filePath);
+            $product = Product::create($validation);
+
+            if ($request->has('media')) {
+                $product->media()->sync($request->media);
             }
 
-            $product = Product::create($validation);
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Product created successfully!', 'product' => $product], 201);
             }
+
             return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'File upload failed: ' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Failed to create product: ' . $e->getMessage()], 500);
             }
-            return redirect()->back()->withInput()->withErrors(['error' => 'File upload failed: ' . $e->getMessage()]);
-        }
 
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create product: ' . $e->getMessage()]);
+        }
     }
 
 

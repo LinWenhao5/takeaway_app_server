@@ -13,4 +13,9 @@ class Media extends Model
         'name',
         'path',
     ];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'media_product');
+    }
 }

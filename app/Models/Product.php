@@ -12,7 +12,11 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'price',
-        'image_url',
+        'price'
     ];
+
+    public function media()
+    {
+        return $this->belongsToMany(Media::class, 'media_product');
+    }
 }

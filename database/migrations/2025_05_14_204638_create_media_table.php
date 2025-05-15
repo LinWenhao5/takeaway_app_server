@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('path');
             $table->timestamps();
         });
+
+        Schema::create('media_product', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('media_id')->constrained('media')->onDelete('cascade');
+        });
     }
 
     /**
@@ -24,6 +30,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('media_product');
         Schema::dropIfExists('media');
     }
 };
