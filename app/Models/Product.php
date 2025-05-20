@@ -12,7 +12,8 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'price'
+        'price',
+        'product_category_id',
     ];
 
     public function media()

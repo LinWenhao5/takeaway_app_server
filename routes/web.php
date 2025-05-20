@@ -26,7 +26,7 @@ Route::get('/products/{product}', [ProductController::class, 'show'])->name('web
 Route::post('/products', [ProductController::class, 'store'])->name('web.products.store'); // Create a new product
 Route::put('/products/{product}', [ProductController::class, 'update'])->name('web.products.update'); // Update an existing product
 Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('web.products.destroy'); // Delete a product
-
+Route::post('/admin/products/assign-category', [ProductController::class, 'assignCategory'])->name('web.products.assignCategory'); // Assign a category to a product
 // ==================== Media Routes ====================
 
 // Media Library Routes

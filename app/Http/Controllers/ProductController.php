@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ProductCategory;
 
 class ProductController extends Controller
 {
@@ -49,11 +50,26 @@ class ProductController extends Controller
     {
         try {
             $media = Media::all();
+            $categories = ProductCategory::all();
             $selectedMedia = $product->media->pluck('id')->toArray();
-            return view('admin.products.edit', compact('product', 'media', 'selectedMedia'));
+            return view('admin.products.edit', compact('product', 'media', 'selectedMedia', 'categories'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load edit form: ' . $e->getMessage()]);
         }
+    }
+
+    public function assignCategory(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'category_id' => 'required|exists:product_categories,id',
+        ]);
+
+        $product = Product::find($request->product_id);
+        $product->product_category_id = $request->category_id;
+        $product->save();
+
+        return redirect()->back()->with('success', 'Category assigned successfully!');
     }
 
    /**
