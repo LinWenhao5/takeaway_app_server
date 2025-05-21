@@ -4,13 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\MediaController;
 
-// ==================== Default Route ====================
-
-// The default homepage route
-Route::get('/', function () {
-    return view('welcome');
-});
-
 // ==================== Product Routes ====================
 
 // Admin Product Management Routes

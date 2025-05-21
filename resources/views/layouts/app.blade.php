@@ -15,6 +15,7 @@
             aria-labelledby="sidebarMenuLabel"
             style="width: 320px;"
         >
+            
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="sidebarMenuLabel">Admin Panel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -36,40 +37,54 @@
             </div>
         </nav>
 
-        <div class="flex-grow-1">
-            <button class="btn btn-outline-secondary m-2"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#sidebarMenu"
-                aria-controls="sidebarMenu">
-                ☰ Menu
-            </button>
+        <div class="container-fluid">
+            <div class="row">
+                @php
+                    $mainCol = View::hasSection('right-sidebar') ? 'col-lg-10' : 'col-lg-8 mx-auto';
+                @endphp
+                <div class="{{ $mainCol }}">
+                    <button class="btn btn-outline-secondary m-2"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebarMenu"
+                        aria-controls="sidebarMenu">
+                        ☰ Menu
+                    </button>
+                    <main class="py-4">
+                        <div class="container">
+                            @yield('breadcrumb')
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible fade show mx-auto" role="alert">
+                                    {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
 
-            <main class="py-4">
-                <div class="container">
-                    @yield('breadcrumb')
-                    @if (session('success'))
-                        <div class="alert alert-success alert-dismissible fade show mx-auto" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            @if ($errors->any())
+                                <div class="alert alert-danger alert-dismissible fade show mx-auto" role="alert">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
+                            @yield('content')
                         </div>
-                    @endif
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show mx-auto" role="alert">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                    @yield('content')
+                    </main>
                 </div>
-            </main>
+                @hasSection('right-sidebar')
+                    <div class="col-lg-2 d-none d-lg-block border-start bg-body-tertiary px-0">
+                        <div class="position-sticky top-0" style="min-height: 100vh;">
+                            <div class="p-3">
+                                @yield('right-sidebar')
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </body>
 </html>
-</script>

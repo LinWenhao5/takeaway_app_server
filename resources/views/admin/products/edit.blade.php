@@ -33,19 +33,28 @@
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
-
-    <form action="{{ route('web.products.assignCategory') }}" method="POST" class="mb-3">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $product->id }}">
-    <div class="mb-2">
-        <label for="category_id" class="form-label">Category</label>
-        <select name="category_id" id="category_id" class="form-select" required>
-            @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <button type="submit" class="btn btn-sm btn-primary w-100">Assign Category</button>
-</form>
 </div>
+@endsection
+
+@section('right-sidebar')
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Assign Category</h5>
+            <form action="{{ route('web.products.assignCategory') }}" method="POST" class="mb-3">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                <div class="mb-2">
+                    <label for="category_id" class="form-label">Category</label>
+                    <select name="category_id" id="category_id" class="form-select" required>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" @if($product->product_category_id == $category->id) selected @endif>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary w-100">Assign Category</button>
+            </form>
+        </div>
+    </div>
 @endsection
