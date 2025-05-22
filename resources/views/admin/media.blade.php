@@ -21,15 +21,17 @@
                     <img src="{{ asset('storage/' . $item->path) }}" class="card-img-top" style="height: 180px; object-fit: cover;">
                     <div class="card-body text-center">
                         <p class="card-text">{{ $item->name }}</p>
-                        <delete-confirm
-                        action="{{ route('admin.media.delete', $item) }}"
-                        title="Delete file?"
-                        text="Are you sure you want to delete the file '{{ $item->name }}'?"
-                        confirm-button-text="Yes, delete it!"
-                        success-message="File deleted successfully!"
-                        error-message="Failed to delete the file."
-                    >
-                    </delete-confirm>
+                        <x-delete-confirm
+                            :action="route('admin.media.delete', $item->id)"
+                            title="Delete Media?"
+                            text="Are you sure you want to delete '{{ $item->name }}'?"
+                            confirm-button-text="Yes, delete it!"
+                            success-message="Media deleted successfully!"
+                            error-message="Failed to delete the media."
+                            button-class="btn btn-outline-danger btn-sm"
+                        >
+                            Delete
+                        </x-delete-confirm>
                     </div>
                 </div>
             </div>

@@ -38,15 +38,17 @@
                 </td>
                 <td>
                     <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary btn-sm">Edit</a>
-                    <delete-confirm
-                        action="{{ route('admin.products.destroy', $product) }}"
+                    <x-delete-confirm
+                        :action="route('admin.products.destroy', $product)"
                         title="Delete Product?"
                         text="Are you sure you want to delete the product '{{ $product->name }}'?"
                         confirm-button-text="Yes, delete it!"
                         success-message="Product deleted successfully!"
                         error-message="Failed to delete the product."
+                        button-class="btn btn-outline-danger btn-sm"
                     >
-                    </delete-confirm>
+                        Delete
+                    </x-delete-confirm>
                 </td>
             </tr>
             @endforeach
