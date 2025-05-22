@@ -5,25 +5,15 @@ use Illuminate\View\Component;
 
 class MediaSelector extends Component
 {
-    public $media;
-    public $label;
-    public $name;
-    public $selected;
 
     /**
      * Create a new component instance.
      *
-     * @param array $media
-     * @param string $label
-     * @param string $name
-     * @param array $selected
+     * @return void
      */
-    public function __construct($media, $label = 'Select Media', $name = 'media', $selected = [])
+    public function __construct()
     {
-        $this->media = $media;
-        $this->label = $label;
-        $this->name = $name;
-        $this->selected = $selected;
+    
     }
 
     /**
