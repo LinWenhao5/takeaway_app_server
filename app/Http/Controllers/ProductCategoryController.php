@@ -4,9 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class ProductCategoryController extends Controller
 {
+    public function adminIndex()
+    {
+        try {
+            $categories = ProductCategory::all();
+            $products = Product::all();
+            return view('admin.categories.index', compact('categories', 'products'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to load categories: ' . $e->getMessage()]);
+        }
+    }
+
+    public function assignProduct(Request $request, ProductCategory $category)
+    {
+        try {
+            $request->validate([
+                'product_id' => 'required|exists:products,id',
+            ]);
+            $product = Product::find($request->product_id);
+            $product->product_category_id = $category->id;
+            $product->save();
+            return redirect()->back()->with('success', 'Product assigned to category!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to assign product: ' . $e->getMessage()]);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -41,7 +68,7 @@ class ProductCategoryController extends Controller
                     'data' => $category
                 ], 201);
             }
-            return redirect()->route('product-categories.index')->with('success', 'Category created successfully!');
+            return redirect()->route('admin.product-categories.index')->with('success', 'Category created successfully!');
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json([

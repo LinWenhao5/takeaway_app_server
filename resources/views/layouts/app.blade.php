@@ -28,7 +28,12 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('media.library') }}" class="nav-link {{ request()->routeIs('media.library') ? 'active' : '' }}">
+                        <a href="{{ route('admin.product-categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                            Product Categories
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.media.library') }}" class="nav-link {{ request()->routeIs('media.library') ? 'active' : '' }}">
                             Media Library
                         </a>
                     </li>
