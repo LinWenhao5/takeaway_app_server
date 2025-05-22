@@ -39,7 +39,7 @@
                 <td>
                     <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary btn-sm">Edit</a>
                     <delete-confirm
-                        action="{{ route('api.products.destroy', $product) }}"
+                        action="{{ route('admin.products.destroy', $product) }}"
                         title="Delete Product?"
                         text="Are you sure you want to delete the product '{{ $product->name }}'?"
                         confirm-button-text="Yes, delete it!"

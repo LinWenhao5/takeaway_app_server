@@ -13,7 +13,7 @@
 @section('content')
 <div class="container">
     <h1>Edit Product</h1>
-    <form action="{{ route('web.products.update', $product) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -40,7 +40,7 @@
     <div class="card shadow-sm mb-3">
         <div class="card-body">
             <h5 class="card-title mb-3">Assign Category</h5>
-            <form action="{{ route('web.products.assignCategory') }}" method="POST" class="mb-3">
+            <form action="{{ route('admin.products.assignCategory') }}" method="POST" class="mb-3">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 <div class="mb-2">

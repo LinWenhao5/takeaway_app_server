@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center mb-2">
         <label for="media" class="form-label mb-0 me-2">{{ $label }}</label>
         <!-- Button to open the media library in a new tab -->
-        <a href="{{ route('media.library') }}" target="_blank" class="btn btn-sm btn-outline-primary">
+        <a href="{{ route('admin.media.library') }}" target="_blank" class="btn btn-sm btn-outline-primary">
             Upload Media
         </a>
     </div>
@@ -45,7 +45,7 @@
 
                 // Update the hidden input value with the current selection
                 selectedMediaInput.value = selectedMedia.join(',');
-                console.log('Selected Media:', selectedMedia);
+                console.log('Selected Media:', selectedMediaInput.value);
             });
         });
     });

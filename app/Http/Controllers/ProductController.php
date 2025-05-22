@@ -82,6 +82,8 @@ class ProductController extends Controller
         if (is_string($media)) {
             $media = array_filter(explode(',', $media));
         }
+
+        $request->merge(['media' => $media]);
         
         $validation = $request->validate([
             'name' => 'required|string|max:255',

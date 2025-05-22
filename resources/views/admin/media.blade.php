@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1>Media Library</h1>
-    <form action="{{ route('web.media.upload') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.media.upload') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
             <label for="file" class="form-label">Upload Image</label>
@@ -22,7 +22,7 @@
                     <div class="card-body text-center">
                         <p class="card-text">{{ $item->name }}</p>
                         <delete-confirm
-                        action="{{ route('api.media.delete', $item) }}"
+                        action="{{ route('admin.media.delete', $item) }}"
                         title="Delete file?"
                         text="Are you sure you want to delete the file '{{ $item->name }}'?"
                         confirm-button-text="Yes, delete it!"

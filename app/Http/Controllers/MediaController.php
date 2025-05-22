@@ -44,7 +44,7 @@ class MediaController extends Controller
                 return response()->json(['message' => 'Image uploaded successfully!'], 200);
             }
 
-            return redirect()->route('media.library')->with('success', 'Image uploaded successfully!');
+            return redirect()->route('admin.media.library')->with('success', 'Image uploaded successfully!');
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Failed to upload image: ' . $e->getMessage()], 500);
@@ -68,7 +68,7 @@ class MediaController extends Controller
                 return response()->json(['message' => 'Media deleted successfully!'], 200);
             }
 
-            return redirect()->route('media.library')->with('success', 'Media deleted successfully!');
+            return redirect()->route('admin.media.library')->with('success', 'Media deleted successfully!');
         } catch (\Exception $e) {
             if (request()->expectsJson()) {
                 return response()->json(['error' => 'Failed to delete media: ' . $e->getMessage()], 500);
