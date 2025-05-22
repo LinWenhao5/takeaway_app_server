@@ -9,8 +9,8 @@ use App\Http\Controllers\ProductCategoryController;
 
 // Admin Product Management Routes
 Route::get('/admin/products', [ProductController::class, 'adminIndex'])->name('admin.products.index'); // Admin: List all products
-Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.products.create'); // Admin: Show form to create a new product
-Route::get('/admin/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit'); // Admin: Show form to edit an existing product
+Route::get('/admin/products/create', [ProductController::class, 'adminCreate'])->name('admin.products.create'); // Admin: Show form to create a new product
+Route::get('/admin/products/{product}/edit', [ProductController::class, 'adminEdit'])->name('admin.products.edit'); // Admin: Show form to edit an existing product
 
 
 // Product CRUD Operations

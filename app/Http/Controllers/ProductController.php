@@ -9,15 +9,7 @@ use App\Models\ProductCategory;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return Product::all();
-    }
-
-    /**
+   /**
      * Display a listing of the resource for admin.
      */
     public function adminIndex()
@@ -33,7 +25,7 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function adminCreate()
     {
         try {
             $media = Media::all();
@@ -46,7 +38,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function adminEdit(Product $product)
     {
         try {
             $media = Media::all();
@@ -58,6 +50,17 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return Product::all();
+    }
+
+    /**
+     * Assign a category to a product.
+     */
     public function assignCategory(Request $request)
     {
         $request->validate([
