@@ -30,7 +30,7 @@
                             error-message="Failed to delete the media."
                             button-class="btn btn-outline-danger btn-sm"
                         >
-                            Delete
+                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
                         </x-delete-confirm>
                     </div>
                 </div>

@@ -5,37 +5,46 @@
     'confirmButtonText' => 'Yes, delete it!',
     'successMessage' => 'Deleted successfully!',
     'errorMessage' => 'An error occurred while deleting.',
-    'buttonClass' => 'btn btn-danger btn-sm',
 ])
 
 <form action="{{ $action }}" method="POST" class="d-inline delete-confirm-form">
     @csrf
     @method('DELETE')
-    <button type="submit" class="{{ $buttonClass }}">
+    <span class="delete-confirm-trigger w-100" style="display:inline-block; cursor:pointer;">
         {{ $slot->isEmpty() ? 'Delete' : $slot }}
-    </button>
+    </span>
 </form>
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.delete-confirm-form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: @json($title),
-                text: @json($text),
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: @json($confirmButtonText),
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
+        const trigger = form.querySelector('.delete-confirm-trigger');
+        if (trigger) {
+            trigger.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // 检测深色模式
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                Swal.fire({
+                    title: @json($title),
+                    text: @json($text),
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: @json($confirmButtonText),
+                    background: isDark ? '#23272b' : '#fff',
+                    color: isDark ? '#fff' : '#23272b',
+                    iconColor: isDark ? '#ffc107' : '#f8bb86',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
             });
-        });
+        }
     });
 });
 </script>

@@ -43,14 +43,6 @@ class ProductCategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -92,7 +84,8 @@ class ProductCategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = ProductCategory::findOrFail($id);
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -100,7 +93,31 @@ class ProductCategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+
+            $category = ProductCategory::findOrFail($id);
+            $category->name = $request->input('name');
+            $category->save();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Category updated successfully!',
+                    'data' => $category
+                ], 200);
+            }
+
+            return redirect()->route('admin.product-categories.index')->with('success', 'Category updated successfully!');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => 'Failed to update category: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->withErrors(['error' => 'Failed to update category: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -108,6 +125,19 @@ class ProductCategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $category = ProductCategory::findOrFail($id);
+            $category->delete();
+
+            if (request()->expectsJson()) {
+                return response()->json(['message' => 'Category deleted successfully!'], 200);
+            }
+            return redirect()->route('admin.product-categories.index')->with('success', 'Category deleted successfully!');
+        } catch (\Exception $e) {
+            if (request()->expectsJson()) {
+                return response()->json(['error' => 'Failed to delete category: ' . $e->getMessage()], 500);
+            }
+            return redirect()->back()->withErrors(['error' => 'Failed to delete category: ' . $e->getMessage()]);
+        }
     }
 }

@@ -37,18 +37,21 @@
                 @endif
                 </td>
                 <td>
-                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary btn-sm">Edit</a>
-                    <x-delete-confirm
-                        :action="route('admin.products.destroy', $product)"
-                        title="Delete Product?"
-                        text="Are you sure you want to delete the product '{{ $product->name }}'?"
-                        confirm-button-text="Yes, delete it!"
-                        success-message="Product deleted successfully!"
-                        error-message="Failed to delete the product."
-                        button-class="btn btn-outline-danger btn-sm"
-                    >
-                        Delete
-                    </x-delete-confirm>
+                    <div class="d-flex align-items-center gap-1">
+                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                        <x-delete-confirm
+                            :action="route('admin.products.destroy', $product)"
+                            title="Delete Product?"
+                            text="Are you sure you want to delete the product '{{ $product->name }}'?"
+                            confirm-button-text="Yes, delete it!"
+                            success-message="Product deleted successfully!"
+                            error-message="Failed to delete the product."
+                            button-class="btn btn-outline-danger btn-sm"
+                        >
+                            <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+                        </x-delete-confirm>
+                    </div>
+                    
                 </td>
             </tr>
             @endforeach

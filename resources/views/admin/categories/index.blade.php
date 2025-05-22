@@ -17,7 +17,35 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>{{ $category->name }}</span>
-                        <span class="badge bg-secondary">{{ $category->products->count() }} Products</span>
+                        <span>
+                            <span class="badge bg-secondary">{{ $category->products->count() }} Products</span>
+                            <div class="dropdown d-inline ms-2">
+                                <button class="btn btn-sm btn-outline-secondary border-0" type="button" id="dropdownMenuButton{{ $category->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton{{ $category->id }}">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.product-categories.edit', $category) }}">
+                                            <i class="bi bi-pencil me-1"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <x-delete-confirm
+                                            :action="route('admin.product-categories.destroy', $category)"
+                                            title="Delete Category"
+                                            text="Are you sure you want to delete the category '{{ $category->name }}'?"
+                                            confirm-button-text="Yes, delete it!"
+                                            success-message="Category deleted successfully!"
+                                            error-message="Failed to delete the category."
+                                        >
+                                            <a class="dropdown-item text-danger" href="#">
+                                                <i class="bi bi-trash me-1"></i> Delete
+                                            </a>
+                                        </x-delete-confirm>
+                                    </li>
+                                </ul>
+                            </div>
+                        </span>
                     </div>
                     <div class="card-body">
                         <ul>

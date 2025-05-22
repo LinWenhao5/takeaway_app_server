@@ -21,11 +21,15 @@ Route::post('/admin/products/assign-category', [ProductController::class, 'assig
 
 // ==================== Product Category Routes ====================
 Route::get('admin/product-categories', [ProductCategoryController::class, 'adminIndex'])->name('admin.product-categories.index'); // Admin: List all product categories
-Route::post('/admin/categories/{category}/assign-product', [ProductCategoryController::class, 'assignProduct'])->name('admin.product-categories.assignProduct');
-Route::post('admin/product-categories', [ProductCategoryController::class, 'store'])->name('admin.product-categories.store');
+Route::get('admin/product-categories/{category}/edit', [ProductCategoryController::class, 'edit'])->name('admin.product-categories.edit'); // Show edit form
+
+// Product Category CRUD Operations
+Route::post('/admin/categories/{category}/assign-product', [ProductCategoryController::class, 'assignProduct'])->name('admin.product-categories.assignProduct'); // Assign a product to a category
+Route::post('admin/product-categories', [ProductCategoryController::class, 'store'])->name('admin.product-categories.store');// Create a new product category
+Route::delete('admin/product-categories/{category}', [ProductCategoryController::class, 'destroy'])->name('admin.product-categories.destroy');// Delete a product category
+Route::put('admin/product-categories/{category}', [ProductCategoryController::class, 'update'])->name('admin.product-categories.update'); // Update category
 
 // ==================== Media Routes ====================
-
 // Media Library Routes
 Route::get('/media/library', [MediaController::class, 'showMediaLibrary'])->name('admin.media.library'); // Show the media library (frontend or admin)
 
