@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Media;
+
 
 class ProductCategoryController extends Controller
 {
@@ -85,7 +87,8 @@ class ProductCategoryController extends Controller
     public function edit(string $id)
     {
         $category = ProductCategory::findOrFail($id);
-        return view('admin.categories.edit', compact('category'));
+        $media = Media::all();
+        return view('admin.categories.edit', compact('category', 'media'));
     }
 
     /**
@@ -96,10 +99,12 @@ class ProductCategoryController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'media_id' => 'nullable|exists:media,id',
             ]);
 
             $category = ProductCategory::findOrFail($id);
             $category->name = $request->input('name');
+            $category->media_id = $request->input('media_id');   
             $category->save();
 
             if ($request->expectsJson()) {

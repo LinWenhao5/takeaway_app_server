@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@section('breadcrumb')
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-3">
+        <li class="breadcrumb-item"><a href="{{ route('admin.product-categories.index') }}">Product Catgories</a></li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
 <div class="container">
     <h2>Category Management</h2>
@@ -16,7 +24,15 @@
             <div class="col-md-6 mb-4">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>{{ $category->name }}</span>
+                        <span>
+                            @if($category->media)
+                                <img src="{{ asset('storage/' . $category->media->path) }}"
+                                     alt="{{ $category->media->name }}"
+                                     class="rounded me-2"
+                                     style="height:32px;width:32px;object-fit:cover;">
+                            @endif
+                            {{ $category->name }}
+                        </span>
                         <span>
                             <span class="badge bg-secondary">{{ $category->products->count() }} Products</span>
                             <div class="dropdown d-inline ms-2">

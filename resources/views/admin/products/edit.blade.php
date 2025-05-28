@@ -29,7 +29,7 @@
             <input type="number" name="price" id="price" class="form-control" value="{{ $product->price }}" required>
         </div>
         <div class="mb-3">
-            <x-media-selector :media="$media" :selected="$selectedMedia" label="Select Media" name="media" />
+            <x-media-selector :media="$media" :selected="$selectedMedia" label="Select Media" name="media" :multiple="true"/>
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
