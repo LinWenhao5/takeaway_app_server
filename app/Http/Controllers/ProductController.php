@@ -191,4 +191,23 @@ class ProductController extends Controller
             return redirect()->back()->withErrors(['error' => 'Failed to delete product: ' . $e->getMessage()]);
         }
     }
+
+    /**
+     * Search products by keyword.
+     */
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        if (!$keyword) {
+            return response()->json(['error' => 'Keyword is required.'], 400);
+        }
+
+        $products = Product::where('name', 'like', "%{$keyword}%")
+            ->orWhere('description', 'like', "%{$keyword}%")
+            ->with('media')
+            ->get();
+
+        return response()->json(['products' => $products]);
+    }
 }
