@@ -38,7 +38,7 @@
                         </a>
                     </li>
                 </ul>
-                <theme-toggle></theme-toggle>
+                <x-toggle />
             </div>
         </nav>
 

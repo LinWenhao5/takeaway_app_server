@@ -58,6 +58,4 @@
         </tbody>
     </table>
 </div>
-
-@vite('resources/js/delete-confirm.js')
 @endsection
