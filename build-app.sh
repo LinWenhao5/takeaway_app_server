@@ -6,3 +6,6 @@ set -e
 
 # Build assets using NPM
 npm run build
+
+# Create storage symbolic link for Laravel
+php artisan storage:link
