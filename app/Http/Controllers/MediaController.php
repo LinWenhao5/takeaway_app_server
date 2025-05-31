@@ -6,6 +6,7 @@ use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class MediaController extends Controller
 {
     public function index()
@@ -33,10 +34,15 @@ class MediaController extends Controller
 
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
-                $path = $file->store('uploads', 'public');
+                $uploaded = Storage::disk('cloudinary')->putFile('uploads', $file);
+
+                $cloudName = env('CLOUDINARY_CLOUD_NAME');
+                $uploadedFileUrl = "https://res.cloudinary.com/{$cloudName}/image/upload/{$uploaded}";
+
                 Media::create([
                     'name' => $file->getClientOriginalName(),
-                    'path' => $path,
+                    'path' => $uploadedFileUrl,
+                    'public_id' => $uploaded,
                 ]);
             }
 
@@ -59,9 +65,10 @@ class MediaController extends Controller
         try {
             $media = Media::findOrFail($id);
 
-            if (Storage::disk('public')->exists($media->path)) {
-                Storage::disk('public')->delete($media->path);
+            if ($media->public_id) {
+                Storage::disk('cloudinary')->delete($media->public_id);
             }
+
             $media->delete();
 
             if (request()->expectsJson()) {

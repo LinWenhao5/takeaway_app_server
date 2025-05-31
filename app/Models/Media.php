@@ -12,6 +12,7 @@ class Media extends Model
     protected $fillable = [
         'name',
         'path',
+        'public_id',
     ];
 
     public function products()

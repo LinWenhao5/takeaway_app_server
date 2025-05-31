@@ -17,7 +17,7 @@
         @foreach ($media as $item)
             <div class="col-md-3 mb-3">
                 <div class="card media-card {{ (is_array($selected) && in_array($item->id, $selected)) || (!is_array($selected) && $selected == $item->id) ? 'border-primary' : '' }}" data-id="{{ $item->id }}">
-                    <img src="{{ asset('storage/' . $item->path) }}" class="card-img-top" alt="{{ $item->name }}" style="height: 150px; object-fit: cover;">
+                    <img src="{{ $item->path }}" class="card-img-top" alt="{{ $item->name }}" style="height: 150px; object-fit: cover;">
                     <div class="card-body text-center">
                         <p class="card-text">{{ $item->name }}</p>
                     </div>

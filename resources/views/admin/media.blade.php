@@ -18,7 +18,7 @@
         @foreach($media as $item)
             <div class="col-md-3 mb-4">
                 <div class="card">
-                    <img src="{{ asset('storage/' . $item->path) }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                    <img src="{{ $item->path }}" class="card-img-top" style="height: 180px; object-fit: cover;">
                     <div class="card-body text-center">
                         <p class="card-text">{{ $item->name }}</p>
                         <x-delete-confirm
