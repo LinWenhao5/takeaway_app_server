@@ -21,7 +21,7 @@ Route::post('/admin/products/assign-category', [ProductController::class, 'assig
 
 // ==================== Product Category Routes ====================
 Route::get('admin/product-categories', [ProductCategoryController::class, 'adminIndex'])->name('admin.product-categories.index'); // Admin: List all product categories
-Route::get('admin/product-categories/{category}/edit', [ProductCategoryController::class, 'edit'])->name('admin.product-categories.edit'); // Show edit form
+Route::get('admin/product-categories/{category}/edit', [ProductCategoryController::class, 'adminEdit'])->name('admin.product-categories.edit'); // Show edit form
 
 // Product Category CRUD Operations
 Route::post('/admin/categories/{category}/assign-product', [ProductCategoryController::class, 'assignProduct'])->name('admin.product-categories.assignProduct'); // Assign a product to a category

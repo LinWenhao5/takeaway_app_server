@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\MediaController;
+use App\Http\Controllers\ProductCategoryController;
 
 // ==================== Default API Route ====================
 
@@ -18,3 +18,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/products', [ProductController::class, 'index'])->name('api.products.index'); // List all products
 Route::get('/products/search', [ProductController::class, 'search']); // Search products by name or description
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('api.products.show'); // Show details of a single product
+
+// ==================== Product Category ====================
+Route::get('/product-categories', [ProductCategoryController::class, 'index'])->name('api.product-categories.index'); // List all product categories
+Route::get('/product-categories/full', [ProductCategoryController::class, 'categoriesWithProducts'])->name('api.product-categories.full'); // List all product categories with products

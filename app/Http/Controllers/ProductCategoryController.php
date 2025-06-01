@@ -21,6 +21,18 @@ class ProductCategoryController extends Controller
         }
     }
 
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function adminEdit(string $id)
+    {
+        $category = ProductCategory::findOrFail($id);
+        $media = Media::all();
+        return view('admin.categories.edit', compact('category', 'media'));
+    }
+
+
     public function assignProduct(Request $request, ProductCategory $category)
     {
         try {
@@ -43,6 +55,7 @@ class ProductCategoryController extends Controller
     {
         return ProductCategory::all();
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -73,23 +86,16 @@ class ProductCategoryController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function categoriesWithProducts()
     {
-        //
+        try {
+            $categories = ProductCategory::with('products.media')->get();
+            return response()->json(['categories' => $categories]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to retrieve categories: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $category = ProductCategory::findOrFail($id);
-        $media = Media::all();
-        return view('admin.categories.edit', compact('category', 'media'));
-    }
 
     /**
      * Update the specified resource in storage.
