@@ -24,8 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
             trigger.addEventListener('click', function(e) {
                 e.preventDefault();
 
-                // 检测深色模式
-                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
 
                 Swal.fire({
                     title: @json($title),
