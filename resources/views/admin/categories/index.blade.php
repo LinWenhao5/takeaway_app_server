@@ -65,8 +65,26 @@
                     </div>
                     <div class="card-body">
                         <ul>
-                            @foreach($category->products as $product)
-                                <li>{{ $product->name }}</li>
+                             @foreach($category->products as $product)
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex flex-column">
+                                        <strong class="fw-bold">{{ $product->id }}. {{ $product->name }}</strong>
+                                        <p class="mb-1 text-muted small">{{ $product->description }}</p>
+                                        <span class="fw-bold text-success">€ {{ number_format($product->price, 2) }}</span>
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
+                                        <form action="{{ route('admin.product-categories.unassignProduct', [$category, $product]) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Unassign</button>
+                                        </form>
+                                    </div>
+                                    
+                                </li>
+                                @if (!$loop->last)
+                                    <hr>
+                                @endif
                             @endforeach
                         </ul>
                         <form action="{{ route('admin.product-categories.assignProduct', $category) }}" method="POST" class="mt-2">

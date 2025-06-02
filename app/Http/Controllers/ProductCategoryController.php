@@ -48,6 +48,20 @@ class ProductCategoryController extends Controller
         }
     }
 
+    public function unassignProduct(ProductCategory $category, Product $product)
+    {
+        try {
+            if ($product->product_category_id !== $category->id) {
+                return redirect()->back()->withErrors(['error' => 'Product is not assigned to this category.']);
+            }
+            $product->product_category_id = null;
+            $product->save();
+            return redirect()->back()->with('success', 'Product unassigned successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to unassign product: ' . $e->getMessage()]);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
