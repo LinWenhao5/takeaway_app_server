@@ -94,7 +94,10 @@
                                     <option value="">Assign product...</option>
                                     @foreach($products as $product)
                                         @if($product->product_category_id != $category->id)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                            <option value="{{ $product->id }}">
+                                                {{ $product->name }} 
+                                                {{ $product->category ? '[' . $product->category->name . ']' : '(Uncategorized)' }}
+                                            </option>
                                         @endif
                                     @endforeach
                                 </select>
