@@ -6,7 +6,7 @@ use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Media;
-
+use Illuminate\Support\Facades\Log;
 
 class ProductCategoryController extends Controller
 {
@@ -103,7 +103,12 @@ class ProductCategoryController extends Controller
     public function categoriesWithProducts()
     {
         try {
-            $categories = ProductCategory::with('products.media')->get();
+            $cacheKey = 'categories_with_products';
+
+            $categories = cache()->remember($cacheKey, 600, function () {
+                return ProductCategory::with('products.media')->get();
+            });
+
             return response()->json(['categories' => $categories]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to retrieve categories: ' . $e->getMessage()], 500);
