@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\MediaController;
-use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductCategory\CategoryProductAssignmentController;
+use App\Http\Controllers\ProductCategory\ProductCategoryController;
 
 // ==================== Product Routes ====================
 
@@ -24,8 +25,8 @@ Route::get('admin/product-categories', [ProductCategoryController::class, 'admin
 Route::get('admin/product-categories/{category}/edit', [ProductCategoryController::class, 'adminEdit'])->name('admin.product-categories.edit'); // Show edit form
 
 // Product Category CRUD Operations
-Route::post('/admin/categories/{category}/assign-product', [ProductCategoryController::class, 'assignProduct'])->name('admin.product-categories.assignProduct'); // Assign a product to a category
-Route::delete('/admin/product-categories/{category}/unassign-product/{product}', [ProductCategoryController::class, 'unassignProduct'])->name('admin.product-categories.unassignProduct'); // Unassign a product from a category
+Route::post('/admin/categories/{category}/assign-product', [CategoryProductAssignmentController::class, 'assignProduct'])->name('admin.product-categories.assignProduct'); // Assign a product to a category
+Route::delete('/admin/product-categories/{category}/unassign-product/{product}', [CategoryProductAssignmentController::class, 'unassignProduct'])->name('admin.product-categories.unassignProduct'); // Unassign a product from a category
 Route::post('admin/product-categories', [ProductCategoryController::class, 'store'])->name('admin.product-categories.store');// Create a new product category
 Route::delete('admin/product-categories/{category}', [ProductCategoryController::class, 'destroy'])->name('admin.product-categories.destroy');// Delete a product category
 Route::put('admin/product-categories/{category}', [ProductCategoryController::class, 'update'])->name('admin.product-categories.update'); // Update category

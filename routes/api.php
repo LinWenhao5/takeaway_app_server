@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProductCategory\ProductCategoryApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductCategoryController;
 
 // ==================== Default API Route ====================
 
@@ -20,5 +20,5 @@ Route::get('/products/search', [ProductController::class, 'search']); // Search 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('api.products.show'); // Show details of a single product
 
 // ==================== Product Category ====================
-Route::get('/product-categories', [ProductCategoryController::class, 'index'])->name('api.product-categories.index'); // List all product categories
-Route::get('/product-categories/full', [ProductCategoryController::class, 'categoriesWithProducts'])->name('api.product-categories.full'); // List all product categories with products
+Route::get('/product-categories', [ProductCategoryApiController::class, 'index'])->name('api.product-categories.index'); // List all product categories
+Route::get('/product-categories/full', [ProductCategoryApiController::class, 'categoriesWithProducts'])->name('api.product-categories.full'); // List all product categories with products
