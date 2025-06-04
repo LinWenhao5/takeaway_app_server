@@ -20,4 +20,17 @@ class ProductCategory extends Model
     {
         return $this->belongsTo(Media::class, 'media_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function () {
+            cache()->forget('categories_with_products');
+        });
+
+        static::deleted(function () {
+            cache()->forget('categories_with_products');
+        });
+    }
 }

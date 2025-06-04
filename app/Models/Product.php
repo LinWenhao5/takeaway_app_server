@@ -25,4 +25,17 @@ class Product extends Model
     {
         return $this->belongsToMany(Media::class, 'media_product');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function () {
+            cache()->forget('categories_with_products');
+        });
+
+        static::deleted(function () {
+            cache()->forget('categories_with_products');
+        });
+    }
 }
