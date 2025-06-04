@@ -12,3 +12,5 @@ php artisan config:cache
 php artisan event:cache
 php artisan route:cache
 php artisan view:cache
+
+php artisan serve --host=0.0.0.0 --port=${APP_PORT:-8080}
