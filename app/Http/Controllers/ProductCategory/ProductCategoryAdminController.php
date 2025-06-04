@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Models\Media;
 use App\Models\Product;
 
-class ProductCategoryController extends Controller
+class ProductCategoryAdminController extends Controller
 {
 
      public function adminIndex()

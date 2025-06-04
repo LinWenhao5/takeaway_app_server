@@ -1,15 +1,15 @@
 <?php
+namespace App\Http\Controllers\Product;
 
-namespace App\Http\Controllers;
-
-use App\Models\Media;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Media;
 use App\Models\ProductCategory;
+use Illuminate\Routing\Controller;
+use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductAdminController extends Controller
 {
-   /**
+    /**
      * Display a listing of the resource for admin.
      */
     public function adminIndex()
@@ -51,31 +51,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return Product::all();
-    }
-
-    /**
-     * Assign a category to a product.
-     */
-    public function assignCategory(Request $request)
-    {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'category_id' => 'required|exists:product_categories,id',
-        ]);
-
-        $product = Product::find($request->product_id);
-        $product->product_category_id = $request->category_id;
-        $product->save();
-
-        return redirect()->back()->with('success', 'Category assigned successfully!');
-    }
-
-   /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -103,16 +78,8 @@ class ProductController extends Controller
                 $product->media()->sync($request->media);
             }
 
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'Product created successfully!', 'product' => $product], 201);
-            }
-
             return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
         } catch (\Exception $e) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Failed to create product: ' . $e->getMessage()], 500);
-            }
-
             return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create product: ' . $e->getMessage()]);
         }
     }
@@ -158,15 +125,8 @@ class ProductController extends Controller
                 $product->media()->sync($request->media);
             }
 
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'Product updated successfully!', 'product' => $product], 200);
-            }
-
             return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
         } catch (\Exception $e) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Failed to update product: ' . $e->getMessage()], 500);
-            }
             return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update product: ' . $e->getMessage()]);
         }
     }
@@ -178,36 +138,10 @@ class ProductController extends Controller
     {
         try {
             $product->delete();
-
-            if (request()->expectsJson()) {
-                return response()->json(['message' => 'Product deleted successfully!'], 200);
-            }
-
             return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
         } catch (\Exception $e) {
-            if (request()->expectsJson()) {
-                return response()->json(['error' => 'Failed to delete product: ' . $e->getMessage()], 500);
-            }
             return redirect()->back()->withErrors(['error' => 'Failed to delete product: ' . $e->getMessage()]);
         }
     }
 
-    /**
-     * Search products by keyword.
-     */
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-
-        if (!$keyword) {
-            return response()->json(['error' => 'Keyword is required.'], 400);
-        }
-
-        $products = Product::where('name', 'like', "%{$keyword}%")
-            ->orWhere('description', 'like', "%{$keyword}%")
-            ->with('media')
-            ->get();
-
-        return response()->json(['products' => $products]);
-    }
 }

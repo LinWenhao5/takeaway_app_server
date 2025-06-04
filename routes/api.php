@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProductCategory\ProductCategoryApiController;
+use App\Http\Controllers\Product\ProductApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
 
 // ==================== Default API Route ====================
 
@@ -15,9 +15,9 @@ Route::get('/user', function (Request $request) {
 // ==================== Product API Routes ====================
 
 // Public Product API Endpoints
-Route::get('/products', [ProductController::class, 'index'])->name('api.products.index'); // List all products
-Route::get('/products/search', [ProductController::class, 'search']); // Search products by name or description
-Route::get('/products/{product}', [ProductController::class, 'show'])->name('api.products.show'); // Show details of a single product
+Route::get('/products', [ProductApiController::class, 'index'])->name('api.products.index'); // List all products
+Route::get('/products/search', [ProductApiController::class, 'search']); // Search products by name or description
+Route::get('/products/{product}', [ProductApiController::class, 'show'])->name('api.products.show'); // Show details of a single product
 
 // ==================== Product Category ====================
 Route::get('/product-categories', [ProductCategoryApiController::class, 'index'])->name('api.product-categories.index'); // List all product categories

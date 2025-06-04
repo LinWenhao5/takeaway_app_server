@@ -6,7 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CategoryProductAssignmentController extends Controller
+class ProductCategoryAssignmentController extends Controller
 {
     public function assignProduct(Request $request, ProductCategory $category)
     {
