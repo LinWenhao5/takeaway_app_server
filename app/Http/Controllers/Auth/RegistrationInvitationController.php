@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\RegistrationInvitation;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationInvitationMail;
 
 class RegistrationInvitationController extends Controller
 {
@@ -19,17 +21,25 @@ class RegistrationInvitationController extends Controller
     {
         $request->validate([
             'email' => 'required|email|unique:users,email',
+            'role' => 'required|string',
         ]);
 
         $token = Str::random(32);
 
-        RegistrationInvitation::create([
-            'email' => $request->email,
-            'token' => $token,
-            'created_at' => now(),
-        ]);
+        RegistrationInvitation::updateOrCreate(
+            ['email' => $request->email],
+            ['token' => $token, 'role' => $request->role, 'created_at' => now()] 
+        );
 
-        return back()->with('link', url('/register?token=' . $token));
+        $link = url('/register?token=' . $token);
+
+        try {
+            Mail::to($request->email)->queue(new RegistrationInvitationMail($link, $request->role));
+
+            return back()->with('success', 'Invitation email sent successfully to ' . $request->email . '!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to send invitation email. Please try again.');
+        }
     }
 
     public function register(Request $request)
@@ -51,14 +61,20 @@ class RegistrationInvitationController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        // 创建用户
-        User::create([
+        $invitation = RegistrationInvitation::where('email', $request->email)->first();
+
+        if (!$invitation) {
+            return redirect()->route('login')->with('error', 'Invalid or expired invitation link.');
+        }
+
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
 
-        // 删除邀请记录
+        $user->assignRole($invitation->role);
+
         RegistrationInvitation::where('email', $request->email)->delete();
 
         return redirect()->route('login')->with('success', 'Account created successfully.');

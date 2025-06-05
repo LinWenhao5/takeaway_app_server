@@ -9,11 +9,12 @@ class RegistrationInvitation extends Model
 {
     use HasFactory;
 
-    protected $table = 'registration_invitations'; // 表名
+    protected $table = 'registration_invitations';
 
     protected $fillable = [
         'email',
         'token',
+        'role',
         'created_at',
     ];
 

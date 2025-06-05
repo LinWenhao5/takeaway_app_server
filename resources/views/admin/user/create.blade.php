@@ -11,19 +11,31 @@
 
 @section('content')
 <div class="container">
-    <h1>Invite a User</h1>
-    @if (session('link'))
-        <div class="alert alert-success">
-            Invitation link: <a href="{{ session('link') }}" target="_blank">{{ session('link') }}</a>
+    <div class="card shadow-sm">
+        <div class="card-header text-white">
+            <h4 class="mb-0">Invite a User</h4>
         </div>
-    @endif
-    <form method="POST" action="{{ route('admin.invite.store') }}">
-        @csrf
-        <div class="mb-3">
-            <label for="email" class="form-label">User Email</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="Enter user email" required>
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.invite.store') }}">
+                @csrf
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter user email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select name="role" id="role" class="form-select" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Send Invitation</button>
+                </div>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Generate Invitation Link</button>
-    </form>
+    </div>
 </div>
 @endsection

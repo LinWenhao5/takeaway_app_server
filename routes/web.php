@@ -11,7 +11,7 @@ use App\Http\Controllers\ProductCategory\ProductCategoryAssignmentController;
 require __DIR__.'/auth.php';
 
 // ==================== Admin Routes ====================
-Route::middleware(['admin'])->group(function () {
+Route::middleware(['role:admin'])->group(function () {
     // ==================== Product Routes ====================
     Route::get('/admin/products', [ProductAdminController::class, 'adminIndex'])->name('admin.products.index'); // Admin: List all products
     Route::get('/admin/products/create', [ProductAdminController::class, 'adminCreate'])->name('admin.products.create'); // Admin: Show form to create a new product
