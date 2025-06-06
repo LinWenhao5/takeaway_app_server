@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 // Get the authenticated user's information (requires Sanctum authentication)
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware(['auth:sanctum', 'throttle:20,1']);
+})->middleware(['auth:sanctum', 'advancedThrottle:20,1']);
 
 // ==================== Product API Routes ====================
 
