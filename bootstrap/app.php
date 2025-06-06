@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
          // Register middleware alias as an array
         $middleware->alias([
             'role' => RoleMiddleware::class,
+            'throttle' => ThrottleRequests::class, 
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

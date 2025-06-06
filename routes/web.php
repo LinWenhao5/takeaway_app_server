@@ -6,4 +6,4 @@ require __DIR__.'/web/auth.php';
 require __DIR__.'/web/admin.php';
 require __DIR__.'/web/owner.php';
 
-Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index'])->middleware('throttle:10,1');
