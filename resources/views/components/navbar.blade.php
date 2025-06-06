@@ -1,6 +1,6 @@
 <div id="navbar" class="navbar navbar-expand-lg bg-primary navbar-dark d-none d-lg-flex">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="#">Admin Panel</a>
+        <a class="navbar-brand text-white" href="{{ route('admin.products.index') }}">Admin Panel</a>
         <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

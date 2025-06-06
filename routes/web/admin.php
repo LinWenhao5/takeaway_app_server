@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductCategory\ProductCategoryAssignmentController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Routes
-Route::middleware(['role:admin|owner'])->group(function () {
+Route::middleware(['auth','role:admin|owner'])->group(function () {
     // Product Routes
     Route::get('/admin/products', [ProductAdminController::class, 'adminIndex'])->name('admin.products.index');
     Route::get('/admin/products/create', [ProductAdminController::class, 'adminCreate'])->name('admin.products.create');
