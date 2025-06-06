@@ -3,7 +3,7 @@
 @section('breadcrumb')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-3">
-        <li class="breadcrumb-item"><a href="{{ route('admin.invite.create') }}">Invitations</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.users.index') }}">Users</a></li>
         <li class="breadcrumb-item active" aria-current="page">Create Invitation</li>
     </ol>
 </nav>
@@ -12,8 +12,8 @@
 @section('content')
 <div class="container">
     <div class="card shadow-sm">
-        <div class="card-header text-white">
-            <h4 class="mb-0">Invite a User</h4>
+        <div class="card-header">
+            <h4 class="mb-0 text">Invite a User</h4>
         </div>
         <div class="card-body">
             <form method="POST" action="{{ route('admin.invite.store') }}">

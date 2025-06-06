@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class RegistrationInvitationController extends Controller
 {
     public function create()
     {
-        return view('admin.user.create');
+        return view('admin.users.create');
     }
 
     public function store(Request $request)
@@ -41,6 +41,17 @@ class RegistrationInvitationController extends Controller
             return back()->with('error', 'Failed to send invitation email. Please try again.');
         }
     }
+
+    public function cancel(RegistrationInvitation $invitation)
+{
+    try {
+        $invitation->delete();
+
+        return back()->with('success', 'Invitation for ' . $invitation->email . ' has been successfully canceled.');
+    } catch (\Exception $e) {
+        return back()->with('error', 'Failed to cancel the invitation. Please try again.');
+    }
+}
 
     public function register(Request $request)
     {

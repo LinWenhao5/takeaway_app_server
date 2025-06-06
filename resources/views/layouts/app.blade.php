@@ -22,23 +22,48 @@
             </div>
             <div class="offcanvas-body d-flex flex-column p-3">
                 <ul class="nav nav-pills flex-column mb-auto">
+                    @can('manage products')
                     <li class="nav-item">
                         <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                             Products
                         </a>
                     </li>
+                    @endcan
+
+                    @can('manage products')
                     <li>
-                        <a href="{{ route('admin.product-categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.product-categories.index') }}" class="nav-link {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
                             Product Categories
                         </a>
                     </li>
+                    @endcan
+
+                    @can('manage users')
                     <li>
-                        <a href="{{ route('admin.media.library') }}" class="nav-link {{ request()->routeIs('media.library') ? 'active' : '' }}">
+                        <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                           Users
+                        </a>
+                    </li>
+                    @endcan
+
+                    @can('manage products')
+                    <li>
+                        <a href="{{ route('admin.media.library') }}" class="nav-link {{ request()->routeIs('admin.media.library') ? 'active' : '' }}">
                             Media Library
                         </a>
                     </li>
+                    @endcan
                 </ul>
-                <x-toggle />
+
+                <div class="d-flex align-items-center justify-content-between mt-3">
+                    <x-toggle />
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Are you sure you want to logout?')" title="Logout">
+                            <i class="bi bi-box-arrow-right" style="font-size: 1.5rem;"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </nav>
 

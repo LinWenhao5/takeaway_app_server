@@ -10,10 +10,13 @@
 
 @section('content')
 <div class="container">
-    <h1>Product Management</h1>
-    <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Add New Product</a>
-    <table class="table mt-4">
-        <thead>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Product Management</h1>
+        <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Add New Product</a>
+    </div>
+
+    <x-table class="mt-4">
+        <x-slot:head>
             <tr>
                 <th>Name</th>
                 <th>Description</th>
@@ -21,8 +24,8 @@
                 <th>Image</th>
                 <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
+        </x-slot:head>
+        <x-slot:body>
             @foreach ($products as $product)
             <tr>
                 <td>{{ $product->name }}</td>
@@ -31,10 +34,10 @@
                 <td>
                     @foreach ($product->media->take(2) as $media)
                     <img src="{{ $media->path }}" alt="Image" width="50" style="margin-right: 4px;">
-                @endforeach
-                @if ($product->media->count() > 2)
+                    @endforeach
+                    @if ($product->media->count() > 2)
                     <span style="font-size: 20px; vertical-align: middle;">...</span>
-                @endif
+                    @endif
                 </td>
                 <td>
                     <div class="d-flex align-items-center gap-1">
@@ -51,11 +54,10 @@
                             <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
                         </x-delete-confirm>
                     </div>
-                    
                 </td>
             </tr>
             @endforeach
-        </tbody>
-    </table>
+        </x-slot:body>
+    </x-table>
 </div>
 @endsection

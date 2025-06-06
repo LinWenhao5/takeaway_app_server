@@ -2,22 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Models\User; 
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-class AdminUserSeeder extends Seeder
+class OwnerUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        $ownerRole = Role::firstOrCreate(['name' => 'owner', 'guard_name' => 'web']);
 
         $permissions = [
+            'manage users',
             'manage products',
         ];
 
@@ -25,17 +25,17 @@ class AdminUserSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
 
-        $adminRole->syncPermissions($permissions);
+        $ownerRole->syncPermissions($permissions);
 
-        $adminUser = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
+        $ownerUser = User::firstOrCreate(
+            ['email' => 'owner@example.com'],
             [
-                'name' => 'Admin User',
+                'name' => 'Owner User',
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
             ]
         );
 
-        $adminUser->assignRole($adminRole);
+        $ownerUser->assignRole($ownerRole);
     }
 }
