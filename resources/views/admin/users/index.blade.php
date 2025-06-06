@@ -33,7 +33,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $invitation->email }}</td>
                 <td class="text-truncate" style="max-width: 150px;">{{ $invitation->token }}</td>
-                <td>{{ $invitation->created_at->format('Y-m-d H:i') }}</td>
+                <td>{{ $invitation->created_at }}</td>
                 <td class="text-center">
                     <form method="POST" action="{{ route('admin.invite.store', $invitation) }}" class="d-inline">
                         @csrf
