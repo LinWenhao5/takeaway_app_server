@@ -15,7 +15,7 @@ Route::get('/user', function (Request $request) {
 // ==================== Product API Routes ====================
 
 // Public Product API Endpoints
-Route::middleware('throttle:60,1')->group(function () {
+Route::middleware('advancedThrottle:60,1')->group(function () {
     Route::get('/products', [ProductApiController::class, 'index'])->name('api.products.index'); // List all products
     Route::get('/products/search', [ProductApiController::class, 'search']); // Search products by name or description
     Route::get('/products/{product}', [ProductApiController::class, 'show'])->name('api.products.show'); // Show details of a single product

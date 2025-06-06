@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
-use Illuminate\Routing\Middleware\ThrottleRequests;
+use App\Http\Middleware\AdvancedThrottleMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
          // Register middleware alias as an array
         $middleware->alias([
             'role' => RoleMiddleware::class,
-            'throttle' => ThrottleRequests::class, 
+            'advancedThrottle' => AdvancedThrottleMiddleware::class, 
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

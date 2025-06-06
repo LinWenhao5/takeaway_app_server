@@ -5,7 +5,7 @@ use App\Http\Controllers\User\UserAdminController;
 use Illuminate\Support\Facades\Route;
 
 // Owner Routes
-Route::middleware(['auth', 'role:owner', 'throttle:60,1'])->group(function () {
+Route::middleware(['auth', 'role:owner', 'advancedThrottle:60,1'])->group(function () {
     // User Routes
     Route::get('/admin/users', [UserAdminController::class, 'adminIndex'])->name('admin.users.index');
     Route::get('/admin/invite', [RegistrationInvitationController::class, 'create'])->name('admin.invite.create');
