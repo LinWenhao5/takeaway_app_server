@@ -58,6 +58,9 @@
             </tr>
             @endforeach
         </x-slot:body>
+        <x-slot:pagination>
+            {{ $products->links() }}
+        </x-slot:pagination>
     </x-table>
 </div>
 @endsection

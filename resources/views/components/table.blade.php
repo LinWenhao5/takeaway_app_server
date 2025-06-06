@@ -8,3 +8,9 @@
         </tbody>
     </table>
 </div>
+
+@if (isset($pagination) && $pagination)
+    <div class="mt-3">
+        {{ $pagination }}
+    </div>
+@endif

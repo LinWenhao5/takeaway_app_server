@@ -10,7 +10,7 @@ class UserAdminController extends Controller
 {
     public function adminIndex()
     {
-        $users = User::all();
+        $users = User::paginate(10);
         $pendingInvitations = RegistrationInvitation::all();
 
         return view('admin.users.index', compact('users', 'pendingInvitations'));

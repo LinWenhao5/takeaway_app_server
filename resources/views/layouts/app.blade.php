@@ -7,79 +7,33 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <div class="d-flex">
-        <nav
-            class="offcanvas offcanvas-start"
-            tabindex="-1"
-            id="sidebarMenu"
-            aria-labelledby="sidebarMenuLabel"
-            style="width: 320px;"
-        >
-            
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="sidebarMenuLabel">Admin Panel</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body d-flex flex-column p-3">
-                <ul class="nav nav-pills flex-column mb-auto">
-                    @can('manage products')
-                    <li class="nav-item">
-                        <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                            Products
-                        </a>
-                    </li>
-                    @endcan
+    <div class="d-flex flex-column">
+        <!-- Navbar for large screens -->
+        <x-navbar />
 
-                    @can('manage products')
-                    <li>
-                        <a href="{{ route('admin.product-categories.index') }}" class="nav-link {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
-                            Product Categories
-                        </a>
-                    </li>
-                    @endcan
+        <!-- Sidebar for small screens -->
+        <x-sidebar />
 
-                    @can('manage users')
-                    <li>
-                        <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                           Users
-                        </a>
-                    </li>
-                    @endcan
 
-                    @can('manage products')
-                    <li>
-                        <a href="{{ route('admin.media.library') }}" class="nav-link {{ request()->routeIs('admin.media.library') ? 'active' : '' }}">
-                            Media Library
-                        </a>
-                    </li>
-                    @endcan
-                </ul>
-
-                <div class="d-flex align-items-center justify-content-between mt-3">
-                    <x-toggle />
-                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Are you sure you want to logout?')" title="Logout">
-                            <i class="bi bi-box-arrow-right" style="font-size: 1.5rem;"></i>
-                        </button>
-                    </form>
-                </div>
+        <nav class="navbar navbar-expand-lg bg-primary navbar-dark d-lg-none shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="#">
+                    <i class="bi bi-house-door-fill me-2"></i> Admin Panel
+                </a>
+                <button class="btn border-0 p-0"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebarMenu"
+                    aria-controls="sidebarMenu"
+                    title="Toggle Sidebar">
+                    <i class="bi bi-list text-white" style="font-size: 1.5rem;"></i>
+                </button>
             </div>
         </nav>
 
         <div class="container-fluid">
             <div class="row">
-                @php
-                    $mainCol = View::hasSection('right-sidebar') ? 'col-lg-10' : 'col-lg-8 mx-auto';
-                @endphp
-                <div class="{{ $mainCol }}">
-                    <button class="btn btn-outline-secondary m-2"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#sidebarMenu"
-                        aria-controls="sidebarMenu">
-                        ☰ Menu
-                    </button>
+                <div class="col-12">
                     <main class="py-4">
                         <div class="container">
                             @yield('breadcrumb')
@@ -104,15 +58,6 @@
                         </div>
                     </main>
                 </div>
-                @hasSection('right-sidebar')
-                    <div class="col-lg-2 d-none d-lg-block border-start bg-body-tertiary px-0">
-                        <div class="position-sticky top-0" style="min-height: 100vh;">
-                            <div class="p-3">
-                                @yield('right-sidebar')
-                            </div>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
     </div>

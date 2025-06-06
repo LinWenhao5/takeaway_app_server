@@ -1,30 +1,42 @@
+@props(['id' => 'theme-toggle'])
+
 <div>
-    <button id="theme-toggle-btn" class="btn btn-sm btn-dark w-100">
-        Dark Mode
+    <button id="{{ $id }}-btn" class="btn btn-outline-light d-flex align-items-center">
+        <i id="{{ $id }}-icon" class="bi bi-moon me-2"></i>
+        <span id="{{ $id }}-text">Light Mode</span>
     </button>
 </div>
 
 @push('scripts')
 <script>
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('{{ $id }}-btn');
+    const toggleIcon = document.getElementById('{{ $id }}-icon');
+    const toggleText = document.getElementById('{{ $id }}-text');
+    const logoutBtn = document.querySelector('.btn-outline-light');
+
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-bs-theme', theme);
         localStorage.setItem('bs-theme', theme);
-        document.getElementById('theme-toggle-btn').className =
-            theme === 'dark'
-                ? 'btn btn-sm btn-light w-100'
-                : 'btn btn-sm btn-dark w-100';
-        document.getElementById('theme-toggle-btn').innerText =
-            theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+        if (theme === 'dark') {
+            toggleBtn.className = 'btn btn-outline-light d-flex align-items-center';
+            toggleIcon.className = 'bi bi-sun me-2';
+            toggleText.textContent = 'Light Mode';
+        } else {
+            toggleBtn.className = 'btn btn-dark d-flex align-items-center';
+            toggleIcon.className = 'bi bi-moon me-2';
+            toggleText.textContent = 'Dark Mode';
+        }
     }
 
     let theme = localStorage.getItem('bs-theme') || 'light';
     applyTheme(theme);
 
-    document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+    toggleBtn.addEventListener('click', function() {
         theme = theme === 'dark' ? 'light' : 'dark';
         applyTheme(theme);
     });
-})();
+});
 </script>
 @endpush

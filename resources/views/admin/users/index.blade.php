@@ -91,6 +91,9 @@
             </tr>
             @endforeach
         </x-slot:body>
+        <x-slot:pagination>
+        {{ $users->links() }}
+        </x-slot:pagination>
     </x-table>
 </div>
 @endsection

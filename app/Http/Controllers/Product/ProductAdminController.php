@@ -15,7 +15,7 @@ class ProductAdminController extends Controller
     public function adminIndex()
     {
         try {
-            $products = Product::with('media')->get();
+            $products = Product::with('media')->paginate(10);
             return view('admin.products.index', compact('products'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load products: ' . $e->getMessage()]);
