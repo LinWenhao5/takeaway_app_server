@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'middleware' => ['web', 'auth', 'can:horizon_view'],
+    'middleware' => ['web', 'auth', 'can:view_horizon'],
 
     /*
     |--------------------------------------------------------------------------
