@@ -1,4 +1,6 @@
-@props(['id' => 'theme-toggle'])
+@php
+    $id = 'theme-toggle-' . uniqid();
+@endphp
 
 <div>
     <button id="{{ $id }}-btn" class="btn btn-outline-light d-flex align-items-center">
@@ -13,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.getElementById('{{ $id }}-btn');
     const toggleIcon = document.getElementById('{{ $id }}-icon');
     const toggleText = document.getElementById('{{ $id }}-text');
-    const logoutBtn = document.querySelector('.btn-outline-light');
 
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-bs-theme', theme);

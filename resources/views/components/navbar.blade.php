@@ -47,7 +47,7 @@
                 @endcan
             </ul>
             <div class="d-flex align-items-center">
-                <x-toggle id="navbar-theme-toggle" />
+                <x-toggle />
 
                 <x-logout-button class="btn btn-danger ms-3" />
             </div>

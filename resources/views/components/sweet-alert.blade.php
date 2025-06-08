@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     background: isDark ? '#23272b' : '#fff',
                     color: isDark ? '#fff' : '#23272b',
                     iconColor: isDark ? '#ffc107' : '#f8bb86',
+                    reverseButtons: true,
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
