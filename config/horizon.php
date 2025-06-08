@@ -197,7 +197,7 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'maxProcesses' => 3, // Limit maximum number of workers in production
+                'maxProcesses' => 1, // Limit maximum number of workers in production
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 5,
             ],
