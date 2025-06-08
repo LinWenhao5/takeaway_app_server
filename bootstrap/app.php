@@ -16,8 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
          // Register middleware alias as an array
         $middleware->alias([
-            'role' => RoleMiddleware::class,
-            'advancedThrottle' => AdvancedThrottleMiddleware::class, 
+            'role' => RoleMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
