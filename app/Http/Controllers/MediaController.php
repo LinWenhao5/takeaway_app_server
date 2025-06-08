@@ -46,16 +46,8 @@ class MediaController extends Controller
                 ]);
             }
 
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'Image uploaded successfully!'], 200);
-            }
-
             return redirect()->route('admin.media.library')->with('success', 'Image uploaded successfully!');
         } catch (\Exception $e) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Failed to upload image: ' . $e->getMessage()], 500);
-            }
-
             return redirect()->back()->withErrors(['error' => 'Failed to upload image: ' . $e->getMessage()]);
         }
     }
@@ -71,16 +63,8 @@ class MediaController extends Controller
 
             $media->delete();
 
-            if (request()->expectsJson()) {
-                return response()->json(['message' => 'Media deleted successfully!'], 200);
-            }
-
             return redirect()->route('admin.media.library')->with('success', 'Media deleted successfully!');
         } catch (\Exception $e) {
-            if (request()->expectsJson()) {
-                return response()->json(['error' => 'Failed to delete media: ' . $e->getMessage()], 500);
-            }
-
             return redirect()->back()->withErrors(['error' => 'Failed to delete media: ' . $e->getMessage()]);
         }
     }
