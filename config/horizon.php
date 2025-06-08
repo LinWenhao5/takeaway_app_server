@@ -83,7 +83,7 @@ return [
     */
 
     'waits' => [
-        'redis:default' => 60,
+        'redis:default' => 30, // Lower wait time threshold
     ],
 
     /*
@@ -91,19 +91,19 @@ return [
     | Job Trimming Times
     |--------------------------------------------------------------------------
     |
-    | Here you can configure for how long (in minutes) you desire Horizon to
-    | persist the recent and failed jobs. Typically, recent jobs are kept
-    | for one hour while all failed jobs are stored for an entire week.
+    | Here you can configure how long (in minutes) Horizon will persist
+    | recent and failed jobs. Typically, recent jobs are kept for one hour
+    | while all failed jobs are stored for an entire week.
     |
     */
 
     'trim' => [
-        'recent' => 15,
-        'pending' => 15,
-        'completed' => 15,
-        'recent_failed' => 1440,
-        'failed' => 1440,
-        'monitored' => 1440,
+        'recent' => 10, // Keep recent jobs for 10 minutes
+        'pending' => 10, // Keep pending jobs for 10 minutes
+        'completed' => 10, // Keep completed jobs for 10 minutes
+        'recent_failed' => 720, // Keep recently failed jobs for 12 hours
+        'failed' => 720, // Keep failed jobs for 12 hours
+        'monitored' => 720, // Keep monitored jobs for 12 hours
     ],
 
     /*
@@ -111,7 +111,7 @@ return [
     | Silenced Jobs
     |--------------------------------------------------------------------------
     |
-    | Silencing a job will instruct Horizon to not place the job in the list
+    | Silencing a job will instruct Horizon not to place the job in the list
     | of completed jobs within the Horizon dashboard. This setting may be
     | used to fully remove any noisy jobs from the completed jobs list.
     |
@@ -134,8 +134,8 @@ return [
 
     'metrics' => [
         'trim_snapshots' => [
-            'job' => 24,
-            'queue' => 24,
+            'job' => 12, // Keep job snapshots for 12 hours
+            'queue' => 12, // Keep queue snapshots for 12 hours
         ],
     ],
 
@@ -145,14 +145,14 @@ return [
     |--------------------------------------------------------------------------
     |
     | When this option is enabled, Horizon's "terminate" command will not
-    | wait on all of the workers to terminate unless the --wait option
-    | is provided. Fast termination can shorten deployment delay by
-    | allowing a new instance of Horizon to start while the last
-    | instance will continue to terminate each of its workers.
+    | wait on all workers to terminate unless the --wait option is provided.
+    | Fast termination can shorten deployment delay by allowing a new
+    | instance of Horizon to start while the last instance continues
+    | to terminate each of its workers.
     |
     */
 
-    'fast_termination' => false,
+    'fast_termination' => true, // Enable fast termination to reduce resource usage
 
     /*
     |--------------------------------------------------------------------------
@@ -165,7 +165,7 @@ return [
     |
     */
 
-    'memory_limit' => 64,
+    'memory_limit' => 32, // Lower Horizon master process memory limit
 
     /*
     |--------------------------------------------------------------------------
@@ -183,13 +183,13 @@ return [
             'connection' => 'redis',
             'queue' => ['default'],
             'balance' => 'auto',
-            'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
+            'autoScalingStrategy' => null, // Disable auto-scaling
+            'maxProcesses' => 1, // Limit maximum number of workers
             'maxTime' => 0,
             'maxJobs' => 0,
-            'memory' => 64,
+            'memory' => 64, // Lower memory limit for each worker
             'tries' => 1,
-            'timeout' => 60,
+            'timeout' => 30, // Lower task timeout
             'nice' => 0,
         ],
     ],
@@ -197,15 +197,15 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'maxProcesses' => 5,
+                'maxProcesses' => 3, // Limit maximum number of workers in production
                 'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
+                'balanceCooldown' => 5,
             ],
         ],
 
         'local' => [
             'supervisor-1' => [
-                'maxProcesses' => 3,
+                'maxProcesses' => 1, // Limit maximum number of workers in local environment
             ],
         ],
     ],
