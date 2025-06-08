@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class OwnerUserSeeder extends Seeder
 {
@@ -14,19 +13,15 @@ class OwnerUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $ownerRole = Role::firstOrCreate(['name' => 'owner', 'guard_name' => 'web']);
+        // Ensure the "owner" role exists
+        $ownerRole = Role::where('name', 'owner')->first();
 
-        $permissions = [
-            'manage users',
-            'manage products',
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+        if (!$ownerRole) {
+            $this->command->error('The "owner" role does not exist. Please run RoleSeeder first.');
+            return;
         }
 
-        $ownerRole->syncPermissions($permissions);
-
+        // Create or update the owner user
         $ownerUser = User::firstOrCreate(
             ['email' => 'owner@example.com'],
             [
@@ -36,6 +31,7 @@ class OwnerUserSeeder extends Seeder
             ]
         );
 
+        // Assign the "owner" role to the user
         $ownerUser->assignRole($ownerRole);
     }
 }

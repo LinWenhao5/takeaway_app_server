@@ -43,15 +43,15 @@ class RegistrationInvitationController extends Controller
     }
 
     public function cancel(RegistrationInvitation $invitation)
-{
-    try {
-        $invitation->delete();
+    {
+        try {
+            $invitation->delete();
 
-        return back()->with('success', 'Invitation for ' . $invitation->email . ' has been successfully canceled.');
-    } catch (\Exception $e) {
-        return back()->with('error', 'Failed to cancel the invitation. Please try again.');
+            return back()->with('success', 'Invitation for ' . $invitation->email . ' has been successfully canceled.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to cancel the invitation. Please try again.');
+        }
     }
-}
 
     public function register(Request $request)
     {

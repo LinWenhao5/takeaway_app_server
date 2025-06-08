@@ -6,7 +6,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                @can('manage products')
+                @can('manage_products')
                 <li class="nav-item">
                     <a href="{{ route('admin.products.index') }}" class="nav-link text-white {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                         <i class="bi bi-box-seam"></i> Products
@@ -14,7 +14,7 @@
                 </li>
                 @endcan
 
-                @can('manage products')
+                @can('manage_products')
                 <li class="nav-item">
                     <a href="{{ route('admin.product-categories.index') }}" class="nav-link text-white {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
                         <i class="bi bi-tags"></i> Product Categories
@@ -22,7 +22,7 @@
                 </li>
                 @endcan
 
-                @can('manage users')
+                @can('manage_users')
                 <li class="nav-item">
                     <a href="{{ route('admin.users.index') }}" class="nav-link text-white {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="bi bi-people"></i> Users
@@ -30,10 +30,18 @@
                 </li>
                 @endcan
 
-                @can('manage products')
+                @can('manage_products')
                 <li class="nav-item">
                     <a href="{{ route('admin.media.library') }}" class="nav-link text-white {{ request()->routeIs('admin.media.library') ? 'active' : '' }}">
                         <i class="bi bi-images"></i> Media Library
+                    </a>
+                </li>
+                @endcan
+
+                @can('view_horizon')
+                <li class="nav-item">
+                    <a href="{{ url('/horizon') }}" class="nav-link text-white {{ request()->is('horizon*') ? 'active' : '' }}">
+                        <i class="bi bi-speedometer2"></i> Horizon
                     </a>
                 </li>
                 @endcan

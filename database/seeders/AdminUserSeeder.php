@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Models\User; 
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class AdminUserSeeder extends Seeder
 {
@@ -15,18 +13,15 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        // Ensure the "admin" role exists
+        $adminRole = Role::where('name', 'admin')->first();
 
-        $permissions = [
-            'manage products',
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+        if (!$adminRole) {
+            $this->command->error('The "admin" role does not exist. Please run RoleSeeder first.');
+            return;
         }
 
-        $adminRole->syncPermissions($permissions);
-
+        // Create or update the admin user
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
@@ -36,6 +31,7 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
+        // Assign the "admin" role to the user
         $adminUser->assignRole($adminRole);
     }
 }
