@@ -1,61 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Takeaway App Server
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is the backend service for a takeaway application, built with the Laravel framework. It provides user authentication, product management, category management, and other features. The service supports RESTful APIs and includes functionality for captcha generation and token-based authentication.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. User Authentication
+- **Registration**: Users can register using their email and verify with a captcha.
+- **Login**: Supports email and password-based login, returning an authentication token.
+- **Captcha Generation**: Sends a captcha to the user's email for registration or login verification.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Product Management
+- **Product List**: Retrieve a list of all products.
+- **Product Search**: Search for products by name or description.
+- **Product Details**: View detailed information about a single product.
 
-## Learning Laravel
+### 3. Category Management
+- **Category List**: Retrieve a list of all product categories.
+- **Categories with Products**: Retrieve categories along with their associated products.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 4. Admin Features
+- **Role-Based Access**: Admins can manage products and categories.
+- **Rate Limiting**: Custom rate limits for admins and users.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tech Stack
 
-## Laravel Sponsors
+- **Framework**: Laravel
+- **Database**: MySQL
+- **Authentication**: Laravel Sanctum
+- **Queue**: Supports asynchronous tasks (e.g., sending captcha emails)
+- **Cache**: Redis for caching and queue management
+- **Queue Monitoring**: Laravel Horizon for managing and monitoring queues
+- **API**: RESTful API
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Installation and Setup
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-repo/takeaway_app_server.git
+cd takeaway_app_server
+```
 
-## Contributing
+### 2. Install Dependencies
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Configure Environment Variables
+Copy the `.env.example` file and rename it to `.env`. Then configure the database, mail service, and Redis:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=takeaway_app
+DB_USERNAME=root
+DB_PASSWORD=your_password
 
-## Code of Conduct
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@example.com
+MAIL_PASSWORD=your_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your_email@example.com
+MAIL_FROM_NAME="Takeaway App"
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+QUEUE_CONNECTION=redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_PASSWORD=null
+```
 
-## Security Vulnerabilities
+### 4. Run Migrations
+```bash
+php artisan migrate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Start the MySQL Server
+Ensure MySQL is installed and running:
+```bash
+sudo service mysql start
+```
+
+### 6. Start the Redis Server
+Ensure Redis is installed and running:
+```bash
+redis-server
+```
+
+### 7. Start Laravel Horizon
+Run the following command to start Horizon:
+```bash
+php artisan horizon
+```
+
+You can access the Horizon dashboard at `http://your-app-url/horizon`.
+
+### 8. Start the Development Server
+```bash
+php artisan serve
+```
+
+---
+
+## API Routes
+
+### User Routes
+- **POST** `/customer/register`: User registration
+- **POST** `/customer/login`: User login
+- **POST** `/customer/generate-captcha`: Generate captcha
+
+### Product Routes
+- **GET** `/products`: Retrieve product list
+- **GET** `/products/search`: Search for products
+- **GET** `/products/{product}`: Retrieve product details
+
+### Category Routes
+- **GET** `/product-categories`: Retrieve category list
+- **GET** `/product-categories/full`: Retrieve categories with associated products
+
+---
+
+## Testing
+
+### Unit Tests
+Run the following command to execute unit tests:
+```bash
+php artisan test
+```
+
+---
+
+## Contribution
+
+Contributions are welcome! Please submit a Pull Request or report issues.
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source and licensed under the MIT License.
