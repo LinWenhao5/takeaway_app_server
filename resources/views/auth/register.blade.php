@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="container">
-    <form method="POST" action="{{ route('invite.complete') }}">
+    <form method="POST" action="{{ route('admin.invite.complete') }}">
         @csrf
         <input type="hidden" name="email" value="{{ $email }}">
         <div class="mb-3">

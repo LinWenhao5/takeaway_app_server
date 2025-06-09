@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -40,6 +39,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => "sanctum",
+            'provider' => 'customers',
+        ],
     ],
 
     /*
@@ -64,7 +67,10 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-
+        'customers' => [ // 新增
+            'driver' => 'eloquent',
+            'model' => env('AUTH_CUSTOMER_MODEL', App\Models\Customer::class),
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -111,5 +117,4 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
-
 ];
