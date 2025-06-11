@@ -15,7 +15,5 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
-
-    'allowed_headers' => ['*'],
+    'paths' => [],
 ];
