@@ -6,6 +6,7 @@ use App\Http\Controllers\Product\ProductApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 Route::middleware(['throttle:custom_limit'])->group(function () {
     // ==================== User API Routes ====================
     Route::prefix('user')->group(function () {
