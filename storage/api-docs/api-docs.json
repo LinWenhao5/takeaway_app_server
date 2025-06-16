@@ -4,7 +4,7 @@
         "title": "Takeaway App API",
         "description": "API documentation for the Takeaway App",
         "contact": {
-            "email": "support@takeawayapp.com"
+            "email": "linwenhao5@gmail.com"
         },
         "version": "1.0.0"
     },
@@ -676,7 +676,7 @@
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
-                "description": "Enter your Bearer token in the format: Bearer {token}",
+                "description": "Enter your Bearer token:",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
             }

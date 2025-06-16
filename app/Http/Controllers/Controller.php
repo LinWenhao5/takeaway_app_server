@@ -11,7 +11,7 @@ use Exception;
  *     version="1.0.0",
  *     description="API documentation for the Takeaway App",
  *     @OA\Contact(
- *         email="support@takeawayapp.com"
+ *         email="linwenhao5@gmail.com"
  *     )
  * )
  * 
@@ -20,10 +20,8 @@ use Exception;
  *     type="http",
  *     scheme="bearer",
  *     bearerFormat="JWT",
- *     description="Enter your Bearer token in the format: Bearer {token}"
+ *     description="Enter your Bearer token:"
  * )
- * 
- * 
  * 
  */
 abstract class Controller
