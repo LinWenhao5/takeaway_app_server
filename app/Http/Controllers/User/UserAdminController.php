@@ -17,11 +17,6 @@ class UserAdminController extends Controller
     }
 
 
-    // public function edit(User $user)
-    // {
-    //     return view('admin.user.edit', compact('user'));
-    // }
-
     public function update(Request $request, User $user)
     {
         $request->validate([

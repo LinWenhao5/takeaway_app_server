@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-bs-theme="{{ $_COOKIE['bs-theme'] }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-body">
-    @include('components.theme-handler')
-
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="card shadow-sm" style="width: 100%; max-width: 400px;">
             <div class="card-header text-center">
@@ -39,5 +37,4 @@
         </div>
     </div>
 </body>
-@stack('scripts')
 </html>

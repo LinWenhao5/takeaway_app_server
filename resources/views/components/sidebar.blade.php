@@ -37,11 +37,17 @@
 
             @can('manage_products')
             <li>
-                <a href="{{ route('admin.media.library') }}" class="nav-link {{ request()->routeIs('admin.media.library') ? 'active' : '' }}">
+                <a href="{{ route('admin.media.library') }}" class="nav-link {{ request()->routeIs('admin.media.*') ? 'active' : '' }}">
                     <i class="bi bi-images me-2"></i> Media Library
                 </a>
             </li>
             @endcan
+
+            <li>
+                <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                    <i class="bi bi bi-gear me-2"></i> Settings
+                </a>
+            </li>
 
             @can('view_horizon')
             <li>
@@ -53,7 +59,6 @@
         </ul>
 
         <div class="d-flex align-items-center justify-content-between mt-3">
-            <x-toggle />
             <x-logout-button class="btn btn-danger ms-3" />
         </div>
     </div>
