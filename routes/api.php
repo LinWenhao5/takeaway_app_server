@@ -3,7 +3,7 @@
 use App\Http\Controllers\Customer\CustomerAuthController;
 use App\Http\Controllers\ProductCategory\ProductCategoryApiController;
 use App\Http\Controllers\Product\ProductApiController;
-use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Cart\CartApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,12 +35,6 @@ Route::middleware(['throttle:custom_limit'])->group(function () {
         Route::post('/generate-captcha', [CustomerAuthController::class, 'generateCaptcha']); // Generate captcha
     });
 
-    // ==================== Cart API Routes ====================
-    Route::prefix('cart')->group(function () {
-        Route::post('/add', [CartController::class, 'addToCart'])->name('api.cart.add'); // Add product to cart
-        Route::get('/{customerId}', [CartController::class, 'getCart'])->name('api.cart.get'); // Get cart for a customer
-        Route::delete('/remove', [CartController::class, 'removeFromCart'])->name('api.cart.remove'); // Remove product from cart
-    });
 });
 
 // ==================== Authenticated Routes ====================
@@ -51,5 +45,12 @@ Route::middleware(['throttle:custom_limit', 'auth:api'])->group(function () {
             'status' => 'success',
             'timestamp' => now(),
         ]);
+    });
+
+    // ==================== Cart API Routes ====================
+    Route::prefix('cart')->group(function () {
+        Route::post('/add', [CartApiController::class, 'addToCart'])->name('api.cart.add'); // Add product to cart
+        Route::get('/', [CartApiController::class, 'getCart'])->name('api.cart.get'); // Get cart for a customer
+        Route::delete('/remove', [CartApiController::class, 'removeFromCart'])->name('api.cart.remove'); // Remove product from cart
     });
 });

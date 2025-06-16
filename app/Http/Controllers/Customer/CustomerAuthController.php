@@ -13,7 +13,35 @@ use App\Mail\CaptchaMail;
 class CustomerAuthController extends Controller
 {
     /**
-     * Register a new customer.
+     * @OA\Post(
+     *     path="/api/customer/register",
+     *     summary="Register a new customer",
+     *     tags={"Customer Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="John Doe", description="Customer's name"),
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com", description="Customer's email"),
+     *             @OA\Property(property="password", type="string", example="password123", description="Customer's password"),
+     *             @OA\Property(property="captcha", type="string", example="123456", description="Captcha code sent to the email")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Customer registered successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Customer registered successfully!"),
+     *             @OA\Property(property="customer", type="object", description="Customer details")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid captcha",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Invalid captcha.")
+     *         )
+     *     )
+     * )
      */
     public function register(Request $request)
     {
@@ -52,7 +80,33 @@ class CustomerAuthController extends Controller
     }
 
     /**
-     * Login a customer.
+     * @OA\Post(
+     *     path="/api/customer/login",
+     *     summary="Login a customer",
+     *     tags={"Customer Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com", description="Customer's email"),
+     *             @OA\Property(property="password", type="string", example="password123", description="Customer's password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Login successful!"),
+     *             @OA\Property(property="token", type="string", example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Invalid credentials.")
+     *         )
+     *     )
+     * )
      */
     public function login(Request $request)
     {
@@ -81,6 +135,26 @@ class CustomerAuthController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/customer/generate-captcha",
+     *     summary="Generate a captcha code for email verification",
+     *     tags={"Customer Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com", description="Customer's email")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Captcha sent successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Captcha sent successfully!")
+     *         )
+     *     )
+     * )
+     */
     public function generateCaptcha(Request $request)
     {
         $request->validate([

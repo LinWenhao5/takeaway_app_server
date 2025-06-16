@@ -14,6 +14,9 @@
             <a href="{{ route('admin.products.index') }}" class="btn btn-primary btn-lg mt-3">
                 <i class="bi bi-box-seam me-2"></i> Go to Dashboard
             </a>
+            <a href="/api/documentation" class="btn btn-outline-secondary btn-lg mt-3">
+                <i class="bi bi-file-earmark-code me-2"></i> View API Documentation
+            </a>
         </div>
     </div>
 </body>
