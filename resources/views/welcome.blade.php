@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" data-bs-theme="{{ $_COOKIE['bs-theme'] }}">
+<html lang="{{ app()->getLocale() }}" data-bs-theme="{{ isset($_COOKIE['bs-theme']) ? $_COOKIE['bs-theme'] : 'light' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

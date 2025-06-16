@@ -39,15 +39,15 @@
                 <span class="text-muted">@lang('settings.theme')</span>
                 <div class="btn-group">
                     <a href="{{ route('set.theme', ['theme' => 'light']) }}" 
-                       class="btn btn-sm {{ $_COOKIE['bs-theme'] === 'light' ? 'btn-primary' : 'btn-outline-primary' }}">
+                       class="btn btn-sm {{ (isset($_COOKIE['bs-theme']) && $_COOKIE['bs-theme'] === 'light') ? 'btn-primary' : 'btn-outline-primary' }}">
                         @lang('settings.theme_light')
                     </a>
                     <a href="{{ route('set.theme', ['theme' => 'dark']) }}" 
-                       class="btn btn-sm {{ $_COOKIE['bs-theme'] === 'dark' ? 'btn-primary' : 'btn-outline-primary' }}">
+                       class="btn btn-sm {{ (isset($_COOKIE['bs-theme']) && $_COOKIE['bs-theme'] === 'dark') ? 'btn-primary' : 'btn-outline-primary' }}">
                         @lang('settings.theme_dark')
                     </a>
                     <a href="{{ route('set.theme', ['theme' => 'auto']) }}" 
-                    class="btn btn-sm {{ $_COOKIE['bs-theme'] === 'auto' ? 'btn-primary' : 'btn-outline-primary' }}">
+                       class="btn btn-sm {{ (isset($_COOKIE['bs-theme']) && $_COOKIE['bs-theme'] === 'auto') ? 'btn-primary' : 'btn-outline-primary' }}">
                         @lang('settings.theme_auto')
                     </a>
                 </div>
