@@ -6,7 +6,7 @@
     style="width: 320px;"
 >
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="sidebarMenuLabel">Admin Panel</h5>
+        <h5 class="offcanvas-title" id="sidebarMenuLabel">@lang('navigation.admin_panel')</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body d-flex flex-column p-3">
@@ -14,7 +14,7 @@
             @can('manage_products')
             <li class="nav-item">
                 <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                    <i class="bi bi-box-seam me-2"></i> Products
+                    <i class="bi bi-box-seam me-2"></i> @lang('navigation.products')
                 </a>
             </li>
             @endcan
@@ -22,7 +22,7 @@
             @can('manage_products')
             <li>
                 <a href="{{ route('admin.product-categories.index') }}" class="nav-link {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
-                    <i class="bi bi-tags me-2"></i> Product Categories
+                    <i class="bi bi-tags me-2"></i> @lang('navigation.product_categories')
                 </a>
             </li>
             @endcan
@@ -30,7 +30,7 @@
             @can('manage_users')
             <li>
                 <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="bi bi-people me-2"></i> Users
+                    <i class="bi bi-people me-2"></i> @lang('navigation.users')
                 </a>
             </li>
             @endcan
@@ -38,21 +38,21 @@
             @can('manage_products')
             <li>
                 <a href="{{ route('admin.media.library') }}" class="nav-link {{ request()->routeIs('admin.media.*') ? 'active' : '' }}">
-                    <i class="bi bi-images me-2"></i> Media Library
+                    <i class="bi bi-images me-2"></i> @lang('navigation.media_library')
                 </a>
             </li>
             @endcan
 
             <li>
                 <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
-                    <i class="bi bi bi-gear me-2"></i> Settings
+                    <i class="bi bi bi-gear me-2"></i> @lang('navigation.settings')
                 </a>
             </li>
 
             @can('view_horizon')
             <li>
                 <a href="{{ url('/horizon') }}" class="nav-link {{ request()->is('horizon*') ? 'active' : '' }}">
-                    <i class="bi bi-speedometer2 me-2"></i> Horizon
+                    <i class="bi bi-speedometer2 me-2"></i> @lang('navigation.horizon')
                 </a>
             </li>
             @endcan

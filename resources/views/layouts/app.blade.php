@@ -18,7 +18,7 @@
         <nav class="navbar navbar-expand-lg bg-primary navbar-dark d-lg-none shadow-sm">
             <div class="container-fluid">
                 <a class="navbar-brand text-white" href="{{ route('admin.products.index') }}">
-                    <i class="bi bi-house-door-fill me-2"></i> Admin Panel
+                    <i class="bi bi-house-door-fill me-2"></i> @lang('navigation.admin_panel')
                 </a>
                 <button class="btn border-0 p-0"
                     type="button"

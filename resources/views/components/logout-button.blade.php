@@ -7,7 +7,7 @@
 <form id="{{ $formId }}" method="POST" action="{{ route('admin.logout') }}" class="d-inline">
     @csrf
     <button type="button" class="btn btn-danger ms-3" id="logout-button" title="Logout">
-        <i class="bi bi-box-arrow-right"></i> Logout
+        <i class="bi bi-box-arrow-right"></i> @lang('navigation.logout')
     </button>
 </form>
 

@@ -1,0 +1,18 @@
+<?php
+
+return [
+    'admin_panel' => '管理面板',
+    'toggle_navigation' => '切换导航',
+    'product' => '产品',
+    'products' => '产品列表',
+    'create_product' => '创建产品',
+    'product_categories' => '产品分类',
+    'media_library' => '媒体库',
+    'user' => '用户',
+    'users' => '用户列表',
+    'invite_user' => '邀请用户',
+    'system_management' => '系统管理',
+    'settings' => '设置',
+    'horizon' => '任务监控',
+    'logout' => '退出登录',
+];
