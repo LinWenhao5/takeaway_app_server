@@ -48,7 +48,8 @@ class CartService
         if (empty($cart)) {
             return [
                 'cart' => [],
-                'total_price' => 0,
+                'total_price' => '0.00',
+                'total_quantity' => '0',
             ];
         }
 
@@ -61,25 +62,28 @@ class CartService
         )->with('media')->get();
 
         $totalPrice = 0;
-        $cartDetails = $products->map(function ($product) use ($cart, &$totalPrice) {
+        $totalQuantity = 0;
+        $cartDetails = $products->map(function ($product) use ($cart, &$totalPrice, &$totalQuantity) {
             $quantity = $cart[$product->id];
             $subtotal = $product->price * $quantity;
             $totalPrice += $subtotal;
+            $totalQuantity += $quantity;
 
             return [
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
-                'price' => $product->price,
+                'price' => (string) $product->price,
                 'image' => $product->media->first()->path ?? null,
-                'quantity' => $quantity,
-                'subtotal' => $subtotal,
+                'quantity' => (string) $quantity,
+                'subtotal' => number_format($subtotal, 2, '.', ''),
             ];
         });
 
         return [
             'cart' => $cartDetails,
-            'total_price' => $totalPrice,
+            'total_price' => number_format($totalPrice, 2, '.', ''),
+            'total_quantity' => (string) $totalQuantity,
         ];
     }
 }

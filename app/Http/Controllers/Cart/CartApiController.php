@@ -87,8 +87,18 @@ class CartApiController extends Controller
      *         description="Cart retrieved successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Cart retrieved successfully."),
-     *             @OA\Property(property="customerId", type="integer", example=123),
-     *             @OA\Property(property="cart", type="array", @OA\Items(type="object"))
+     *             @OA\Property(property="cart", type="array", @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=101, description="Product ID"),
+     *                 @OA\Property(property="name", type="string", example="Delicious Sushi", description="Product name"),
+     *                 @OA\Property(property="description", type="string", example="Fresh and tasty sushi.", description="Product description"),
+     *                 @OA\Property(property="price", type="string", example="12.50", description="Product price"),
+     *                 @OA\Property(property="image", type="string", example="https://example.com/images/sushi.jpg", description="Product image URL"),
+     *                 @OA\Property(property="quantity", type="string", example="3", description="Quantity of the product"),
+     *                 @OA\Property(property="subtotal", type="string", example="37.50", description="Subtotal for the product")
+     *             )),
+     *             @OA\Property(property="total_price", type="string", example="150.00", description="Total price of all products in the cart"),
+     *             @OA\Property(property="total_quantity", type="string", example="12", description="Total quantity of all products in the cart")
      *         )
      *     ),
      *     @OA\Response(
@@ -96,7 +106,7 @@ class CartApiController extends Controller
      *         description="Failed to retrieve cart",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Failed to retrieve cart."),
-     *             @OA\Property(property="error", type="string", example="Some error message")
+     *             @OA\Property(property="error", type="string", example="An unexpected error occurred.")
      *         )
      *     )
      * )
@@ -112,6 +122,7 @@ class CartApiController extends Controller
                 'message' => 'Cart retrieved successfully.',
                 'cart' => $cartData['cart'],
                 'total_price' => $cartData['total_price'],
+                'total_quantity' => $cartData['total_quantity'],
             ]);
         } catch (Exception $e) {
             return response()->json([

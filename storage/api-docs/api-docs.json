@@ -113,15 +113,58 @@
                                             "type": "string",
                                             "example": "Cart retrieved successfully."
                                         },
-                                        "customerId": {
-                                            "type": "integer",
-                                            "example": 123
-                                        },
                                         "cart": {
                                             "type": "array",
                                             "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Product ID",
+                                                        "type": "integer",
+                                                        "example": 101
+                                                    },
+                                                    "name": {
+                                                        "description": "Product name",
+                                                        "type": "string",
+                                                        "example": "Delicious Sushi"
+                                                    },
+                                                    "description": {
+                                                        "description": "Product description",
+                                                        "type": "string",
+                                                        "example": "Fresh and tasty sushi."
+                                                    },
+                                                    "price": {
+                                                        "description": "Product price",
+                                                        "type": "string",
+                                                        "example": "12.50"
+                                                    },
+                                                    "image": {
+                                                        "description": "Product image URL",
+                                                        "type": "string",
+                                                        "example": "https://example.com/images/sushi.jpg"
+                                                    },
+                                                    "quantity": {
+                                                        "description": "Quantity of the product",
+                                                        "type": "string",
+                                                        "example": "3"
+                                                    },
+                                                    "subtotal": {
+                                                        "description": "Subtotal for the product",
+                                                        "type": "string",
+                                                        "example": "37.50"
+                                                    }
+                                                },
                                                 "type": "object"
                                             }
+                                        },
+                                        "total_price": {
+                                            "description": "Total price of all products in the cart",
+                                            "type": "string",
+                                            "example": "150.00"
+                                        },
+                                        "total_quantity": {
+                                            "description": "Total quantity of all products in the cart",
+                                            "type": "string",
+                                            "example": "12"
                                         }
                                     },
                                     "type": "object"
@@ -141,7 +184,7 @@
                                         },
                                         "error": {
                                             "type": "string",
-                                            "example": "Some error message"
+                                            "example": "An unexpected error occurred."
                                         }
                                     },
                                     "type": "object"
