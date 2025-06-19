@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Redis;
+use App\Models\Product;
 
 class CartService
 {
@@ -37,5 +38,48 @@ class CartService
         $cartKey = $this->cartKeyPrefix . $customerId;
 
         Redis::connection('cache')->del($cartKey);
+    }
+
+
+    public function getCartDetails($customerId)
+    {
+        $cart = $this->getCart($customerId);
+
+        if (empty($cart)) {
+            return [
+                'cart' => [],
+                'total_price' => 0,
+            ];
+        }
+
+        $productIds = array_keys($cart);
+        $products = Product::whereIn('id', $productIds)->select(
+            'id', 
+            'name', 
+            'description', 
+            'price'
+        )->with('media')->get();
+
+        $totalPrice = 0;
+        $cartDetails = $products->map(function ($product) use ($cart, &$totalPrice) {
+            $quantity = $cart[$product->id];
+            $subtotal = $product->price * $quantity;
+            $totalPrice += $subtotal;
+
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'price' => $product->price,
+                'image' => $product->media->first()->path ?? null,
+                'quantity' => $quantity,
+                'subtotal' => $subtotal,
+            ];
+        });
+
+        return [
+            'cart' => $cartDetails,
+            'total_price' => $totalPrice,
+        ];
     }
 }

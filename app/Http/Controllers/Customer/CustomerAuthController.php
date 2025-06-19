@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Customer;
 
 use App\Models\Customer;
@@ -9,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CaptchaMail;
+use Exception;
 
 class CustomerAuthController extends Controller
 {
@@ -40,43 +40,58 @@ class CustomerAuthController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Invalid captcha.")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to register customer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Failed to register customer."),
+     *             @OA\Property(property="error", type="string", example="Detailed error message")
+     *         )
      *     )
      * )
      */
     public function register(Request $request)
     {
-        // Validate the request data
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:customers,email',
-            'password' => 'required|string|min:8',
-            'captcha' => 'required|string',
-        ]);
+        try {
+            // Validate the request data
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:customers,email',
+                'password' => 'required|string|min:8',
+                'captcha' => 'required|string',
+            ]);
 
-        // Get the cached captcha for the email
-        $cachedCaptcha = Cache::get('captcha_' . $request->email);
+            // Get the cached captcha for the email
+            $cachedCaptcha = Cache::get('captcha_' . $request->email);
 
-        //Check if the captcha is valid
-        if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
+            // Check if the captcha is valid
+            if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
+                return response()->json([
+                    'message' => 'Invalid captcha.',
+                ], 400);
+            }
+
+            // Create a new customer
+            $customer = Customer::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            Cache::forget('captcha_' . $request->email);
+
+            // Return a success response
             return response()->json([
-                'message' => 'Invalid captcha.',
-            ], 400);
+                'message' => 'Customer registered successfully!',
+                'customer' => $customer,
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to register customer.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // Create a new customer
-        $customer = Customer::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-        ]);
-
-        Cache::forget('captcha_' . $request->email);
-
-        // Return a success response
-        return response()->json([
-            'message' => 'Customer registered successfully!',
-            'customer' => $customer,
-        ], 201);
     }
 
     /**
@@ -105,34 +120,49 @@ class CustomerAuthController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Invalid credentials.")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to login",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Failed to login."),
+     *             @OA\Property(property="error", type="string", example="Detailed error message")
+     *         )
      *     )
      * )
      */
     public function login(Request $request)
     {
-        // Validate the request data
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            // Validate the request data
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
 
-        // Find the customer by email
-        $customer = Customer::where('email', $request->email)->first();
+            // Find the customer by email
+            $customer = Customer::where('email', $request->email)->first();
 
-        if (!$customer || !Hash::check($request->password, $customer->password)) {
+            if (!$customer || !Hash::check($request->password, $customer->password)) {
+                return response()->json([
+                    'message' => 'Invalid credentials.',
+                ], 401);
+            }
+
+            // Generate a token for the customer
+            $token = $customer->createToken('auth_token')->plainTextToken;
+
+            // Return a success response with the token
             return response()->json([
-                'message' => 'Invalid credentials.',
-            ], 401);
+                'message' => 'Login successful!',
+                'token' => $token,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to login.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // Generate a token for the customer
-        $token = $customer->createToken('auth_token')->plainTextToken;
-
-        // Return a success response with the token
-        return response()->json([
-            'message' => 'Login successful!',
-            'token' => $token,
-        ], 200);
     }
 
     /**
@@ -152,23 +182,38 @@ class CustomerAuthController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Captcha sent successfully!")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to generate captcha",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Failed to generate captcha."),
+     *             @OA\Property(property="error", type="string", example="Detailed error message")
+     *         )
      *     )
      * )
      */
     public function generateCaptcha(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-        
-        $captchaCode = rand(100000, 999999);
+        try {
+            $request->validate([
+                'email' => 'required|email',
+            ]);
 
-        Cache::put('captcha_' . $request->email, $captchaCode, now()->addMinutes(5));
+            $captchaCode = rand(100000, 999999);
 
-        Mail::to($request->email)->queue(new CaptchaMail($captchaCode));
+            Cache::put('captcha_' . $request->email, $captchaCode, now()->addMinutes(5));
 
-        return response()->json([
-            'message' => 'Captcha sent successfully!',
-        ], 200);
+            Mail::to($request->email)->queue(new CaptchaMail($captchaCode));
+
+            return response()->json([
+                'message' => 'Captcha sent successfully!',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to generate captcha.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

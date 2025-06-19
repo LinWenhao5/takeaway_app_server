@@ -67,9 +67,6 @@ class CartApiController extends Controller
 
             return response()->json([
                 'message' => 'Product added to cart successfully.',
-                'customerId' => $customerId,
-                'productId' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -108,12 +105,13 @@ class CartApiController extends Controller
     {
         try {
             $customerId = $this->getAuthenticatedCustomerId();
-            $cart = $this->cartService->getCart($customerId);
+
+            $cartData = $this->cartService->getCartDetails($customerId);
 
             return response()->json([
                 'message' => 'Cart retrieved successfully.',
-                
-                'cart' => $cart,
+                'cart' => $cartData['cart'],
+                'total_price' => $cartData['total_price'],
             ]);
         } catch (Exception $e) {
             return response()->json([
