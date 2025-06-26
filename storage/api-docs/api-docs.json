@@ -277,6 +277,92 @@
                 ]
             }
         },
+        "/api/cart/remove-quantity": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Remove a specific quantity of a product from the cart",
+                "operationId": "ffc895d9c9a10b499e3c5705d45969ce",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "product_id": {
+                                        "description": "ID of the product to remove",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity to remove",
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product quantity removed from cart successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product quantity removed from cart successfully."
+                                        },
+                                        "customerId": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "productId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "quantity": {
+                                            "type": "integer",
+                                            "example": 2
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to remove product quantity from cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to remove product quantity from cart."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Some error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/customer/register": {
             "post": {
                 "tags": [

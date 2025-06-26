@@ -19,6 +19,21 @@ class CartService
         Redis::connection('cache')->expire($cartKey, $this->cartExpiration);
     }
 
+    public function removeQuantityFromCart($customerId, $productId, $quantity)
+    {
+        $cartKey = $this->cartKeyPrefix . $customerId;
+        $currentQuantity = Redis::connection('cache')->hget($cartKey, $productId);
+
+        if ($currentQuantity !== null) {
+            $newQuantity = $currentQuantity - $quantity;
+            if ($newQuantity > 0) {
+                Redis::connection('cache')->hset($cartKey, $productId, $newQuantity);
+            } else {
+                Redis::connection('cache')->hdel($cartKey, $productId);
+            }
+        }
+    }
+
     public function removeFromCart($customerId, $productId)
     {
         $cartKey = $this->cartKeyPrefix . $customerId;

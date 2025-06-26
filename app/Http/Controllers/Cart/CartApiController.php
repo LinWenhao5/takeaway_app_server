@@ -189,4 +189,67 @@ class CartApiController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * @OA\Delete(
+     *    path="/api/cart/remove-quantity",
+     *    summary="Remove a specific quantity of a product from the cart",
+     *    tags={"Cart"},
+     *    security={{"bearerAuth":{}}},
+     *    @OA\RequestBody(
+     *      required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="product_id", type="integer", example=1, description="ID of the product to remove"),
+     *             @OA\Property(property="quantity", type="integer", example=2, description="Quantity to remove")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product quantity removed from cart successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product quantity removed from cart successfully."),
+     *             @OA\Property(property="customerId", type="integer", example=123),
+     *             @OA\Property(property="productId", type="integer", example=1),
+     *             @OA\Property(property="quantity", type="integer", example=2)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to remove product quantity from cart",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Failed to remove product quantity from cart."),
+     *             @OA\Property(property="error", type="string", example="Some error message")
+     *         )
+     *     )
+     * )
+     */
+    public function removeQuantityFromCart(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'product_id' => 'required|integer',
+                'quantity' => 'required|integer|min:1',
+            ]);
+
+            $customerId = $this->getAuthenticatedCustomerId();
+
+            $this->cartService->removeQuantityFromCart(
+                $customerId,
+                $validated['product_id'],
+                $validated['quantity']
+            );
+
+            return response()->json([
+                'message' => 'Product quantity removed from cart successfully.',
+                'customerId' => $customerId,
+                'productId' => $validated['product_id'],
+                'quantity' => $validated['quantity'],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to remove product quantity from cart.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

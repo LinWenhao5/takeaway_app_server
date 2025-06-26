@@ -52,5 +52,6 @@ Route::middleware(['throttle:custom_limit', 'auth:api'])->group(function () {
         Route::post('/add', [CartApiController::class, 'addToCart'])->name('api.cart.add'); // Add product to cart
         Route::get('/', [CartApiController::class, 'getCart'])->name('api.cart.get'); // Get cart for a customer
         Route::delete('/remove', [CartApiController::class, 'removeFromCart'])->name('api.cart.remove'); // Remove product from cart
+        Route::delete('/remove-quantity', [CartApiController::class, 'removeQuantityFromCart'])->name('api.cart.removeQuantity'); // Remove specific quantity from cart
     });
 });
