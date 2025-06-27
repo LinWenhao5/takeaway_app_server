@@ -57,7 +57,7 @@ class CartApiController extends Controller
                 'quantity' => 'required|integer|min:1',
             ]);
 
-            $customerId = $this->getAuthenticatedCustomerId();
+            $customerId = $this->getAuthenticatedCustomer()->id;
 
             $this->cartService->addToCart(
                 $customerId,
@@ -114,7 +114,7 @@ class CartApiController extends Controller
     public function getCart()
     {
         try {
-            $customerId = $this->getAuthenticatedCustomerId();
+            $customerId = $this->getAuthenticatedCustomer()->id;
 
             $cartData = $this->cartService->getCartDetails($customerId);
 
@@ -170,7 +170,7 @@ class CartApiController extends Controller
                 'product_id' => 'required|integer',
             ]);
 
-            $customerId = $this->getAuthenticatedCustomerId();
+            $customerId = $this->getAuthenticatedCustomer()->id;
 
             $this->cartService->removeFromCart(
                 $customerId,
@@ -231,7 +231,7 @@ class CartApiController extends Controller
                 'quantity' => 'required|integer|min:1',
             ]);
 
-            $customerId = $this->getAuthenticatedCustomerId();
+            $customerId = $this->getAuthenticatedCustomer()->id;
 
             $this->cartService->removeQuantityFromCart(
                 $customerId,

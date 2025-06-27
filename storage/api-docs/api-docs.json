@@ -363,13 +363,81 @@
                 ]
             }
         },
+        "/api/customer/username": {
+            "get": {
+                "tags": [
+                    "Customer Account"
+                ],
+                "summary": "Get the current customer's username",
+                "operationId": "120d84a25aa34b79d38ac30307e216bc",
+                "responses": {
+                    "200": {
+                        "description": "Username fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "username": {
+                                            "type": "string",
+                                            "example": "SushiLover"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get username",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to get username."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detailed error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/customer/register": {
             "post": {
                 "tags": [
                     "Customer Authentication"
                 ],
                 "summary": "Register a new customer",
-                "operationId": "33eff0b4d9c675358064c854f60bb042",
+                "operationId": "ea828fa7fcc68c49aa7e2c502c64687a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -468,7 +536,7 @@
                     "Customer Authentication"
                 ],
                 "summary": "Login a customer",
-                "operationId": "91efc48e4f4a808d5fad27568ac26f7a",
+                "operationId": "559d4234e8237a47700ca18548668a4a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -557,7 +625,7 @@
                     "Customer Authentication"
                 ],
                 "summary": "Generate a captcha code for email verification",
-                "operationId": "20994ead4076946ff12770e37577d241",
+                "operationId": "047fc41f5b4a952e61352cec5110d941",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -875,6 +943,10 @@
         {
             "name": "Cart",
             "description": "Cart"
+        },
+        {
+            "name": "Customer Account",
+            "description": "Customer Account"
         },
         {
             "name": "Customer Authentication",

@@ -1,9 +1,9 @@
 <?php
-
-use App\Http\Controllers\Customer\CustomerAuthController;
 use App\Http\Controllers\ProductCategory\ProductCategoryApiController;
 use App\Http\Controllers\Product\ProductApiController;
 use App\Http\Controllers\Cart\CartApiController;
+use App\Http\Controllers\Customer\CustomerAuthApiController;
+use App\Http\Controllers\Customer\CustomerAccountApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,9 +30,9 @@ Route::middleware(['throttle:custom_limit'])->group(function () {
 
     // ==================== Customer API Routes ====================
     Route::prefix('customer')->group(function () {
-        Route::post('/register', [CustomerAuthController::class, 'register']); // Customer registration
-        Route::post('/login', [CustomerAuthController::class, 'login']);       // Customer login
-        Route::post('/generate-captcha', [CustomerAuthController::class, 'generateCaptcha']); // Generate captcha
+        Route::post('/login', [CustomerAuthApiController::class, 'login']); // Customer login
+        Route::post('/register', [CustomerAuthApiController::class, 'register']); // Customer registration
+        Route::post('/generate-captcha', [CustomerAuthApiController::class, 'generateCaptcha']); // Generate captcha
     });
 
 });
@@ -45,6 +45,11 @@ Route::middleware(['throttle:custom_limit', 'auth:api'])->group(function () {
             'status' => 'success',
             'timestamp' => now(),
         ]);
+    });
+
+    // ==================== Customer Authentication API Routes ====================
+    Route::prefix('customer')->group(function () {
+        Route::get('/username', [CustomerAccountApiController::class, 'getUserName']);
     });
 
     // ==================== Cart API Routes ====================

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\CaptchaMail;
 use Exception;
 
-class CustomerAuthController extends Controller
+class CustomerAuthApiController extends Controller
 {
     /**
      * @OA\Post(

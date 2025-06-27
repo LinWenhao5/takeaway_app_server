@@ -26,12 +26,14 @@ use Exception;
  */
 abstract class Controller
 {
-    protected function getAuthenticatedCustomerId()
+    protected function getAuthenticatedCustomer()
     {
         $user = Auth::user();
         if (!$user) {
-            throw new Exception('Unauthorized: No authenticated user found.');
+            abort(response()->json([
+                'message' => 'Unauthorized.'
+            ], 401));
         }
-        return $user->id;
+        return $user;
     }
 }
