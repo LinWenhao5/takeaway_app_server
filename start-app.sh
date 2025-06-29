@@ -19,4 +19,3 @@ php artisan db:seed --force
 # Generate Swagger documentation
 php artisan l5-swagger:generate
 
-php artisan serve --host=0.0.0.0 --port=${APP_PORT:-8080}
