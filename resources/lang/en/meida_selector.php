@@ -1,5 +1,5 @@
 <?php
 return [
-    'media' => '媒体',
-    'upload_media' => '上传媒体',
+    'media' => 'Media',
+    'upload_media' => 'Upload Media',
 ];
