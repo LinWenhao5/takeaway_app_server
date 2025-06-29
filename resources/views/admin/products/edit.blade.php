@@ -26,7 +26,7 @@
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">Price</label>
-            <input type="number" name="price" id="price" class="form-control" value="{{ $product->price }}" required>
+            <input type="number" name="price" id="price" class="form-control" value="{{ $product->price }}" required step="0.01">
         </div>
         <div class="mb-3">
             <x-media-selector :media="$media" :selected="$selectedMedia" label="Select Media" name="media" :multiple="true"/>

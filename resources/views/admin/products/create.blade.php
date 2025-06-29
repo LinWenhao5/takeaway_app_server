@@ -24,7 +24,7 @@
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">Price</label>
-            <input type="number" name="price" id="price" class="form-control" placeholder="Enter product price" required>
+            <input type="number" name="price" id="price" class="form-control" placeholder="Enter product price" required step="0.01">
         </div>
         <div class="mb-3">
             <x-media-selector :media="$media" label="Select Media" name="media" />
