@@ -133,6 +133,9 @@ function enableSortMode(enable) {
         el.classList.add('sortable-active');
         sortableInstance = Sortable.create(el, {
             animation: 150,
+            scroll: true,
+            scrollSensitivity: 100, 
+            scrollSpeed: 100,
             onEnd: function () {
                 const order = Array.from(document.querySelectorAll('#category-list li')).map((li, idx) => ({
                     id: li.getAttribute('data-id'),
