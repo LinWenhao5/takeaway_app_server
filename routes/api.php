@@ -4,6 +4,7 @@ use App\Http\Controllers\Product\ProductApiController;
 use App\Http\Controllers\Cart\CartApiController;
 use App\Http\Controllers\Customer\CustomerAuthApiController;
 use App\Http\Controllers\Customer\CustomerAccountApiController;
+use App\Http\Controllers\Order\OrderApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -58,5 +59,10 @@ Route::middleware(['throttle:custom_limit', 'auth:api'])->group(function () {
         Route::get('/', [CartApiController::class, 'getCart'])->name('api.cart.get'); // Get cart for a customer
         Route::delete('/remove', [CartApiController::class, 'removeFromCart'])->name('api.cart.remove'); // Remove product from cart
         Route::delete('/remove-quantity', [CartApiController::class, 'removeQuantityFromCart'])->name('api.cart.removeQuantity'); // Remove specific quantity from cart
+    });
+
+    // ==================== Order API Routes ====================
+    Route::prefix('order')->group(function () {
+        Route::post('/create', [OrderApiController::class, 'createOrder'])->name('api.orders.create'); // Create a new order
     });
 });
