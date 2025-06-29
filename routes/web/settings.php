@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Cookie;
 
 
 // ==================== Settings Routes ====================
-Route::prefix('admin/settings')->middleware(['throttle:custom_limit'])->group(function () {
+Route::middleware(['web', 'throttle:custom_limit'])->prefix('admin/settings')->group(function () {
     Route::get('/set-locale/{locale}', [SettingsController::class, 'setLocale'])->name('set.locale');
     Route::get('/set-theme/{theme}', [SettingsController::class, 'setTheme'])->name('set.theme');
 

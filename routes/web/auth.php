@@ -3,7 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\RegistrationInvitationController;
 
-Route::middleware('throttle:custom_limit')->group(function () {
+Route::middleware('web', 'throttle:custom_limit')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
