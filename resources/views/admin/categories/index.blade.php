@@ -3,19 +3,23 @@
 @section('breadcrumb')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-3">
-        <li class="breadcrumb-item"><a href="{{ route('admin.product-categories.index') }}">Product Catgories</a></li>
+        <li class="breadcrumb-item">
+            <a href="{{ route('admin.product-categories.index') }}">
+                @lang('product_categories.product_categories')
+            </a>
+        </li>
     </ol>
 </nav>
 @endsection
 
 @section('content')
 <div class="container">
-    <h2>Category Management</h2>
+    <h2>@lang('product_categories.category_management')</h2>
     <form action="{{ route('admin.product-categories.store') }}" method="POST" class="mb-4">
         @csrf
         <div class="input-group">
-            <input type="text" name="name" class="form-control" placeholder="New Category Name" required>
-            <button class="btn btn-success" type="submit">Add Category</button>
+            <input type="text" name="name" class="form-control" placeholder="@lang('product_categories.new_category_placeholder')" required>
+            <button class="btn btn-success" type="submit">@lang('product_categories.add_category')</button>
         </div>
     </form>
 
@@ -34,7 +38,9 @@
                             {{ $category->name }}
                         </span>
                         <span>
-                            <span class="badge bg-secondary">{{ $category->products->count() }} Products</span>
+                            <span class="badge bg-secondary">
+                                @lang('product_categories.products_count', ['count' => $category->products->count()])
+                            </span>
                             <div class="dropdown d-inline ms-2">
                                 <button class="btn btn-sm btn-outline-secondary border-0" type="button" id="dropdownMenuButton{{ $category->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-three-dots-vertical"></i>
@@ -42,20 +48,20 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton{{ $category->id }}">
                                     <li>
                                         <a class="dropdown-item" href="{{ route('admin.product-categories.edit', $category) }}">
-                                            <i class="bi bi-pencil me-1"></i> Edit
+                                            <i class="bi bi-pencil me-1"></i> @lang('product_categories.edit')
                                         </a>
                                     </li>
                                     <li>
                                         <x-delete-confirm
                                             :action="route('admin.product-categories.destroy', $category)"
-                                            title="Delete Category"
-                                            text="Are you sure you want to delete the category '{{ $category->name }}'?"
-                                            confirm-button-text="Yes, delete it!"
-                                            success-message="Category deleted successfully!"
-                                            error-message="Failed to delete the category."
+                                            :title="__('product_categories.delete')"
+                                            :text="__('product_categories.delete_confirm', ['name' => $category->name])"
+                                            :confirm-button-text="__('product_categories.yes_delete')"
+                                            :success-message="__('product_categories.delete_success')"
+                                            :error-message="__('product_categories.delete_error')"
                                         >
                                             <a class="dropdown-item text-danger" href="#">
-                                                <i class="bi bi-trash me-1"></i> Delete
+                                                <i class="bi bi-trash me-1"></i> @lang('product_categories.delete')
                                             </a>
                                         </x-delete-confirm>
                                     </li>
@@ -73,14 +79,13 @@
                                         <span class="fw-bold text-success">€ {{ number_format($product->price, 2) }}</span>
                                     </div>
                                     <div>
-                                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
+                                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-primary ms-2">@lang('product_categories.edit')</a>
                                         <form action="{{ route('admin.product-categories.unassignProduct', [$category, $product]) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Unassign</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">@lang('product_categories.unassign')</button>
                                         </form>
                                     </div>
-                                    
                                 </li>
                                 @if (!$loop->last)
                                     <hr>
@@ -91,17 +96,17 @@
                             @csrf
                             <div class="input-group">
                                 <select name="product_id" class="form-select" required>
-                                    <option value="">Assign product...</option>
+                                    <option value="">@lang('product_categories.assign_product')...</option>
                                     @foreach($products as $product)
                                         @if($product->product_category_id != $category->id)
                                             <option value="{{ $product->id }}">
                                                 {{ $product->name }} 
-                                                {{ $product->category ? '[' . $product->category->name . ']' : '(Uncategorized)' }}
+                                                {{ $product->category ? '[' . $product->category->name . ']' : '(' . __('product_categories.uncategorized') . ')' }}
                                             </option>
                                         @endif
                                     @endforeach
                                 </select>
-                                <button class="btn btn-primary" type="submit">Assign</button>
+                                <button class="btn btn-primary" type="submit">@lang('product_categories.assign_product')</button>
                             </div>
                         </form>
                     </div>
