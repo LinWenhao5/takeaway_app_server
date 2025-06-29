@@ -13,6 +13,9 @@ php artisan event:cache
 php artisan route:cache
 php artisan view:cache
 
+# Run database migrations
+php artisan migrate --force
+
 # Run database seeder
 php artisan db:seed --force
 
