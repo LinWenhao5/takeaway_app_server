@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductCategory extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'sort_order'];
 
     /**
      * The products that belong to the category.

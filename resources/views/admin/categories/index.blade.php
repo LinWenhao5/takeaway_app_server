@@ -19,9 +19,9 @@
         </div>
     </form>
 
-    <div class="row">
+    <ul id="category-list" class="row list-unstyled">
         @foreach($categories as $category)
-            <div class="col-md-6 mb-4">
+            <li class="col-md-6 mb-4" data-id="{{ $category->id }}">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>
@@ -106,8 +106,38 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </li>
         @endforeach
-    </div>
+    </ul>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var el = document.getElementById('category-list');
+    Sortable.create(el, {
+        animation: 150,
+        onEnd: function () {
+            let order = [];
+            document.querySelectorAll('#category-list li').forEach(function (li, idx) {
+                order.push({id: li.getAttribute('data-id'), sort_order: idx});
+            });
+            fetch("{{ route('admin.product-categories.sort') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({order: order})
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    console.log('Categories sorted successfully');
+                } else {
+                    console.error('Failed to sort categories:', data.message);
+                }
+            }).catch(error => {
+                console.error('Error sorting categories:', error);
+            });
+        }
+    });
+});
+</script>
 @endsection

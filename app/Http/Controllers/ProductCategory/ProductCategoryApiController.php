@@ -30,7 +30,7 @@ class ProductCategoryApiController extends Controller
      */
     public function index()
     {
-        return ProductCategory::all();
+        return ProductCategory::orderBy('sort_order')->get();
     }
 
     /**
@@ -60,7 +60,9 @@ class ProductCategoryApiController extends Controller
             $cacheKey = 'categories_with_products';
 
             $categories = cache()->remember($cacheKey, 600, function () {
-                return ProductCategory::with('products.media')->get();
+                return ProductCategory::with('products.media')
+                    ->orderBy('sort_order')
+                    ->get();
             });
 
             return response()->json(['categories' => $categories]);

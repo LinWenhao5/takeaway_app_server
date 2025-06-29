@@ -14,7 +14,7 @@ class ProductCategoryAdminController extends Controller
      public function adminIndex()
     {
         try {
-            $categories = ProductCategory::all();
+            $categories = ProductCategory::orderBy('sort_order')->get();
             $products = Product::all();
             return view('admin.categories.index', compact('categories', 'products'));
         } catch (\Exception $e) {
@@ -74,6 +74,15 @@ class ProductCategoryAdminController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to delete category: ' . $e->getMessage()]);
         }
+    }
+
+    public function sort(Request $request)
+    {
+        foreach ($request->order as $item) {
+            ProductCategory::where('id', $item['id'])->update(['sort_order' => $item['sort_order']]);
+        }
+        cache()->forget('categories_with_products');
+        return response()->json(['success' => true]);
     }
 
 }

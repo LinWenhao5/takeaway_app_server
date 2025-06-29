@@ -24,6 +24,7 @@ Route::middleware(['auth:web', 'role:admin|owner', 'throttle:custom_limit'])->gr
     // ==================== Product Category Routes ====================
     Route::prefix('admin/product-categories')->group(function () {
         Route::get('/', [ProductCategoryAdminController::class, 'adminIndex'])->name('admin.product-categories.index'); // List all categories
+        Route::post('/admin/product-categories/sort', [ProductCategoryAdminController::class, 'sort'])->name('admin.product-categories.sort');
         Route::get('/{category}/edit', [ProductCategoryAdminController::class, 'adminEdit'])->name('admin.product-categories.edit'); // Edit category form
         Route::post('/{category}/assign-product', [ProductCategoryAssignmentController::class, 'assignProduct'])->name('admin.product-categories.assignProduct'); // Assign product to category
         Route::delete('/{category}/unassign-product/{product}', [ProductCategoryAssignmentController::class, 'unassignProduct'])->name('admin.product-categories.unassignProduct'); // Unassign product from category
