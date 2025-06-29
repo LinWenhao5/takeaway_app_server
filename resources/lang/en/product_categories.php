@@ -3,6 +3,7 @@ return [
     'category_management' => 'Product Category Management',
     'add_category' => 'Add Category',
     'new_category_placeholder' => 'New Category Name',
+    'sort_mode' => 'Sort Mode (Drag & Drop)',
     'edit' => 'Edit',
     'delete' => 'Delete',
     'delete_confirm' => "Are you sure you want to delete the category ':name'?",

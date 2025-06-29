@@ -2,6 +2,7 @@
 return [
     'category_management' => '产品分类管理',
     'add_category' => '添加分类',
+    'sort_mode' => '拖拽排序模式',
     'new_category_placeholder' => '新分类名称',
     'edit' => '编辑',
     'delete' => '删除',

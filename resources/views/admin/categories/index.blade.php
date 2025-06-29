@@ -25,6 +25,13 @@
         </div>
     </form>
 
+    <div class="mb-3">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="toggle-sort-mode">
+            <span class="form-check-label">@lang('product_categories.sort_mode')</span>
+        </div>
+    </div>
+
     <ul id="category-list" class="row list-unstyled">
         @foreach($categories as $category)
             <li class="col-md-6 mb-4" data-id="{{ $category->id }}">
@@ -118,33 +125,60 @@
     </ul>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var el = document.getElementById('category-list');
-    Sortable.create(el, {
-        animation: 150,
-        onEnd: function () {
-            let order = [];
-            document.querySelectorAll('#category-list li').forEach(function (li, idx) {
-                order.push({id: li.getAttribute('data-id'), sort_order: idx});
-            });
-            fetch("{{ route('admin.product-categories.sort') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({order: order})
-            }).then(res => res.json()).then(data => {
-                if (data.success) {
-                    console.log('Categories sorted successfully');
-                } else {
-                    console.error('Failed to sort categories:', data.message);
-                }
-            }).catch(error => {
-                console.error('Error sorting categories:', error);
-            });
+let sortableInstance = null;
+
+function enableSortMode(enable) {
+    const el = document.getElementById('category-list');
+    if (enable) {
+        el.classList.add('sortable-active');
+        sortableInstance = Sortable.create(el, {
+            animation: 150,
+            onEnd: function () {
+                const order = Array.from(document.querySelectorAll('#category-list li')).map((li, idx) => ({
+                    id: li.getAttribute('data-id'),
+                    sort_order: idx
+                }));
+                sendSortOrder(order);
+            }
+        });
+    } else {
+        el.classList.remove('sortable-active');
+        if (sortableInstance) {
+            sortableInstance.destroy();
+            sortableInstance = null;
         }
+    }
+}
+
+async function sendSortOrder(order) {
+    try {
+        const res = await fetch("{{ route('admin.product-categories.sort') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({order})
+        });
+        const data = await res.json();
+        if (!data.success) {
+            console.error('Failed to sort categories:', data.message);
+        }
+    } catch (error) {
+        console.error('Error sorting categories:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('toggle-sort-mode').addEventListener('change', function () {
+        enableSortMode(this.checked);
     });
 });
 </script>
+<style>
+#category-list.sortable-active .card {
+    cursor: move;
+    box-shadow: 0 0 8px #007bff44;
+}
+</style>
 @endsection
