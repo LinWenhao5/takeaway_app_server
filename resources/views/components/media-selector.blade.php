@@ -2,7 +2,7 @@
     'media' => [],
     'selected' => [],
     'name' => 'media',
-    'label' => 'Media',
+    'label' => __('media_selector.media'),
     'multiple' => false
 ])
 
@@ -10,7 +10,7 @@
     <div class="d-flex align-items-center mb-2">
         <label for="media" class="form-label mb-0 me-2">{{ $label }}</label>
         <a href="{{ route('admin.media.library') }}" target="_blank" class="btn btn-sm btn-outline-primary">
-            Upload Media
+            @lang('media_selector.upload_media')
         </a>
     </div>
     <div class="row">
@@ -86,10 +86,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     card.classList.add('border-primary');
                 }
             } else {
-                // Single select: clear others and select current
-                selectedMedia = [mediaId];
-                mediaCards.forEach(c => c.classList.remove('border-primary'));
-                card.classList.add('border-primary');
+                if (selectedMedia[0] === mediaId) {
+                    // Deselect if already selected (for single select)
+                    selectedMedia = [];
+                    card.classList.remove('border-primary');
+                } else {
+                    // Single select: clear others and select current
+                    selectedMedia = [mediaId];
+                    mediaCards.forEach(c => c.classList.remove('border-primary'));
+                    card.classList.add('border-primary');
+                }
             }
             updateInputs();
         });

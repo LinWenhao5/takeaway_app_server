@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller 
 {
     public function index()
     {
-        return view('settings.index');
+        return view('admin.settings.index');
     }
 
     public function setLocale($locale)

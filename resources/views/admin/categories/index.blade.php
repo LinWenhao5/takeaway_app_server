@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', __('product_categories.category_management'))
+
 @section('breadcrumb')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-3">

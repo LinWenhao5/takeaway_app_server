@@ -13,5 +13,10 @@ return [
     'products_count' => ':count Products',
     'product_categories' => 'Product Categories',
     'yes_delete' => 'Yes, delete it!',
-    'uncategorized' => 'Uncategorized'
+    'uncategorized' => 'Uncategorized',
+    'edit_category' => 'Edit Category',
+    'category_name' => 'Category Name',
+    'select_media' => 'Select Category Photo',
+    'save' => 'Save',
+    'cancel' => 'Cancel',
 ];

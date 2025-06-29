@@ -13,5 +13,10 @@ return [
     'products_count' => ':count 个产品',
     'product_categories' => '产品分类',
     'yes_delete' => '是的，删除！',
-    'uncategorized' => '未分类'
+    'uncategorized' => '未分类',
+    'edit_category' => '编辑分类',
+    'category_name' => '分类名称',
+    'select_media' => '选择商品分类照片',
+    'save' => '保存',
+    'cancel' => '取消',
 ];
