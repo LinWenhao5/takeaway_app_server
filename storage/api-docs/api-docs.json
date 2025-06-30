@@ -9,6 +9,147 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/address/create": {
+            "post": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Add a new address for the authenticated customer",
+                "operationId": "28b05a8df525bb5cc687d4111a34a00c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "street",
+                                    "house_number",
+                                    "postcode",
+                                    "city",
+                                    "country"
+                                ],
+                                "properties": {
+                                    "street": {
+                                        "type": "string",
+                                        "example": "Damrak"
+                                    },
+                                    "house_number": {
+                                        "type": "string",
+                                        "example": "1A"
+                                    },
+                                    "postcode": {
+                                        "type": "string",
+                                        "example": "1012LG"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "Amsterdam"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "Netherlands"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Address created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "address": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "street": {
+                                                    "type": "string",
+                                                    "example": "Damrak"
+                                                },
+                                                "house_number": {
+                                                    "type": "string",
+                                                    "example": "1A"
+                                                },
+                                                "postcode": {
+                                                    "type": "string",
+                                                    "example": "1012LG"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Amsterdam"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "Netherlands"
+                                                },
+                                                "customer_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-01T00:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-01T00:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to add address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to add address"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Exception message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/cart/add": {
             "post": {
                 "tags": [
@@ -689,7 +830,27 @@
                     "Order"
                 ],
                 "summary": "Create a new order",
-                "operationId": "b1e1a91bc37ee88d0ea5499158e09290",
+                "operationId": "7e8d8ded32538313a64c9d180c011675",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "address_id"
+                                ],
+                                "properties": {
+                                    "address_id": {
+                                        "description": "ID of the address to use for this order",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Order created successfully",
@@ -996,6 +1157,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Address",
+            "description": "Address"
+        },
         {
             "name": "Cart",
             "description": "Cart"

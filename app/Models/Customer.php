@@ -24,4 +24,17 @@ class Customer extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

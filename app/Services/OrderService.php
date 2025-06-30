@@ -3,6 +3,8 @@ namespace App\Services;
 use App\Models\Product;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use App\Models\Address;
+use Exception;
 
 Class OrderService
 {
@@ -13,28 +15,34 @@ Class OrderService
         $this->cartService = $cartService;
     }
 
-    public function createOrder($customerId)
+    public function createOrder($customerId, $addressId)
     {
-        return DB::transaction(function () use ($customerId) {
+        return DB::transaction(function () use ($customerId, $addressId) {
             $cart = $this->cartService->getCart($customerId);
             if (empty($cart)) {
-                throw new \Exception('Cart is empty');
+                throw new Exception('Cart is empty');
             }
+
+            $address = Address::findOrFail($addressId);
 
             $totalPrice = 0;
             foreach ($cart as $productId => $quantity) {
                 $product = Product::find($productId);
                 if (!$product) {
-                    throw new \Exception('Product not found: ' . $productId);
+                    throw new Exception('Product not found: ' . $productId);
                 }
                 $totalPrice += $product->price * $quantity;
                 $products[$productId] = $product;
             }
 
+            $addressSnapshot = "{$address->street} {$address->house_number}, {$address->postcode} {$address->city}, {$address->country}";
+
             $order = Order::create([
                 'customer_id' => $customerId,
                 'status' => 'pending',
                 'total_price' => $totalPrice,
+                'address_id' => $address->id,
+                'address_snapshot' => $addressSnapshot,
             ]);
 
             foreach ($cart as $productId => $quantity) {

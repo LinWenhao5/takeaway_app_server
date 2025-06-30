@@ -13,6 +13,8 @@ class Order extends Model
         'customer_id',
         'status',
         'total_price',
+        'address_id',
+        'address_snapshot',
     ];
 
     public function customer()
@@ -24,5 +26,10 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class, 'order_product')
                     ->withPivot('quantity', 'price');
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
     }
 }
