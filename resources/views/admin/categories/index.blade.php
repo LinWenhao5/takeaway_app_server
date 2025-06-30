@@ -155,17 +155,16 @@ function enableSortMode(enable) {
 
 async function sendSortOrder(order) {
     try {
-        const res = await fetch("{{ route('admin.product-categories.sort') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({order})
-        });
-        const data = await res.json();
-        if (!data.success) {
-            console.error('Failed to sort categories:', data.message);
+        const res = await axios.post("{{ route('admin.product-categories.sort') }}", 
+            { order },
+            {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }
+        );
+        if (!res.data.success) {
+            console.error('Failed to sort categories:', res.data.message);
         }
     } catch (error) {
         console.error('Error sorting categories:', error);
