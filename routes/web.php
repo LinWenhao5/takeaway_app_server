@@ -9,6 +9,7 @@ require __DIR__.'/web/settings.php';
 require __DIR__.'/web/admin/products.php';
 require __DIR__.'/web/admin/product_categories.php';
 require __DIR__.'/web/admin/media.php';
+require __DIR__.'/web/admin/allowed_postcodes.php';
 
 // Owner Routes
 require __DIR__.'/web/owner/users.php';

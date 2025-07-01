@@ -11,6 +11,8 @@ return [
     'user' => '用户',
     'users' => '用户列表',
     'invite_user' => '邀请用户',
+    'shop_management' => '店铺管理',
+    'allowed_postcodes' => '配送范围管理',
     'system_management' => '系统管理',
     'settings' => '设置',
     'horizon' => '任务监控',

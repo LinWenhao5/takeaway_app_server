@@ -10,7 +10,7 @@ return [
         'view_horizon' => 'View Horizon Dashboard',
     ],
     'role_permissions' => [
-        'owner' => ['manage_users', 'manage_products', 'view_horizon'],
-        'admin' => ['manage_products'],
+        'owner' => ['manage_users', 'manage_shops', 'manage_products', 'view_horizon', 'manage_settings'],
+        'admin' => ['manage_products', 'manage_settings'],
     ],
 ];

@@ -10,6 +10,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <!-- Product Management -->
+                @canany(['manage_products'])
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="productDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-box-seam"></i> @lang('navigation.product')
@@ -39,8 +40,10 @@
                         @endcan
                     </ul>
                 </li>
+                @endcanany
 
                 <!-- User Management -->
+                @canany(['manage_users'])
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-people"></i> @lang('navigation.user')
@@ -60,27 +63,50 @@
                         @endcan
                     </ul>
                 </li>
+                @endcanany
 
+                <!-- Shop Management -->
+                @canany(['manage_shops'])
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-shop"></i> @lang('navigation.shop_management')
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="shopDropdown">
+                        @can('manage_shops')
+                            <li>
+                                <a href="{{ route('admin.allowed-postcodes.index') }}" class="dropdown-item {{ request()->routeIs('admin.allowed-postcodes.*') ? 'active' : '' }}">
+                                    @lang('navigation.allowed_postcodes')
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+                @endcanany
+
+                @canany(['manage_settings', 'view_horizon'])
                 <!-- System Management -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="systemDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-gear"></i> @lang('navigation.system_management')
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="systemDropdown">
+                        @can('manage_settings')
                         <li>
                             <a href="{{ route('admin.settings.index') }}" class="dropdown-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                                 @lang('navigation.settings')
                             </a>
                         </li>
+                        @endcan
                         @can('view_horizon')
-                            <li>
-                                <a href="{{ url('/horizon') }}" class="dropdown-item {{ request()->is('horizon*') ? 'active' : '' }}">
-                                    @lang('navigation.horizon')
-                                </a>
-                            </li>
+                        <li>
+                            <a href="{{ url('/horizon') }}" class="dropdown-item {{ request()->is('horizon*') ? 'active' : '' }}">
+                                @lang('navigation.horizon')
+                            </a>
+                        </li>
                         @endcan
                     </ul>
                 </li>
+                @endcanany
             </ul>
 
             <!-- Logout Button -->

@@ -11,6 +11,8 @@ return [
     'user' => 'User',
     'users' => 'Users',
     'invite_user' => 'Invite User',
+    'shop_management' => 'Shop Management',
+    'allowed_postcodes' => 'Allowed Postcodes',
     'system_management' => 'System Management',
     'settings' => 'Settings',
     'horizon' => 'Horizon',

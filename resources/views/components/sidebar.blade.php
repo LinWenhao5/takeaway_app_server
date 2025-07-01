@@ -42,12 +42,23 @@
                 </a>
             </li>
             @endcan
+            
+            @can('view_horizon')
+            <li>
+                <a href="{{ route('admin.allowed-postcodes.index') }}" class="nav-link {{ request()->routeIs('admin.allowed-postcodes.*') ? 'active' : '' }}">
+                    <i class="bi bi-geo-alt-fill me-2"></i> @lang('navigation.allowed_postcodes')
+                </a>
+            </li>
+            @endcan
 
             <li>
                 <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                     <i class="bi bi bi-gear me-2"></i> @lang('navigation.settings')
                 </a>
             </li>
+            
+            
+            
 
             @can('view_horizon')
             <li>
