@@ -3,7 +3,8 @@ namespace App\Http\Controllers\Address;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Models\AllowedPostcode;
+use Illuminate\Validation\ValidationException;
 
 class AddressApiController extends Controller
 {
@@ -17,10 +18,10 @@ class AddressApiController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"street","house_number","postcode","city","country"},
-     *             @OA\Property(property="street", type="string", example="Damrak"),
-     *             @OA\Property(property="house_number", type="string", example="1A"),
-     *             @OA\Property(property="postcode", type="string", example="1012LG"),
-     *             @OA\Property(property="city", type="string", example="Amsterdam"),
+     *             @OA\Property(property="street", type="string", example="Wagenweg"),
+     *             @OA\Property(property="house_number", type="string", example="12B"),
+     *             @OA\Property(property="postcode", type="string", example="1442CE"),
+     *             @OA\Property(property="city", type="string", example="Purmerend"),
      *             @OA\Property(property="country", type="string", example="Netherlands")
      *         )
      *     ),
@@ -31,15 +32,24 @@ class AddressApiController extends Controller
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="address", type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="street", type="string", example="Damrak"),
-     *                 @OA\Property(property="house_number", type="string", example="1A"),
-     *                 @OA\Property(property="postcode", type="string", example="1012LG"),
-     *                 @OA\Property(property="city", type="string", example="Amsterdam"),
+     *                 @OA\Property(property="street", type="string", example="Wagenweg"),
+     *                 @OA\Property(property="house_number", type="string", example="12B"),
+     *                 @OA\Property(property="postcode", type="string", example="1442CE"),
+     *                 @OA\Property(property="city", type="string", example="Purmerend"),
      *                 @OA\Property(property="country", type="string", example="Netherlands"),
      *                 @OA\Property(property="customer_id", type="integer", example=1),
      *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-01T00:00:00Z"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-01T00:00:00Z")
      *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Validation failed"),
+     *             @OA\Property(property="errors", type="object")
      *         )
      *     ),
      *     @OA\Response(
@@ -59,16 +69,24 @@ class AddressApiController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             $customer = $this->getAuthenticatedCustomer();
 
             $validated = $request->validate([
                 'street' => 'required|string|max:255',
                 'house_number' => 'required|string|max:20',
-                'postcode' => 'required|string|max:20',
+                'postcode' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) {
+                        if (!AllowedPostcode::isAllowed($value)) {
+                            $fail('The postcode is not in the allowed range.');
+                        }
+                    }
+                ],
                 'city' => 'required|string|max:100',
                 'country' => 'required|string|max:100',
-            ]);
+            ]); 
 
             $address = $customer->addresses()->create($validated);
 
@@ -76,6 +94,12 @@ class AddressApiController extends Controller
                 'success' => true,
                 'address' => $address,
             ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'error' => $e->getMessage(),
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -83,6 +107,5 @@ class AddressApiController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
-        
     }
 }

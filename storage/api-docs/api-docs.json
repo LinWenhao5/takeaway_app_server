@@ -31,19 +31,19 @@
                                 "properties": {
                                     "street": {
                                         "type": "string",
-                                        "example": "Damrak"
+                                        "example": "Wagenweg"
                                     },
                                     "house_number": {
                                         "type": "string",
-                                        "example": "1A"
+                                        "example": "12B"
                                     },
                                     "postcode": {
                                         "type": "string",
-                                        "example": "1012LG"
+                                        "example": "1442CE"
                                     },
                                     "city": {
                                         "type": "string",
-                                        "example": "Amsterdam"
+                                        "example": "Purmerend"
                                     },
                                     "country": {
                                         "type": "string",
@@ -74,19 +74,19 @@
                                                 },
                                                 "street": {
                                                     "type": "string",
-                                                    "example": "Damrak"
+                                                    "example": "Wagenweg"
                                                 },
                                                 "house_number": {
                                                     "type": "string",
-                                                    "example": "1A"
+                                                    "example": "12B"
                                                 },
                                                 "postcode": {
                                                     "type": "string",
-                                                    "example": "1012LG"
+                                                    "example": "1442CE"
                                                 },
                                                 "city": {
                                                     "type": "string",
-                                                    "example": "Amsterdam"
+                                                    "example": "Purmerend"
                                                 },
                                                 "country": {
                                                     "type": "string",
@@ -107,6 +107,29 @@
                                                     "example": "2025-07-01T00:00:00Z"
                                                 }
                                             },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        },
+                                        "errors": {
                                             "type": "object"
                                         }
                                     },
