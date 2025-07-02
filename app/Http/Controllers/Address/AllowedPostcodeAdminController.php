@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Address;
 use App\Http\Controllers\Controller;
 use App\Models\AllowedPostcode;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class AllowedPostcodeAdminController extends Controller
 {
@@ -27,7 +28,7 @@ class AllowedPostcodeAdminController extends Controller
             ]);
             AllowedPostcode::create($request->only('postcode_pattern'));
             return redirect()->route('admin.allowed-postcodes.index')->with('success', __('messages.add_success'));
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return redirect()->back()
                 ->withErrors($e->validator)
                 ->withInput()
@@ -48,7 +49,7 @@ class AllowedPostcodeAdminController extends Controller
             ]);
             $allowedPostcode->update($request->only('postcode_pattern'));
             return redirect()->route('admin.allowed-postcodes.index')->with('success', __('messages.update_success'));
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return redirect()->back()
                 ->withErrors($e->validator)
                 ->withInput()

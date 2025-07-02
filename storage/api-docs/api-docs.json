@@ -22,6 +22,8 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "name",
+                                    "phone",
                                     "street",
                                     "house_number",
                                     "postcode",
@@ -29,6 +31,16 @@
                                     "country"
                                 ],
                                 "properties": {
+                                    "name": {
+                                        "description": "Recipient name",
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "phone": {
+                                        "description": "Dutch phone number",
+                                        "type": "string",
+                                        "example": "0612345678"
+                                    },
                                     "street": {
                                         "type": "string",
                                         "example": "Wagenweg"
@@ -71,6 +83,14 @@
                                                 "id": {
                                                     "type": "integer",
                                                     "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "张三"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "0612345678"
                                                 },
                                                 "street": {
                                                     "type": "string",

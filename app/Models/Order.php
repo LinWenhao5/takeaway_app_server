@@ -17,6 +17,10 @@ class Order extends Model
         'address_snapshot',
     ];
 
+    protected $casts = [
+        'address_snapshot' => 'array',
+    ];
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

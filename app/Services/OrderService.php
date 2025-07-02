@@ -35,7 +35,15 @@ Class OrderService
                 $products[$productId] = $product;
             }
 
-            $addressSnapshot = "{$address->street} {$address->house_number}, {$address->postcode} {$address->city}, {$address->country}";
+            $addressSnapshot = [
+                'name' => $address->name,
+                'phone' => $address->phone,
+                'street' => $address->street,
+                'house_number' => $address->house_number,
+                'postcode' => $address->postcode,
+                'city' => $address->city,
+                'country' => $address->country,
+            ];
 
             $order = Order::create([
                 'customer_id' => $customerId,

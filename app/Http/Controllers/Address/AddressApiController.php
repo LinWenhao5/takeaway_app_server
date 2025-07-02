@@ -17,7 +17,9 @@ class AddressApiController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"street","house_number","postcode","city","country"},
+     *             required={"name","phone","street","house_number","postcode","city","country"},
+     *             @OA\Property(property="name", type="string", example="John", description="Recipient name"),
+     *             @OA\Property(property="phone", type="string", example="0612345678", description="Dutch phone number"),
      *             @OA\Property(property="street", type="string", example="Wagenweg"),
      *             @OA\Property(property="house_number", type="string", example="12B"),
      *             @OA\Property(property="postcode", type="string", example="1442CE"),
@@ -32,6 +34,8 @@ class AddressApiController extends Controller
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="address", type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="张三"),
+     *                 @OA\Property(property="phone", type="string", example="0612345678"),
      *                 @OA\Property(property="street", type="string", example="Wagenweg"),
      *                 @OA\Property(property="house_number", type="string", example="12B"),
      *                 @OA\Property(property="postcode", type="string", example="1442CE"),
@@ -73,6 +77,11 @@ class AddressApiController extends Controller
             $customer = $this->getAuthenticatedCustomer();
 
             $validated = $request->validate([
+                'name' => 'required|string|max:50',
+                'phone' => [
+                    'required',
+                    'regex:/^(?:\+31|0)[1-9][0-9]{8}$/'
+                ],
                 'street' => 'required|string|max:255',
                 'house_number' => 'required|string|max:20',
                 'postcode' => [
