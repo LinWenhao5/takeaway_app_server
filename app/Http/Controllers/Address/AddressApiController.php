@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\AllowedPostcode;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use App\Models\Address;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AddressApiController extends Controller
 {
@@ -179,6 +181,158 @@ class AddressApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to get addresses',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/address/{id}",
+     *     summary="Update an address",
+     *     tags={"Address"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Address ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","phone","street","house_number","postcode","city","country"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="phone", type="string"),
+     *             @OA\Property(property="street", type="string"),
+     *             @OA\Property(property="house_number", type="string"),
+     *             @OA\Property(property="postcode", type="string"),
+     *             @OA\Property(property="city", type="string"),
+     *             @OA\Property(property="country", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Address updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="address", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Address not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $customer = $this->getAuthenticatedCustomer();
+            $address = $customer->addresses()->findOrFail($id);
+
+            $validated = $request->validate([
+                'name' => 'required|string|max:50',
+                'phone' => [
+                    'required',
+                    'regex:/^(?:\+31|0)[1-9][0-9]{8}$/'
+                ],
+                'street' => 'required|string|max:255',
+                'house_number' => 'required|string|max:20',
+                'postcode' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) {
+                        if (!AllowedPostcode::isAllowed($value)) {
+                            $fail('The postcode is not in the allowed range.');
+                        }
+                    }
+                ],
+                'city' => 'required|string|max:100',
+                'country' => 'required|string|max:100',
+            ]);
+
+            $address->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'address' => $address,
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Address not found',
+            ], 404);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'error' => $e->getMessage(),
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update address',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/address/{id}",
+     *     summary="Delete an address",
+     *     tags={"Address"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Address ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Address deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Address not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
+    public function destroy(Request $request, $id)
+    {
+        try {
+            $customer = $this->getAuthenticatedCustomer();
+            $address = $customer->addresses()->findOrFail($id);
+
+            $address->delete();
+
+            return response()->json([
+                'success' => true,
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Address not found',
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete address',
                 'error' => $e->getMessage(),
             ], 500);
         }
