@@ -18,7 +18,7 @@ class CartApiController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/cart/add",
+     *     path="/api/cart",
      *     summary="Add a product to the cart",
      *     tags={"Cart"},
      *     security={{"bearerAuth":{}}},

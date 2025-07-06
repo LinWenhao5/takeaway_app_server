@@ -18,7 +18,7 @@ class OrderApiController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/order/create",
+     *     path="/api/order",
      *     summary="Create a new order",
      *     tags={"Order"},
      *     security={{"bearerAuth":{}}},

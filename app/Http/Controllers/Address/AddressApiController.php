@@ -13,7 +13,7 @@ class AddressApiController extends Controller
 {
     /**
      * @OA\Post(
-     *     path="/api/address/create",
+     *     path="/api/address",
      *     summary="Add a new address for the authenticated customer",
      *     tags={"Address"},
      *     security={{"bearerAuth":{}}},
