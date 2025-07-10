@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Order;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
+use App\Services\PaymentService;
 use Exception;
 use Mollie\Laravel\Facades\Mollie;
 use App\Models\Order;
@@ -12,10 +13,12 @@ use App\Models\Order;
 class OrderApiController extends Controller
 {
     protected $orderService;
+    protected $paymentService;
 
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, PaymentService $paymentService)
     {
         $this->orderService = $orderService;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -73,8 +76,8 @@ class OrderApiController extends Controller
             // 1. Create the order
             $order = $this->orderService->createOrder($customerId, $addressId);
 
-            // 2. Create the payment and get the payment URL
-            $paymentUrl = $this->orderService->createPayment($order);
+            // 2. Create payment and get payment URL via PaymentService
+            $paymentUrl = $this->paymentService->createPayment($order);
 
             // Return order ID and payment URL
             return response()->json([
@@ -94,22 +97,12 @@ class OrderApiController extends Controller
 
     public function paymentWebhook(Request $request)
     {
-        $paymentId = $request->id;
-        if (!$paymentId) {
-            return response()->json(['error' => 'No payment id'], 400);
+        try {
+            $paymentId = $request->id;
+            $this->paymentService->handleWebhook($paymentId);
+            return response()->json(['status' => 'ok']);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
         }
-
-        $payment = Mollie::api()->payments->get($paymentId);
-
-        $orderId = $payment->metadata->order_id ?? null;
-        if ($orderId) {
-            $order = Order::find($orderId);
-            if ($order && $payment->isPaid() && $order->status !== 'paid') {
-                $order->status = 'paid';
-                $order->save();
-            }
-        }
-
-        return response()->json(['status' => 'ok']);
     }
 }

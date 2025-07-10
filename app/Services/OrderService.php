@@ -66,27 +66,4 @@ Class OrderService
             return $order;
         });
     }
-
-
-     public function createPayment(Order $order)
-    {
-        $payment = Mollie::api()->payments->create([
-            "amount" => [
-                "currency" => "EUR",
-                "value" => number_format($order->total_price, 2, '.', ''),
-            ],
-            "description" => "Order #{$order->id}",
-            "redirectUrl" => route('orders.payment.callback', $order),
-            "webhookUrl" => route('orders.payment.webhook'),
-            "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
-            "metadata" => [
-                "order_id" => $order->id,
-            ],
-        ]);
-
-        $order->payment_id = $payment->id;
-        $order->save();
-
-        return $payment->getCheckoutUrl();
-    }
 }
