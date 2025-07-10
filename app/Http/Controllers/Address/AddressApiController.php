@@ -13,9 +13,9 @@ class AddressApiController extends Controller
 {
     /**
      * @OA\Post(
-     *     path="/api/address",
+     *     path="/api/addresses",
      *     summary="Add a new address for the authenticated customer",
-     *     tags={"Address"},
+     *     tags={"Addresses"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -123,9 +123,9 @@ class AddressApiController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/address",
+     *     path="/api/addresses",
      *     summary="Get all addresses for the authenticated customer",
-     *     tags={"Address"},
+     *     tags={"Addresses"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
@@ -188,9 +188,9 @@ class AddressApiController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/address/{id}",
+     *     path="/api/addresses/{id}",
      *     summary="Update an address",
-     *     tags={"Address"},
+     *     tags={"Addresses"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -285,9 +285,9 @@ class AddressApiController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/address/{id}",
+     *     path="/api/addresses/{id}",
      *     summary="Delete an address",
-     *     tags={"Address"},
+     *     tags={"Addresses"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",

@@ -9,13 +9,13 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/address": {
+        "/api/addresses": {
             "get": {
                 "tags": [
-                    "Address"
+                    "Addresses"
                 ],
                 "summary": "Get all addresses for the authenticated customer",
-                "operationId": "52d94018cea4ec74d9132eeeb9a557da",
+                "operationId": "a2267d465f04e480ecc958c585a6bc5a",
                 "responses": {
                     "200": {
                         "description": "List of addresses",
@@ -123,10 +123,10 @@
             },
             "post": {
                 "tags": [
-                    "Address"
+                    "Addresses"
                 ],
                 "summary": "Add a new address for the authenticated customer",
-                "operationId": "533d20bc66a2a0bd2cfc164f53512ec1",
+                "operationId": "5f97f2eb5667f21ed9242a3dea978d97",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -304,13 +304,13 @@
                 ]
             }
         },
-        "/api/address/{id}": {
+        "/api/addresses/{id}": {
             "put": {
                 "tags": [
-                    "Address"
+                    "Addresses"
                 ],
                 "summary": "Update an address",
-                "operationId": "993f3458f3276a7ebf5159aa53f4446f",
+                "operationId": "402b1aa6b69bf92f6ff1425f4312a682",
                 "parameters": [
                     {
                         "name": "id",
@@ -399,10 +399,10 @@
             },
             "delete": {
                 "tags": [
-                    "Address"
+                    "Addresses"
                 ],
                 "summary": "Delete an address",
-                "operationId": "bec97df5612545c466ab75015c32fe91",
+                "operationId": "2d463625f0583fffed5c0daa9114953b",
                 "parameters": [
                     {
                         "name": "id",
@@ -1117,13 +1117,14 @@
                 }
             }
         },
-        "/api/order": {
+        "/api/orders": {
             "post": {
                 "tags": [
-                    "Order"
+                    "Orders"
                 ],
-                "summary": "Create a new order",
-                "operationId": "3e8e3579883efd6f44352807e63bfb2f",
+                "summary": "Create a new order and get payment URL",
+                "description": "Create a new order and return payment URL.",
+                "operationId": "94edbd32f9aec015639293609b02417b",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1158,6 +1159,10 @@
                                         "order_id": {
                                             "type": "integer",
                                             "example": 123
+                                        },
+                                        "payment_url": {
+                                            "type": "string",
+                                            "example": "https://www.mollie.com/paymentscreen/example"
                                         }
                                     },
                                     "type": "object"
@@ -1451,8 +1456,8 @@
     },
     "tags": [
         {
-            "name": "Address",
-            "description": "Address"
+            "name": "Addresses",
+            "description": "Addresses"
         },
         {
             "name": "Cart",
@@ -1467,8 +1472,8 @@
             "description": "Customer Authentication"
         },
         {
-            "name": "Order",
-            "description": "Order"
+            "name": "Orders",
+            "description": "Orders"
         },
         {
             "name": "Products",
