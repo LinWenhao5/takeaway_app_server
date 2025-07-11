@@ -15,8 +15,10 @@ class PaymentService
                 "value" => number_format($order->total_price, 2, '.', ''),
             ],
             "description" => "Order #{$order->id}",
-            "redirectUrl" => route('orders.payment.callback', $order),
-            "webhookUrl" => route('orders.payment.webhook'),
+            "redirectUrl" => "takeawayapp://payment-callback?order_id={$order->id}",
+            // "redirectUrl" => route('orders.payment.callback', $order),
+            "webhookUrl" => "https://9f68e5a383b1.ngrok-free.app/api/orders/payment-webhook",
+            // "webhookUrl" => route('orders.payment.webhook'),
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
                 "order_id" => $order->id,
