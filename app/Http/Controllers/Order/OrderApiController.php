@@ -76,8 +76,12 @@ class OrderApiController extends Controller
             // 1. Create the order
             $order = $this->orderService->createOrder($customerId, $addressId);
 
-            // 2. Create payment and get payment URL via PaymentService
-            $paymentUrl = $this->paymentService->createPayment($order);
+            // 2. Get platform and host parameters to pass to PaymentService
+            $platform = $request->input('platform');
+            $host = $request->input('host');
+
+            // 3. Create payment and get payment URL via PaymentService
+            $paymentUrl = $this->paymentService->createPayment($order, $platform, $host);
 
             // Return order ID and payment URL
             return response()->json([

@@ -7,18 +7,26 @@ use InvalidArgumentException;
 
 class PaymentService
 {
-    public function createPayment(Order $order)
+    public function createPayment(
+        Order $order, 
+        string $platform = 'app', 
+        ?string $host = 'https://takeaway-app-zen-sushi.web.app'
+    )
     {
+        if ($platform === 'web') {
+            $redirectUrl = "{$host}/order-result?order_id={$order->id}";
+        } else {
+            $redirectUrl = "takeawayapp://payment-callback?order_id={$order->id}";
+        }
+
         $payment = Mollie::api()->payments->create([
             "amount" => [
                 "currency" => "EUR",
                 "value" => number_format($order->total_price, 2, '.', ''),
             ],
             "description" => "Order #{$order->id}",
-            "redirectUrl" => "takeawayapp://payment-callback?order_id={$order->id}",
-            // "redirectUrl" => route('orders.payment.callback', $order),
-            "webhookUrl" => "https://9f68e5a383b1.ngrok-free.app/api/orders/payment-webhook",
-            // "webhookUrl" => route('orders.payment.webhook'),
+            "redirectUrl" => $redirectUrl,
+            "webhookUrl" => route('orders.payment.webhook'),
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
                 "order_id" => $order->id,
