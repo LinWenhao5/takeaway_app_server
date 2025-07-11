@@ -14,7 +14,7 @@ class PaymentService
     )
     {
         if ($platform === 'web') {
-            $redirectUrl = "{$host}/order-result?order_id={$order->id}";
+            $redirectUrl = "{$host}/payment-callback?order_id={$order->id}";
         } else {
             $redirectUrl = "takeawayapp://payment-callback?order_id={$order->id}";
         }
