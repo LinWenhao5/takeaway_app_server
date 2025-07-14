@@ -76,7 +76,7 @@ class CustomerAuthApiController extends Controller
             $customer = Customer::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => $request->password,
             ]);
 
             Cache::forget('captcha_' . $request->email);
