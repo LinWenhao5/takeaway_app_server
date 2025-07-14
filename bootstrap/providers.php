@@ -7,5 +7,6 @@ return [
     App\Features\Product\Providers\ProductServiceProvider::class,
     App\Features\Auth\Providers\AuthServiceProvider::class,
     App\Features\ProductCategory\Providers\ProductCategoryServiceProvider::class,
-    App\Features\Media\Providers\MediaServiceProvider::class
+    App\Features\Media\Providers\MediaServiceProvider::class,
+    App\Features\User\Providers\UserServiceProvider::class
 ];

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Features\User\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\RegistrationInvitation;
-use App\Features\Auth\Models\User;
+use App\Features\User\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationInvitationMail;
 
@@ -14,7 +14,7 @@ class RegistrationInvitationController extends Controller
 {
     public function create()
     {
-        return view('admin.users.create');
+        return view('user::create');
     }
 
     public function store(Request $request)

@@ -1,9 +1,9 @@
 <?php
-namespace App\Http\Controllers\User;
+namespace App\Features\User\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\RegistrationInvitation;
-use App\Features\Auth\Models\User;
+use App\Features\User\Models\User;
 use Illuminate\Http\Request;
 
 class UserAdminController extends Controller
@@ -13,7 +13,7 @@ class UserAdminController extends Controller
         $users = User::paginate(10);
         $pendingInvitations = RegistrationInvitation::all();
 
-        return view('admin.users.index', compact('users', 'pendingInvitations'));
+        return view('user::index', compact('users', 'pendingInvitations'));
     }
 
 
