@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Features\Setting\Controllers;
 
 use Illuminate\Support\Facades\Cookie;
+use App\Http\Controllers\Controller;
 
 class SettingsController extends Controller 
 {
     public function index()
     {
-        return view('admin.settings.index');
+        return view('setting::index');
     }
 
     public function setLocale($locale)

@@ -1,7 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SettingsController;
-use Illuminate\Support\Facades\Cookie;
+use App\Features\Setting\Controllers\SettingsController;
 
 
 // ==================== Settings Routes ====================
