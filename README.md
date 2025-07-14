@@ -1,40 +1,61 @@
 # Takeaway App Server
 
-This is the backend service for a takeaway application, built with the Laravel framework. It provides user authentication, product management, category management, and other features. The service supports RESTful APIs and includes functionality for captcha generation and token-based authentication.
+This is the backend service for a takeaway application, built with the Laravel framework. The project adopts a **feature-based modular structure** for better scalability and maintainability. It provides user authentication, product and category management, order processing, media handling, address management, and system settings. The service supports RESTful APIs, captcha generation, token-based authentication, role-based access control, and more.
+
+---
+
+## Project Structure Highlights
+
+- `app/Features/`: All business modules (Product, Order, Customer, Media, Setting, etc.) are organized independently, each containing Controllers, Models, Views, Providers, and routes.
 
 ---
 
 ## Features Overview
 
-### 1. User Authentication
-- **Registration**: Users can register using their email and verify with a captcha.
-- **Login**: Supports email and password-based login, returning an authentication token.
-- **Captcha Generation**: Sends a captcha to the user's email for registration or login verification.
+### 1. User Authentication & Authorization
+- Email registration, login, and captcha verification
+- Token-based authentication (Laravel Sanctum)
+- Role-based access control (admin, owner, customer)
+- User profile management
 
-### 2. Product Management
-- **Product List**: Retrieve a list of all products.
-- **Product Search**: Search for products by name or description.
-- **Product Details**: View detailed information about a single product.
+### 2. Product & Category Management
+- CRUD for products and images
+- CRUD for product categories, including drag-and-drop sorting
+- Product-category association
 
-### 3. Category Management
-- **Category List**: Retrieve a list of all product categories.
-- **Categories with Products**: Retrieve categories along with their associated products.
+### 3. Order & Payment
+- Place orders and query order status
+- Payment integration
+- Order association with addresses and users
 
-### 4. Admin Features
-- **Role-Based Access**: Admins can manage products and categories.
-- **Rate Limiting**: Custom rate limits for admins and users.
+### 4. Address & Delivery Area
+- User address management
+- Delivery area (postcode) management
+
+### 5. Media Management
+- Media upload, selection, and product association
+
+### 6. System Settings
+- Language switching (English/Chinese)
+- Theme switching (light/dark/auto)
+
+### 7. Admin Panel
+- Role-based access control for admin features
+- Custom rate limiting
+- Queue monitoring with Laravel Horizon
 
 ---
 
 ## Tech Stack
 
-- **Framework**: Laravel
+- **Framework**: Laravel 11+
 - **Database**: MySQL
 - **Authentication**: Laravel Sanctum
-- **Queue**: Supports asynchronous tasks (e.g., sending captcha emails)
-- **Cache**: Redis for caching and queue management
-- **Queue Monitoring**: Laravel Horizon for managing and monitoring queues
-- **API**: RESTful API
+- **Authorization**: spatie/laravel-permission
+- **Queue/Cache**: Redis
+- **Queue Monitoring**: Laravel Horizon
+- **API**: RESTful, with Swagger documentation support
+- **Frontend**: Blade + Bootstrap 5
 
 ---
 
@@ -42,7 +63,7 @@ This is the backend service for a takeaway application, built with the Laravel f
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-repo/takeaway_app_server.git
+git clone https://github.com/LinWenhao5/takeaway_app_server.git
 cd takeaway_app_server
 ```
 
@@ -52,56 +73,23 @@ composer install
 ```
 
 ### 3. Configure Environment Variables
-Copy the `.env.example` file and rename it to `.env`. Then configure the database, mail service, and Redis:
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=takeaway_app
-DB_USERNAME=root
-DB_PASSWORD=your_password
+Copy `.env.example` to `.env` and configure your database, mail, and Redis settings.
 
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.example.com
-MAIL_PORT=587
-MAIL_USERNAME=your_email@example.com
-MAIL_PASSWORD=your_password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=your_email@example.com
-MAIL_FROM_NAME="Takeaway App"
-
-QUEUE_CONNECTION=redis
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-REDIS_PASSWORD=null
-```
-
-### 4. Run Migrations
+### 4. Run Migrations and Seeders
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
 
-### 5. Start the MySQL Server
-Ensure MySQL is installed and running:
-```bash
-sudo service mysql start
-```
+### 5. Start Required Services
+Make sure MySQL and Redis are running.
 
-### 6. Start the Redis Server
-Ensure Redis is installed and running:
-```bash
-redis-server
-```
-
-### 7. Start Laravel Horizon
-Run the following command to start Horizon:
+### 6. Start Laravel Horizon (for queue monitoring)
 ```bash
 php artisan horizon
 ```
+Access the Horizon dashboard at `http://your-app-url/horizon`.
 
-You can access the Horizon dashboard at `http://your-app-url/horizon`.
-
-### 8. Start the Development Server
+### 7. Start the Development Server
 ```bash
 php artisan serve
 ```
@@ -110,38 +98,48 @@ php artisan serve
 
 ## API Routes
 
-### User Routes
-- **POST** `/customer/register`: User registration
+### User
+- **POST** `/customer/register`: Register a new user
 - **POST** `/customer/login`: User login
 - **POST** `/customer/generate-captcha`: Generate captcha
 
-### Product Routes
-- **GET** `/products`: Retrieve product list
-- **GET** `/products/search`: Search for products
-- **GET** `/products/{product}`: Retrieve product details
+### Product
+- **GET** `/products`: List products
+- **GET** `/products/search`: Search products
+- **GET** `/products/{product}`: Product details
 
-### Category Routes
-- **GET** `/product-categories`: Retrieve category list
-- **GET** `/product-categories/full`: Retrieve categories with associated products
+### Category
+- **GET** `/product-categories`: List categories
+- **GET** `/product-categories/full`: Categories with products
+
+### Order
+- **POST** `/orders`: Create order (requires authentication)
+- **POST** `/orders/payment-webhook`: Payment webhook
+
+### Address
+- **GET** `/addresses`: List user addresses (requires authentication)
+- **POST** `/addresses`: Add address (requires authentication)
+
+### Admin (requires admin/owner role)
+- **GET** `/admin/products`: Manage products
+- **GET** `/admin/product-categories`: Manage categories
+- **GET** `/admin/allowed-postcodes`: Manage delivery areas
+- **GET** `/admin/settings`: System settings
 
 ---
 
 ## Testing
 
-### Unit Tests
-Run the following command to execute unit tests:
-```bash
-php artisan test
-```
+- Tests are organized by feature module under `tests/Feature/` and `tests/Unit/`.
+- Run all tests:
+    ```bash
+    php artisan test
+    ```
 
 ---
 
 ## Contribution
 
-Contributions are welcome! Please submit a Pull Request or report issues.
+Contributions are welcome! Please submit a Pull Request or open an issue.
 
 ---
-
-## License
-
-This project is open-source and licensed under the MIT License.
