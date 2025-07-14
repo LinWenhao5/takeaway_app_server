@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Order;
+namespace App\Features\Order\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Features\Order\Services\OrderService;
+use App\Features\Order\Services\PaymentService;
 use Illuminate\Http\Request;
-use App\Services\OrderService;
-use App\Services\PaymentService;
 use Exception;
-use Mollie\Laravel\Facades\Mollie;
-use App\Models\Order;
 
 class OrderApiController extends Controller
 {

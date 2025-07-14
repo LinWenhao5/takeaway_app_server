@@ -1,10 +1,11 @@
 <?php
-namespace App\Services;
-use App\Models\Product;
-use App\Models\Order;
+namespace App\Features\Order\Services;
+
+use App\Features\Cart\Services\CartService;
+use App\Features\Product\Models\Product;
+use App\Features\Order\Models\Order;
 use Illuminate\Support\Facades\DB;
-use App\Models\Address;
-use Mollie\Laravel\Facades\Mollie;
+use App\Features\Address\Models\Address;
 use Exception;
 
 Class OrderService

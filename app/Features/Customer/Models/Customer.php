@@ -5,8 +5,8 @@ namespace App\Features\Customer\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Address;
-use App\Models\Order;
+use App\Features\Order\Models\Order;
+use App\Features\Address\Models\Address;
 
 class Customer extends Authenticatable
 {

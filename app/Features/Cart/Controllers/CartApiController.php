@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Cart;
+namespace App\Features\Cart\Controllers;
 
-use App\Services\CartService;
+use App\Features\Cart\Services\CartService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Exception;

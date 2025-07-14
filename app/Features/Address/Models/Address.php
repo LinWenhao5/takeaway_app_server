@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Features\Address\Models;
+use App\Features\Customer\Models\Customer;
+use App\Features\Order\Models\Order;
 
 use Illuminate\Database\Eloquent\Model;
 

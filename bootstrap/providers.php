@@ -8,5 +8,6 @@ return [
     App\Features\Auth\Providers\AuthServiceProvider::class,
     App\Features\ProductCategory\Providers\ProductCategoryServiceProvider::class,
     App\Features\Media\Providers\MediaServiceProvider::class,
-    App\Features\User\Providers\UserServiceProvider::class
+    App\Features\User\Providers\UserServiceProvider::class,
+    App\Features\Address\Providers\AddressServiceProvider::class
 ];

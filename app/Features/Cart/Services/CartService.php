@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Features\Cart\Services;
 
 use Illuminate\Support\Facades\Redis;
 use App\Features\Product\Models\Product;

@@ -1,12 +1,11 @@
 <?php
-namespace App\Http\Controllers\Address;
+namespace App\Features\Address\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\AllowedPostcode;
+use App\Features\Address\Models\AllowedPostcode;
 use Illuminate\Validation\ValidationException;
 use Exception;
-use App\Models\Address;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AddressApiController extends Controller

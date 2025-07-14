@@ -1,8 +1,8 @@
 <?php
-namespace App\Services;
+namespace App\Features\Order\Services;
 
 use Mollie\Laravel\Facades\Mollie;
-use App\Models\Order;
+use App\Features\Order\Models\Order;
 use InvalidArgumentException;
 
 class PaymentService

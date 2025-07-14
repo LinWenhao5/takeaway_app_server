@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Address;
+namespace App\Features\Address\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\AllowedPostcode;
+use App\Features\Address\Models\AllowedPostcode;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -12,12 +12,12 @@ class AllowedPostcodeAdminController extends Controller
     public function index()
     {
         $postcodes = AllowedPostcode::orderBy('postcode_pattern', 'asc')->get();
-        return view('admin.allowed_postcodes.index', compact('postcodes'));
+        return view('allowed_postcodes::index', compact('postcodes'));
     }
 
     public function create()
     {
-        return view('admin.allowed_postcodes.create');
+        return view('allowed_postcodes::create');
     }
 
     public function store(Request $request)
@@ -38,7 +38,7 @@ class AllowedPostcodeAdminController extends Controller
 
     public function edit(AllowedPostcode $allowedPostcode)
     {
-        return view('admin.allowed_postcodes.edit', compact('allowedPostcode'));
+        return view('allowed_postcodes::edit', compact('allowedPostcode'));
     }
 
     public function update(Request $request, AllowedPostcode $allowedPostcode)

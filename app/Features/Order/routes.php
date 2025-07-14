@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\Order\OrderApiController;
+use App\Features\Order\Controllers\OrderApiController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:api'])->prefix('orders')->group(function () {
