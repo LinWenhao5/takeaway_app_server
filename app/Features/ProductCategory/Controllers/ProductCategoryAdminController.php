@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\ProductCategory;
+namespace App\Features\ProductCategory\Controllers;
 
-use App\Models\ProductCategory;
+use App\Features\ProductCategory\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Media;
-use App\Models\Product;
+use App\Features\Product\Models\Product;
 
 class ProductCategoryAdminController extends Controller
 {
@@ -16,7 +16,7 @@ class ProductCategoryAdminController extends Controller
         try {
             $categories = ProductCategory::orderBy('sort_order')->get();
             $products = Product::all();
-            return view('admin.categories.index', compact('categories', 'products'));
+            return view('productCategory::index', compact('categories', 'products'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load categories: ' . $e->getMessage()]);
         }
@@ -26,7 +26,7 @@ class ProductCategoryAdminController extends Controller
     {
         $category = ProductCategory::findOrFail($id);
         $media = Media::all();
-        return view('admin.categories.edit', compact('category', 'media'));
+        return view('productCategory::edit', compact('category', 'media'));
     }
 
 

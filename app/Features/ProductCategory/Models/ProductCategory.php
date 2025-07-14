@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Features\ProductCategory\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Features\Product\Models\Product;
+use App\Models\Media;
 
 class ProductCategory extends Model
 {

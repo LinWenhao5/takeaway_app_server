@@ -3,7 +3,7 @@ namespace App\Features\Product\Controllers;
 
 use App\Features\Product\Models\Product;
 use App\Models\Media;
-use App\Models\ProductCategory;
+use App\Features\ProductCategory\Models\ProductCategory;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 

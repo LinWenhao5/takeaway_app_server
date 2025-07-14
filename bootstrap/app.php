@@ -27,11 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
         ]);
     })
-    ->withProviders([
-        App\Providers\RouteServiceProvider::class,
-        App\Features\Product\Providers\ProductServiceProvider::class,
-        App\Features\Auth\Providers\AuthServiceProvider::class,
-    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

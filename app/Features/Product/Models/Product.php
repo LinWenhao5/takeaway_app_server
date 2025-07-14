@@ -5,7 +5,7 @@ namespace App\Features\Product\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Media;
-use App\Models\ProductCategory;
+use App\Features\ProductCategory\Models\ProductCategory;
 
 class Product extends Model
 {

@@ -1,8 +1,8 @@
 <?php
-namespace App\Http\Controllers\ProductCategory;
+namespace App\Features\ProductCategory\Controllers;
 
-use App\Models\ProductCategory;
-use App\Models\Product;
+use App\Features\ProductCategory\Models\ProductCategory;
+use App\Features\Product\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

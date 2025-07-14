@@ -1,7 +1,6 @@
 <?php
 // Public APIs
 require __DIR__.'/api/products.php';
-require __DIR__.'/api/product_categories.php';
 require __DIR__.'/api/customer.php';
 
 // Authenticated APIs

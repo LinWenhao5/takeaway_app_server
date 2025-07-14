@@ -1,7 +1,7 @@
 <?php
-namespace App\Http\Controllers\ProductCategory;
+namespace App\Features\ProductCategory\Controllers;
 
-use App\Models\ProductCategory;
+use App\Features\ProductCategory\Models\ProductCategory;
 use App\Http\Controllers\Controller;
 
 class ProductCategoryApiController extends Controller
