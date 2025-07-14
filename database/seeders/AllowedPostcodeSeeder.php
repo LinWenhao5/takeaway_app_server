@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\AllowedPostcode;
+use App\Features\Address\Models\AllowedPostcode;  
 use Illuminate\Database\Seeder;
 
 class AllowedPostcodeSeeder extends Seeder
