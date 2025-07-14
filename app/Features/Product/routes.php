@@ -1,6 +1,6 @@
 <?php
-use App\Http\Controllers\Product\ProductAdminController;
-use App\Http\Controllers\Product\ProductAssignmentController;
+use App\Features\Product\Controllers\ProductAdminController;
+use App\Features\Product\Controllers\ProductAssignmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit'])->prefix('admin/products')->group(function () {

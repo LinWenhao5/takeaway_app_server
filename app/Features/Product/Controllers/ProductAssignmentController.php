@@ -1,7 +1,8 @@
 <?php
-namespace App\Http\Controllers\Product;
+namespace App\Features\Product\Controllers;
+
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Features\Product\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductAssignmentController extends Controller

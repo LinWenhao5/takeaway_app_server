@@ -1,7 +1,7 @@
 <?php
-namespace App\Http\Controllers\Product;
+namespace App\Features\Product\Controllers;
 
-use App\Models\Product;
+use App\Features\Product\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 

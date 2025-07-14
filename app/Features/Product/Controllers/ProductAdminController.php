@@ -1,7 +1,7 @@
 <?php
-namespace App\Http\Controllers\Product;
+namespace App\Features\Product\Controllers;
 
-use App\Models\Product;
+use App\Features\Product\Models\Product;
 use App\Models\Media;
 use App\Models\ProductCategory;
 use Illuminate\Routing\Controller;
@@ -16,7 +16,7 @@ class ProductAdminController extends Controller
     {
         try {
             $products = Product::with('media')->paginate(10);
-            return view('admin.products.index', compact('products'));
+            return view('product::index', compact('products'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load products: ' . $e->getMessage()]);
         }
@@ -29,7 +29,7 @@ class ProductAdminController extends Controller
     {
         try {
             $media = Media::all();
-            return view('admin.products.create', compact('media'));
+            return view('product::create', compact('media'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load create form: ' . $e->getMessage()]);
         }
@@ -44,7 +44,7 @@ class ProductAdminController extends Controller
             $media = Media::all();
             $categories = ProductCategory::all();
             $selectedMedia = $product->media->pluck('id')->toArray();
-            return view('admin.products.edit', compact('product', 'media', 'selectedMedia', 'categories'));
+            return view('product::edit', compact('product', 'media', 'selectedMedia', 'categories'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load edit form: ' . $e->getMessage()]);
         }
@@ -56,13 +56,11 @@ class ProductAdminController extends Controller
     public function store(Request $request)
     {
         $media = $request->input('media');
-
         if (is_string($media)) {
             $media = array_filter(explode(',', $media));
         }
-
         $request->merge(['media' => $media]);
-        
+
         $validation = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
@@ -84,7 +82,6 @@ class ProductAdminController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      */
@@ -97,18 +94,15 @@ class ProductAdminController extends Controller
         }
     }
 
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Product $product)
     {
         $media = $request->input('media');
-
         if (is_string($media)) {
             $media = array_filter(explode(',', $media));
         }
-        
         $request->merge(['media' => $media]);
 
         $validation = $request->validate([
@@ -118,6 +112,7 @@ class ProductAdminController extends Controller
             'media' => 'nullable|array',
             'media.*' => 'exists:media,id',
         ]);
+
         try {
             $product->update($validation);
 
@@ -143,5 +138,4 @@ class ProductAdminController extends Controller
             return redirect()->back()->withErrors(['error' => 'Failed to delete product: ' . $e->getMessage()]);
         }
     }
-
 }
