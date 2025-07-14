@@ -1,8 +1,10 @@
 <?php
 use App\Features\Product\Controllers\ProductAdminController;
 use App\Features\Product\Controllers\ProductAssignmentController;
+use App\Features\Product\Controllers\ProductApiController;
 use Illuminate\Support\Facades\Route;
 
+//web Routes
 Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit'])->prefix('admin/products')->group(function () {
         Route::get('/', [ProductAdminController::class, 'adminIndex'])->name('admin.products.index'); // List all products
         Route::get('/create', [ProductAdminController::class, 'adminCreate'])->name('admin.products.create'); // Create product form
@@ -11,4 +13,11 @@ Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit
         Route::put('/{product}', [ProductAdminController::class, 'update'])->name('admin.products.update'); // Update product
         Route::delete('/{product}', [ProductAdminController::class, 'destroy'])->name('admin.products.destroy'); // Delete product
         Route::post('/assign-category', [ProductAssignmentController::class, 'assignCategory'])->name('admin.products.assignCategory'); // Assign category to product
+});
+
+// API Routes
+Route::middleware(['api'])->prefix('api/products')->group(function () {
+    Route::get('/', [ProductApiController::class, 'index'])->name('api.products.index');
+    Route::get('/search', [ProductApiController::class, 'search']);
+    Route::get('/{product}', [ProductApiController::class, 'show'])->name('api.products.show');
 });
