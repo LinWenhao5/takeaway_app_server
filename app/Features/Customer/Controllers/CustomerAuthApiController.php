@@ -1,7 +1,7 @@
 <?php
-namespace App\Http\Controllers\Customer;
+namespace App\Features\Customer\Controllers;
 
-use App\Models\Customer;
+use App\Features\Customer\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;

@@ -1,6 +1,4 @@
 <?php
-// Public APIs
-require __DIR__.'/api/customer.php';
 
 // Authenticated APIs
 require __DIR__.'/api/cart.php';

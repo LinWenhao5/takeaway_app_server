@@ -5,7 +5,7 @@ namespace App\Features\User\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\RegistrationInvitation;
+use App\Features\User\Models\RegistrationInvitation;
 use App\Features\User\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationInvitationMail;

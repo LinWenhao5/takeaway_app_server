@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Redis;
-use App\Models\Product;
+use App\Features\Product\Models\Product;
 
 class CartService
 {

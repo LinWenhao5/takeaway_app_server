@@ -2,7 +2,7 @@
 namespace App\Features\User\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\RegistrationInvitation;
+use App\Features\User\Models\RegistrationInvitation;    
 use App\Features\User\Models\User;
 use Illuminate\Http\Request;
 

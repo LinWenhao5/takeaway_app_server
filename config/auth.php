@@ -67,9 +67,9 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Features\User\Models\User::class),
         ],
-        'customers' => [ // 新增
+        'customers' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_CUSTOMER_MODEL', App\Models\Customer::class),
+            'model' => env('AUTH_CUSTOMER_MODEL', App\Features\Customer\Models\Customer::class),
         ],
         // 'users' => [
         //     'driver' => 'database',
