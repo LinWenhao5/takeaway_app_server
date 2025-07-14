@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Features\Media\Controllers;
 
-use App\Models\Media;
+use App\Features\Media\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 
 class MediaController extends Controller
 {
@@ -21,7 +22,7 @@ class MediaController extends Controller
     public function showMediaLibrary()
     {
         $media = Media::all();
-        return view('admin.media', compact('media'));
+        return view('media::index', compact('media'));
     }
 
     public function upload(Request $request)

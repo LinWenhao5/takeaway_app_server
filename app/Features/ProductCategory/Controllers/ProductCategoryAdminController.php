@@ -5,7 +5,7 @@ namespace App\Features\ProductCategory\Controllers;
 use App\Features\ProductCategory\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\Media;
+use App\Features\Media\Models\Media;
 use App\Features\Product\Models\Product;
 
 class ProductCategoryAdminController extends Controller

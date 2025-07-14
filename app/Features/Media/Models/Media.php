@@ -1,8 +1,9 @@
 <?php
-namespace App\Models;
+namespace App\Features\Media\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Features\Product\Models\Product;
 
 
 class Media extends Model

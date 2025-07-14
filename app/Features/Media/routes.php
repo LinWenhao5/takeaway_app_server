@@ -1,7 +1,6 @@
 <?php
-
-use App\Http\Controllers\MediaController;
 use Illuminate\Support\Facades\Route;
+use App\Features\Media\Controllers\MediaController;
 
 Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit'])->prefix('admin/media')->group(function () {
     Route::get('/library', [MediaController::class, 'showMediaLibrary'])->name('admin.media.library'); // Show media library

@@ -5,7 +5,6 @@ use App\Http\Controllers\WelcomeController;
 require __DIR__.'/web/settings.php';
 
 // Admin Routes
-require __DIR__.'/web/admin/media.php';
 require __DIR__.'/web/admin/allowed_postcodes.php';
 
 // Owner Routes

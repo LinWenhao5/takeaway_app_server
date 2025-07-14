@@ -6,5 +6,6 @@ return [
     App\Providers\RouteServiceProvider::class,
     App\Features\Product\Providers\ProductServiceProvider::class,
     App\Features\Auth\Providers\AuthServiceProvider::class,
-    App\Features\ProductCategory\Providers\ProductCategoryServiceProvider::class
+    App\Features\ProductCategory\Providers\ProductCategoryServiceProvider::class,
+    App\Features\Media\Providers\MediaServiceProvider::class
 ];
