@@ -8,7 +8,7 @@ Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit
     Route::resource('allowed-postcodes', AllowedPostcodeAdminController::class);
 });
 
-Route::middleware(['api', 'auth:api'])->prefix('api/addresses')->group(function () {
+Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])->prefix('api/addresses')->group(function () {
     Route::post('/', [AddressApiController::class, 'store']);
     Route::get('/', [AddressApiController::class, 'getAddresses']);
     Route::put('/{id}', [AddressApiController::class, 'update']);

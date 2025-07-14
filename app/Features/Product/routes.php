@@ -16,7 +16,7 @@ Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit
 });
 
 // API Routes
-Route::middleware(['api'])->prefix('api/products')->group(function () {
+Route::middleware(['api', 'throttle:custom_limit'])->prefix('api/products')->group(function () {
     Route::get('/', [ProductApiController::class, 'index'])->name('api.products.index');
     Route::get('/search', [ProductApiController::class, 'search']);
     Route::get('/{product}', [ProductApiController::class, 'show'])->name('api.products.show');

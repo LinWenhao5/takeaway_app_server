@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Features\Auth\Controllers\AuthController;
-use App\Http\Controllers\User\RegistrationInvitationController;
+use App\Features\User\Controllers\RegistrationInvitationController;
 
 Route::middleware('web', 'throttle:custom_limit')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

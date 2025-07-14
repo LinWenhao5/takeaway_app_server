@@ -18,7 +18,7 @@ Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit
 });
 
 // API Routes
-Route::middleware(['api'])->prefix('api/product-categories')->group(function () {
+Route::middleware(['api', 'throttle:custom_limit'])->prefix('api/product-categories')->group(function () {
     Route::get('/', [ProductCategoryApiController::class, 'index'])->name('api.product-categories.index');
     Route::get('/full', [ProductCategoryApiController::class, 'categoriesWithProducts'])->name('api.product-categories.full');
 });
