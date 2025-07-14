@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
+use App\Features\Auth\Controllers\AuthController;
 use App\Http\Controllers\User\RegistrationInvitationController;
 
 Route::middleware('web', 'throttle:custom_limit')->group(function () {

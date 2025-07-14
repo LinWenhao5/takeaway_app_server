@@ -3,7 +3,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\RegistrationInvitation;
-use App\Models\User;
+use App\Features\Auth\Models\User;
 use Illuminate\Http\Request;
 
 class UserAdminController extends Controller

@@ -2,7 +2,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WelcomeController;
 
-require __DIR__.'/web/auth.php';
 require __DIR__.'/web/settings.php';
 
 // Admin Routes

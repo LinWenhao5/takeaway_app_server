@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\RegistrationInvitation;
-use App\Models\User;
+use App\Features\Auth\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationInvitationMail;
 
@@ -61,7 +61,7 @@ class RegistrationInvitationController extends Controller
             abort(403, 'Invalid or expired invitation link.');
         }
 
-        return view('auth.register', ['email' => $invitation->email]);
+        return view('auth::register', ['email' => $invitation->email]);
     }
 
 
