@@ -6,6 +6,7 @@ use App\Features\Product\Models\Product;
 use App\Features\Order\Models\Order;
 use Illuminate\Support\Facades\DB;
 use App\Features\Address\Models\Address;
+use App\Features\Order\Enums\OrderStatus;
 use Exception;
 
 Class OrderService
@@ -49,7 +50,7 @@ Class OrderService
 
             $order = Order::create([
                 'customer_id' => $customerId,
-                'status' => 'pending',
+                'status' => OrderStatus::Unpaid,
                 'total_price' => $totalPrice,
                 'address_id' => $address->id,
                 'address_snapshot' => $addressSnapshot,

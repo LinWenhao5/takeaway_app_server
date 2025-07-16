@@ -11,4 +11,5 @@ return [
     App\Features\User\Providers\UserServiceProvider::class,
     App\Features\Address\Providers\AddressServiceProvider::class,
     App\Features\Setting\Providers\SettingServiceProvider::class,
+    App\Features\Order\Providers\OrderServiceProvider::class,
 ];

@@ -1,4 +1,4 @@
-<div id="navbar" class="navbar navbar-expand-lg bg-primary navbar-dark d-none d-lg-flex">
+<div id="navbar" class="navbar navbar-expand-lg bg-primary navbar-dark d-none d-lg-flex fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="{{ route('admin.products.index') }}">@lang('navigation.admin_panel')</a>
 
@@ -76,6 +76,28 @@
                             <li>
                                 <a href="{{ route('admin.allowed-postcodes.index') }}" class="dropdown-item {{ request()->routeIs('admin.allowed-postcodes.*') ? 'active' : '' }}">
                                     @lang('navigation.allowed_postcodes')
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+                @endcanany
+
+                @canany(['manage_orders'])
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="orderDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-receipt"></i> @lang('navigation.order_management')
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="orderDropdown">
+                        @can('manage_orders')
+                            <li>
+                                <a href="{{ route('admin.orders.index') }}" class="dropdown-item {{ request()->routeIs('admin.orders.index') ? 'active' : '' }}">
+                                    @lang('navigation.orders')
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.orders.history') }}" class="dropdown-item {{ request()->routeIs('admin.orders.history') ? 'active' : '' }}">
+                                    @lang('navigation.order_history')
                                 </a>
                             </li>
                         @endcan

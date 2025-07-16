@@ -15,7 +15,7 @@
         <x-sidebar />
 
 
-        <nav class="navbar navbar-expand-lg bg-primary navbar-dark d-lg-none shadow-sm">
+        <nav class="navbar navbar-expand-lg bg-primary navbar-dark d-lg-none shadow-sm fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand text-white" href="{{ route('admin.products.index') }}">
                     <i class="bi bi-house-door-fill me-2"></i> @lang('navigation.admin_panel')
@@ -31,11 +31,11 @@
             </div>
         </nav>
 
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <main class="py-4">
-                        <div class="container">
+        <div class="container-fluid px-0" style="height: 100vh;">
+            <div class="d-flex flex-row h-100" style="padding-top: 60px;">
+                <div class="flex-grow-1">
+                    <main class="py-4 h-100">
+                        <div class="container h-100">
                             @yield('breadcrumb')
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show mx-auto" role="alert">
@@ -58,6 +58,11 @@
                         </div>
                     </main>
                 </div>
+                @hasSection('right-sidebar')
+                    <div class="d-none d-lg-block bg-body-tertiary p-3" style="width:260px;min-width:200px;max-width:320px;height:100%;">
+                        @yield('right-sidebar')
+                    </div>
+                @endif
             </div>
         </div>
     </div>

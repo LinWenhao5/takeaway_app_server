@@ -4,6 +4,7 @@ namespace App\Features\Order\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Features\Order\Enums\OrderStatus;
 use App\Features\Customer\Models\Customer;
 use App\Features\Product\Models\Product;
 use App\Features\Address\Models\Address;
@@ -23,7 +24,9 @@ class Order extends Model
 
     protected $casts = [
         'address_snapshot' => 'array',
+        'status' => OrderStatus::class,
     ];
+    
 
     public function customer()
     {

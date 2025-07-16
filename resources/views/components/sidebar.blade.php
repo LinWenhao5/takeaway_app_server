@@ -42,8 +42,16 @@
                 </a>
             </li>
             @endcan
+
+            @can('manage_orders')
+            <li>
+                <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                    <i class="bi bi-receipt me-2"></i> @lang('navigation.orders')
+                </a>
+            </li>
+            @endcan
             
-            @can('view_horizon')
+            @can('manage_shops')
             <li>
                 <a href="{{ route('admin.allowed-postcodes.index') }}" class="nav-link {{ request()->routeIs('admin.allowed-postcodes.*') ? 'active' : '' }}">
                     <i class="bi bi-geo-alt-fill me-2"></i> @lang('navigation.allowed_postcodes')
@@ -58,8 +66,6 @@
             </li>
             
             
-            
-
             @can('view_horizon')
             <li>
                 <a href="{{ url('/horizon') }}" class="nav-link {{ request()->is('horizon*') ? 'active' : '' }}">
