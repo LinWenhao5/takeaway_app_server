@@ -41,4 +41,11 @@ return [
     'order_history' => 'Order History',
     'action' => 'Action',
     'no_order_history' => 'No order history.',
+    'ws_connected' => 'Order notification connected',
+    'ws_disconnected' => 'Order notification disconnected',
+    'ws_error' => 'Order notification connection error',
+    'new_order_title' => 'New Order!',
+    'refresh_order_list' => 'Refresh Order List',
+    'order_number' => 'Order #',
+    'enable_new_order_audio' => 'Enable new order notification sound',
 ];

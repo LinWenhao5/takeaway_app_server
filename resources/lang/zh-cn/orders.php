@@ -41,4 +41,11 @@ return [
     'order_history' => '订单历史',
     'action' => '操作',
     'no_order_history' => '暂无订单历史',
+    'ws_connected' => '订单通知已连接',
+    'ws_disconnected' => '订单通知已断开',
+    'ws_error' => '订单通知连接异常',
+    'new_order_title' => '新订单！',
+    'refresh_order_list' => '刷新订单列表',
+    'order_number' => '订单号',
+    'enable_new_order_audio' => '启用新订单提示音',
 ];

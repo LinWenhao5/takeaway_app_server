@@ -68,7 +68,7 @@ class OrderAdminController extends Controller
         $order->status = $request->status;
         $order->save();
 
-        return redirect()->back()->with('success', 'Order status updated.');
+        return redirect()->back()->with('success', __('messages.update_success'));
     }
 
 
@@ -80,6 +80,6 @@ class OrderAdminController extends Controller
         $order = Order::findOrFail($id);
         $order->delete();
 
-        return redirect()->route('admin.orders.index')->with('success', 'Order deleted.');
+        return redirect()->route('admin.orders.index')->with('success', __('messages.delete_success'));
     }
 }

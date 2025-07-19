@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Features\Order\Services\OrderService;
 use App\Features\Order\Services\PaymentService;
 use Illuminate\Http\Request;
+use App\Features\Order\Events\OrderCreated;
 use Exception;
 
 class OrderApiController extends Controller

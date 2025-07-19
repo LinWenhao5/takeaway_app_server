@@ -9,6 +9,10 @@
             <span class="badge bg-{{ $badgeColors[$order->status->value] ?? 'secondary' }} ms-2">
                 @lang('orders.' . $order->status->value)
             </span>
+            <span class="text-muted ms-3" style="font-size:0.95em;">
+                <i class="bi bi-clock me-1"></i>
+                {{ $order->created_at->format('H:i') }}
+            </span>
         </span>
         <div class="dropdown">
             <button class="btn btn-sm btn-outline-secondary border-0" type="button" id="dropdownMenuButton{{ $order->id }}" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,8 +56,14 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="mb-2"><strong>@lang('orders.customer'):</strong> {{ $order->customer->name ?? '-' }}</div>
-        <div class="mb-2"><strong>@lang('orders.phone'):</strong> {{ $order->address_snapshot['phone'] ?? '-' }}</div>
+        <div class="mb-2">
+            <strong>@lang('orders.customer'):</strong>
+            {{ $order->customer->name ?? '-' }}
+            <span class="ms-2 text-muted">
+                <i class="bi bi-telephone me-1"></i>
+                {{ $order->address_snapshot['phone'] ?? '-' }}
+            </span>
+        </div>
         <div class="mb-2">
             <strong>@lang('orders.address'):</strong>
             {{ $order->address_snapshot['street'] ?? '-' }}
@@ -63,7 +73,6 @@
             {{ $order->address_snapshot['country'] ?? '' }}
         </div>
         <div class="mb-2"><strong>@lang('orders.total'):</strong> €{{ number_format($order->total_price, 2) }}</div>
-        <div class="mb-2"><strong>@lang('orders.created'):</strong> {{ $order->created_at->format('H:i') }}</div>
 
         @if(isset($showProducts) && $showProducts)
             <button class="btn btn-link btn-sm px-0" type="button"
