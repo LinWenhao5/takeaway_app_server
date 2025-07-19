@@ -24,8 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Log::info('BROADCAST_DRIVER on boot:', ['driver' => config('broadcasting.default')]);
-        
         Paginator::useBootstrapFive();
 
         RateLimiter::for('custom_limit', function (Request $request) {

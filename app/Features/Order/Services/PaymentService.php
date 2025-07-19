@@ -56,7 +56,7 @@ class PaymentService
             if ($order && $payment->isPaid() && $order->status !== OrderStatus::Paid) {
                 $order->status = OrderStatus::Paid;
                 $order->save();
-                event(new OrderCreated($order));
+                event(new OrderCreated($order->toArray()));
             }
         }
     }

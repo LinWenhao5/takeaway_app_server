@@ -2,11 +2,9 @@
 
 namespace App\Features\Order\Events;
 
-use App\Features\Order\Models\Order;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
+
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -20,9 +18,9 @@ class OrderCreated implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(Order $order)
+    public function __construct(array $orderData)
     {
-        $this->order = $order;
+        $this->order = $orderData;
     }
 
     /**
