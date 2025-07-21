@@ -68,4 +68,18 @@ Class OrderService
             return $order;
         });
     }
+
+    public function getOrderById($orderId, $customerId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            throw new Exception('Order not found');
+        }
+
+        if ($order->customer_id !== $customerId) {
+            throw new Exception('No permission to view this order');
+        }
+
+        return $order;
+    }
 }

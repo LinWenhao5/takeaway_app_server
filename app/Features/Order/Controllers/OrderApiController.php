@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Features\Order\Services\OrderService;
 use App\Features\Order\Services\PaymentService;
 use Illuminate\Http\Request;
-use App\Features\Order\Events\OrderCreated;
 use Exception;
 
 class OrderApiController extends Controller
@@ -94,6 +93,60 @@ class OrderApiController extends Controller
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
+        }
+    }
+
+
+    /**
+     * Get order status by ID.
+     *
+     * @OA\Get(
+     *     path="/api/orders/{orderId}/status",
+     *     summary="Get order status by ID",
+     *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="orderId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID of the order"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Order status retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="order_id", type="integer", example=123),
+     *             @OA\Property(property="status", type="string", example="paid")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Order not found")
+     *         )
+     *     ),
+     * )
+     */
+    public function getOrderStatus($orderId)
+    {
+        try {
+            $customerId = $this->getAuthenticatedCustomer()->id;
+            $order = $this->orderService->getOrderById($orderId, $customerId);
+            if (!$order) {
+                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id,
+                'status' => $order->status,
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
     }
 

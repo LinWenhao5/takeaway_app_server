@@ -3,14 +3,19 @@ use App\Features\Order\Controllers\OrderApiController;
 use App\Features\Order\Controllers\OrderAdminController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['api', 'throttle:custom_limit'])->prefix('api/orders')->group(function () {
-    Route::post('/', [OrderApiController::class, 'createOrder'])
-        ->middleware('auth:api')
-        ->name('api.orders.create');
+Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])
+    ->prefix('api/orders')
+    ->group(function () {
+        Route::post('/', [OrderApiController::class, 'createOrder'])
+            ->name('api.orders.create');
 
-    Route::post('/payment-webhook', [OrderApiController::class, 'paymentWebhook'])
-        ->name('orders.payment.webhook');
-});
+        Route::get('/{order}/status', [OrderApiController::class, 'getOrderStatus'])
+            ->name('api.orders.status');
+
+        Route::post('/payment-webhook', [OrderApiController::class, 'paymentWebhook'])
+            ->withoutMiddleware('auth:api')
+            ->name('api.payment.webhook');
+    });
 
 
 Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit'])
