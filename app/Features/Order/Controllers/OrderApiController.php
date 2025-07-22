@@ -152,19 +152,39 @@ class OrderApiController extends Controller
 
 
     /**
-     * Get all orders for the authenticated customer.
+     * Get all orders for the authenticated customer (with pagination).
      *
      * @OA\Get(
      *     path="/api/orders",
-     *     summary="Get all orders for the authenticated customer",
+     *     summary="Get all orders for the authenticated customer (paginated)",
      *     tags={"Orders"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         required=false,
+     *         description="Page number for pagination",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         required=false,
+     *         description="Number of orders per page",
+     *         @OA\Schema(type="integer", example=10)
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Orders retrieved successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="orders", type="array", @OA\Items(type="object"))
+     *             @OA\Property(property="orders", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="last_page", type="integer", example=5),
+     *                 @OA\Property(property="per_page", type="integer", example=10),
+     *                 @OA\Property(property="total", type="integer", example=50)
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -179,17 +199,14 @@ class OrderApiController extends Controller
      */
     public function getOrdersByCustomerId()
     {
-        try {
-            $customerId = $this->getAuthenticatedCustomer()->id;
-            $orders = $this->orderService->getOrdersByCustomerId($customerId);
+        $customerId = $this->getAuthenticatedCustomer()->id;
+        $perPage = request()->input('per_page', 10);
+        $orders = $this->orderService->getOrdersByCustomerId($customerId, $perPage);
 
-            return response()->json([
-                'success' => true,
-                'orders' => $orders,
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
-        }
+        return response()->json([
+            'success' => true,
+            'orders' => $orders,
+        ]);
     }
 
 

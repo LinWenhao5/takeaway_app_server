@@ -83,11 +83,11 @@ Class OrderService
         return $order;
     }
 
-    public function getOrdersByCustomerId($customerId)
+    public function getOrdersByCustomerId($customerId, $perPage = 10)
     {
         return Order::with(['products'])
             ->where('customer_id', $customerId)
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate($perPage);
     }
 }
