@@ -82,4 +82,12 @@ Class OrderService
 
         return $order;
     }
+
+    public function getOrdersByCustomerId($customerId)
+    {
+        return Order::with(['products'])
+            ->where('customer_id', $customerId)
+            ->orderByDesc('created_at')
+            ->get();
+    }
 }

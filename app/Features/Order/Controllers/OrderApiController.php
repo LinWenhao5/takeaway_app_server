@@ -151,6 +151,48 @@ class OrderApiController extends Controller
     }
 
 
+    /**
+     * Get all orders for the authenticated customer.
+     *
+     * @OA\Get(
+     *     path="/api/orders",
+     *     summary="Get all orders for the authenticated customer",
+     *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Orders retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="orders", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error message")
+     *         )
+     *     )
+     * )
+     */
+    public function getOrdersByCustomerId()
+    {
+        try {
+            $customerId = $this->getAuthenticatedCustomer()->id;
+            $orders = $this->orderService->getOrdersByCustomerId($customerId);
+
+            return response()->json([
+                'success' => true,
+                'orders' => $orders,
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+
     public function paymentWebhook(Request $request)
     {
         try {

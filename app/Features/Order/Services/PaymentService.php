@@ -5,6 +5,7 @@ use Mollie\Laravel\Facades\Mollie;
 use App\Features\Order\Models\Order;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Events\OrderCreated;
+use App\Features\Order\Events\OrderStatusChanged;
 use InvalidArgumentException;
 
 class PaymentService
@@ -28,8 +29,8 @@ class PaymentService
             ],
             "description" => "Order #{$order->id}",
             "redirectUrl" => $redirectUrl,
-            "webhookUrl" => route('api.payment.webhook'),
-            // "webhookUrl" => " https://2f601399874d.ngrok-free.app/api/orders/payment-webhook",
+            // "webhookUrl" => route('api.payment.webhook'),
+            "webhookUrl" => " https://2f601399874d.ngrok-free.app/api/orders/payment-webhook",
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
                 "order_id" => $order->id,

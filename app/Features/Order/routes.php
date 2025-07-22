@@ -12,6 +12,9 @@ Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])
         Route::get('/{order}/status', [OrderApiController::class, 'getOrderStatus'])
             ->name('api.orders.status');
 
+        Route::get('/', [OrderApiController::class, 'getOrdersByCustomerId'])
+            ->name('api.orders.list');
+
         Route::post('/payment-webhook', [OrderApiController::class, 'paymentWebhook'])
             ->withoutMiddleware('auth:api')
             ->name('api.payment.webhook');

@@ -13,6 +13,7 @@ const wsStatusBtn = document.getElementById('ws-status');
 const ws = new WebSocket(@json(config('websocket.url')));
 
 ws.onopen = () => {
+    ws.send(JSON.stringify({ type: 'subscribe', channel: 'orders' }));
     if (wsStatusDot) wsStatusDot.className = 'rounded-circle bg-success';
     if (wsStatusText) wsStatusText.textContent = wsStatusConnected;
     if (wsStatusText) wsStatusText.className = 'small text-success';
