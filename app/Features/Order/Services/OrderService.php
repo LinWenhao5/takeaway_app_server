@@ -69,9 +69,16 @@ Class OrderService
         });
     }
 
-    public function getOrderById($orderId, $customerId)
+    public function getOrderById($orderId, $customerId, $detail = false)
     {
-        $order = Order::find($orderId);
+        $query = Order::query();
+
+        if ($detail) {
+            $query->with(['products']);
+        }
+
+        $order = $query->find($orderId);
+
         if (!$order) {
             throw new Exception('Order not found');
         }

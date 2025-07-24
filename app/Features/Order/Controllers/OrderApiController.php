@@ -210,6 +210,58 @@ class OrderApiController extends Controller
     }
 
 
+    /**
+     * Get order details by ID.
+     *
+     * @OA\Get(
+     *     path="/api/orders/{orderId}",
+     *     summary="Get order details by ID",
+     *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="orderId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID of the order"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Order details retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="order", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Order not found")
+     *         )
+     *     )
+     * )
+     */
+    public function getOrderDetail($orderId)
+    {
+        try {
+            $customerId = $this->getAuthenticatedCustomer()->id;
+            $order = $this->orderService->getOrderById($orderId, $customerId, detail: true);
+            if (!$order) {
+                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'order' => $order,
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+
     public function paymentWebhook(Request $request)
     {
         try {
