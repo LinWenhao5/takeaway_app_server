@@ -6,21 +6,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])
     ->prefix('api/orders')
     ->group(function () {
-        Route::post('/', [OrderApiController::class, 'createOrder'])
-            ->name('api.orders.create');
-
-        Route::get('/{order}/status', [OrderApiController::class, 'getOrderStatus'])
-            ->name('api.orders.status');
-
-        Route::get('/{order}', [OrderApiController::class, 'getOrderDetail'])
-            ->name('api.orders.show');
-
-        Route::get('/', [OrderApiController::class, 'getOrdersByCustomerId'])
-            ->name('api.orders.list');
-
-        Route::post('/payment-webhook', [OrderApiController::class, 'paymentWebhook'])
-            ->withoutMiddleware('auth:api')
-            ->name('api.payment.webhook');
+        Route::post('/', [OrderApiController::class, 'createOrder'])->name('api.orders.create');
+        Route::post('/{order}/repay', [OrderApiController::class, 'repayOrder'])->name('api.orders.repay');
+        Route::get('/{order}/status', [OrderApiController::class, 'getOrderStatus'])->name('api.orders.status');
+        Route::get('/{order}', [OrderApiController::class, 'getOrderDetail'])->name('api.orders.show');
+        Route::get('/', [OrderApiController::class, 'getOrdersByCustomerId'])->name('api.orders.list');
     });
 
 

@@ -1298,6 +1298,78 @@
                 ]
             }
         },
+        "/api/orders/{orderId}/repay": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Repay an unpaid order and get a new payment URL",
+                "description": "Repay an unpaid order and get a new payment URL.",
+                "operationId": "e173b1ee52be777c41a52d93cddd2477",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "ID of the order",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment URL generated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "order_id": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "payment_url": {
+                                            "type": "string",
+                                            "example": "https://www.mollie.com/paymentscreen/example"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order already paid or not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/orders/{orderId}/status": {
             "get": {
                 "tags": [

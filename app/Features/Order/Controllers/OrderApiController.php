@@ -4,9 +4,10 @@ namespace App\Features\Order\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Features\Order\Services\OrderService;
-use App\Features\Order\Services\PaymentService;
+use App\Features\Payment\Services\PaymentService;
 use Illuminate\Http\Request;
 use Exception;
+use App\Features\Order\Enums\OrderStatus;
 
 class OrderApiController extends Controller
 {
@@ -89,6 +90,79 @@ class OrderApiController extends Controller
             ]);
         } catch (Exception $e) {
             // Return error message
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Repay an unpaid order and get a new payment URL.
+     *
+     * @OA\Post(
+     *     path="/api/orders/{orderId}/repay",
+     *     summary="Repay an unpaid order and get a new payment URL",
+     *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="orderId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID of the order"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment URL generated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="order_id", type="integer", example=123),
+     *             @OA\Property(property="payment_url", type="string", example="https://www.mollie.com/paymentscreen/example")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Order already paid or not found")
+     *         )
+     *     )
+     * )
+     */
+    public function repayOrder(Request $request, $orderId)
+    {
+        try {
+            $customerId = $this->getAuthenticatedCustomer()->id;
+            $order = $this->orderService->getOrderById($orderId, $customerId, detail: true);
+
+            if (!$order) {
+                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+            }
+
+            $isUnpaid = false;
+            if ($order->status instanceof OrderStatus) {
+                $isUnpaid = $order->status === OrderStatus::Unpaid;
+            } else {
+                $isUnpaid = $order->status === OrderStatus::Unpaid->value;
+            }
+
+            if (!$isUnpaid) {
+                return response()->json(['success' => false, 'message' => 'Order already paid or cannot be repaid'], 400);
+            }
+
+            $platform = $request->input('platform');
+            $host = $request->input('host');
+
+            $paymentUrl = $this->paymentService->createPayment($order, $platform, $host);
+
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id,
+                'payment_url' => $paymentUrl,
+            ]);
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -258,18 +332,6 @@ class OrderApiController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
-        }
-    }
-
-
-    public function paymentWebhook(Request $request)
-    {
-        try {
-            $paymentId = $request->id;
-            $this->paymentService->handleWebhook($paymentId);
-            return response()->json(['status' => 'ok']);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 }

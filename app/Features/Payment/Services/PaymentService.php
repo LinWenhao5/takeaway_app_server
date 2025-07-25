@@ -1,18 +1,17 @@
 <?php
-namespace App\Features\Order\Services;
+namespace App\Features\Payment\Services;
 
 use Mollie\Laravel\Facades\Mollie;
 use App\Features\Order\Models\Order;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Events\OrderCreated;
-use App\Features\Order\Events\OrderStatusChanged;
 use InvalidArgumentException;
 
 class PaymentService
 {
     public function createPayment(
         Order $order, 
-        string $platform = 'app', 
+        ?string $platform = 'app', 
         ?string $host = 'https://takeaway-app-zen-sushi.web.app'
     )
     {
@@ -29,8 +28,8 @@ class PaymentService
             ],
             "description" => "Order #{$order->id}",
             "redirectUrl" => $redirectUrl,
-            "webhookUrl" => route('api.payment.webhook'),
-            // "webhookUrl" => " https://2f601399874d.ngrok-free.app/api/orders/payment-webhook",
+            // "webhookUrl" => route('api.payment.webhook'),
+            "webhookUrl" => "https://29b1bd9da48c.ngrok-free.app/api/payments/webhook",
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
                 "order_id" => $order->id,
