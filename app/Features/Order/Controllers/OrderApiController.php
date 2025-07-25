@@ -8,6 +8,7 @@ use App\Features\Payment\Services\PaymentService;
 use Illuminate\Http\Request;
 use Exception;
 use App\Features\Order\Enums\OrderStatus;
+use App\Features\Order\Enums\OrderType;
 
 class OrderApiController extends Controller
 {
@@ -31,12 +32,30 @@ class OrderApiController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"address_id"},
+     *             required={"order_type"},
+     *             @OA\Property(
+     *                 property="order_type",
+     *                 type="string",
+     *                 enum={"delivery", "pickup"},
+     *                 description="Order type: delivery or pickup"
+     *             ),
      *             @OA\Property(
      *                 property="address_id",
      *                 type="integer",
      *                 example=1,
-     *                 description="ID of the address to use for this order"
+     *                 description="Required if order_type is delivery. Address ID for delivery orders"
+     *             ),
+     *             @OA\Property(
+     *                 property="platform",
+     *                 type="string",
+     *                 example="web",
+     *                 description="Platform (optional)"
+     *             ),
+     *             @OA\Property(
+     *                 property="host",
+     *                 type="string",
+     *                 example="example.com",
+     *                 description="Request host (optional)"
      *             )
      *         )
      *     ),
@@ -61,35 +80,29 @@ class OrderApiController extends Controller
      */
     public function createOrder(Request $request)
     {
-        // Get the authenticated customer's ID
         $customerId = $this->getAuthenticatedCustomer()->id;
 
-        // Validate the request
         $validated = $request->validate([
-            'address_id' => 'required|integer|exists:addresses,id',
+            'order_type' => 'required|string|in:delivery,pickup',
+            'address_id' => 'required_if:order_type,delivery|integer|exists:addresses,id',
         ]);
 
-        $addressId = $validated['address_id'];
+        $orderType = OrderType::from($validated['order_type']);
+        $addressId = $orderType === OrderType::DELIVERY ? $validated['address_id'] : null;
 
         try {
-            // 1. Create the order
-            $order = $this->orderService->createOrder($customerId, $addressId);
+            $order = $this->orderService->createOrder($customerId, $addressId, $orderType);
 
-            // 2. Get platform and host parameters to pass to PaymentService
             $platform = $request->input('platform');
             $host = $request->input('host');
-
-            // 3. Create payment and get payment URL via PaymentService
             $paymentUrl = $this->paymentService->createPayment($order, $platform, $host);
 
-            // Return order ID and payment URL
             return response()->json([
                 'success' => true,
                 'order_id' => $order->id,
                 'payment_url' => $paymentUrl,
             ]);
         } catch (Exception $e) {
-            // Return error message
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

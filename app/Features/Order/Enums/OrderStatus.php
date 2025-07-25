@@ -6,5 +6,6 @@ enum OrderStatus: string
     case Unpaid = 'unpaid';
     case Paid = 'paid';
     case Delivering = 'delivering';
+    case WaitingPickup = 'waiting_pickup';
     case Completed = 'completed';
 }

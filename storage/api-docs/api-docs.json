@@ -1231,13 +1231,31 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "address_id"
+                                    "order_type"
                                 ],
                                 "properties": {
+                                    "order_type": {
+                                        "description": "Order type: delivery or pickup",
+                                        "type": "string",
+                                        "enum": [
+                                            "delivery",
+                                            "pickup"
+                                        ]
+                                    },
                                     "address_id": {
-                                        "description": "ID of the address to use for this order",
+                                        "description": "Required if order_type is delivery. Address ID for delivery orders",
                                         "type": "integer",
                                         "example": 1
+                                    },
+                                    "platform": {
+                                        "description": "Platform (optional)",
+                                        "type": "string",
+                                        "example": "web"
+                                    },
+                                    "host": {
+                                        "description": "Request host (optional)",
+                                        "type": "string",
+                                        "example": "example.com"
                                     }
                                 },
                                 "type": "object"

@@ -5,6 +5,7 @@ namespace App\Features\Order\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Features\Order\Enums\OrderStatus;
+use App\Features\Order\Enums\OrderType;
 use App\Features\Customer\Models\Customer;
 use App\Features\Product\Models\Product;
 use App\Features\Address\Models\Address;
@@ -20,11 +21,14 @@ class Order extends Model
         'total_price',
         'address_id',
         'address_snapshot',
+        'order_type',
     ];
 
     protected $casts = [
         'address_snapshot' => 'array',
         'status' => OrderStatus::class,
+        'order_type' => OrderType::class,
+        
     ];
     
 
