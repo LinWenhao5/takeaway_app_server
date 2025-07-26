@@ -37,7 +37,7 @@
                 <form method="POST" action="{{ route('admin.orders.updateStatus', $order) }}">
                     @csrf
                     <input type="hidden" name="status" value="{{ $nextStatus }}">
-                    <button type="submit" class="dropdown-item text-white">
+                    <button type="submit" class="dropdown-item">
                         <i class="bi {{ $icon }} me-1"></i>
                         @lang('orders.mark_as') @lang('orders.' . $nextStatus)
                     </button>
