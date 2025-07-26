@@ -14,6 +14,8 @@ return [
     'waiting_pickup' => 'Waiting for Pickup',
     'delivering' => 'Delivering',
     'completed' => 'Completed',
+    'all_status' => 'All Statuses',
+    'change_status' => 'Change Status',
     'order_count' => 'orders',
     'no_orders' => 'No orders',
     'order' => 'Order',

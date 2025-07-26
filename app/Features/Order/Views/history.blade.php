@@ -15,7 +15,7 @@
 <div class="container">
     <h2 class="mb-4">@lang('orders.order_history')</h2>
     @php
-        $badgeColors = config('order_status.badge_colors');
+        $badgeStyles = config('order_status.badge_styles');
     @endphp
     <x-table>
         <x-slot:head>
@@ -24,6 +24,7 @@
                 <th>@lang('orders.customer')</th>
                 <th>@lang('orders.phone')</th>
                 <th>@lang('orders.address')</th>
+                <th>@lang('orders.type')</th>
                 <th>@lang('orders.status')</th>
                 <th>@lang('orders.total')</th>
                 <th>@lang('orders.created')</th>
@@ -32,6 +33,12 @@
         </x-slot:head>
         <x-slot:body>
             @forelse($historyOrders as $order)
+                @php
+                    $status = $order->status->value;
+                    $type = $order->order_type->value ?? '';
+                    $statusBadge = config('order_status.status_badge_styles')[$status] ?? ['bg' => 'secondary', 'text' => 'white'];
+                    $typeBadge = config('order_status.type_badge_styles')[$type] ?? ['bg' => 'secondary', 'text' => 'white'];
+                @endphp
                 <tr>
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->customer->name ?? '-' }}</td>
@@ -44,8 +51,13 @@
                         {{ $order->address_snapshot['country'] ?? '' }}
                     </td>
                     <td>
-                        <span class="badge bg-{{ $badgeColors[$order->status->value] ?? 'secondary' }}">
-                            @lang('orders.' . $order->status->value)
+                        <span class="badge bg-{{ $typeBadge['bg'] }} text-{{ $typeBadge['text'] }}">
+                            @lang('orders.' . strtolower($type))
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ $statusBadge['bg'] }} text-{{ $statusBadge['text'] }}">
+                            @lang('orders.' . $status)
                         </span>
                     </td>
                     <td>€{{ number_format($order->total_price, 2) }}</td>
@@ -58,7 +70,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="text-center text-muted">@lang('orders.no_order_history')</td>
+                    <td colspan="9" class="text-center text-muted">@lang('orders.no_order_history')</td>
                 </tr>
             @endforelse
         </x-slot:body>

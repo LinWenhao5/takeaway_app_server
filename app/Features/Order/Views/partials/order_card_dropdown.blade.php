@@ -12,30 +12,37 @@
             $type = $order->order_type->value;
             $status = $order->status->value;
             $allStates = $allStatuses ?? [];
-            // 定义每种类型允许的状态
+            // 定义每种类型允许的状态顺序
             $typeStates = [
                 'pickup' => ['paid', 'waiting_pickup', 'completed'],
                 'delivery' => ['paid', 'delivering', 'completed'],
             ];
             $allowedStates = $typeStates[$type] ?? [];
+            $currentIndex = array_search($status, $allowedStates);
+            $nextStatus = $allowedStates[$currentIndex + 1] ?? null;
         @endphp
 
         {{-- 状态切换（非未支付时） --}}
-        @if($status !== 'unpaid')
-            @foreach($allStates as $s)
-                @if($s !== $status && $s !== 'unpaid' && in_array($s, $allowedStates))
-                    <li>
-                        <form method="POST" action="{{ route('admin.orders.updateStatus', $order) }}">
-                            @csrf
-                            <input type="hidden" name="status" value="{{ $s }}">
-                            <button type="submit" class="dropdown-item">
-                                <i class="bi bi-arrow-repeat me-1"></i>
-                                @lang('orders.mark_as') @lang('orders.' . $s)
-                            </button>
-                        </form>
-                    </li>
-                @endif
-            @endforeach
+        @if($status !== 'unpaid' && $nextStatus)
+            @php
+                $stateIcons = [
+                    'paid' => 'bi-cash-coin',
+                    'waiting_pickup' => 'bi-clock',
+                    'delivering' => 'bi-truck',
+                    'completed' => 'bi-check-circle',
+                ];
+                $icon = $stateIcons[$nextStatus] ?? 'bi-arrow-repeat';
+            @endphp
+            <li>
+                <form method="POST" action="{{ route('admin.orders.updateStatus', $order) }}">
+                    @csrf
+                    <input type="hidden" name="status" value="{{ $nextStatus }}">
+                    <button type="submit" class="dropdown-item text-white">
+                        <i class="bi {{ $icon }} me-1"></i>
+                        @lang('orders.mark_as') @lang('orders.' . $nextStatus)
+                    </button>
+                </form>
+            </li>
         @endif
 
         {{-- 删除按钮（仅未支付时） --}}

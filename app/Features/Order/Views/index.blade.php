@@ -25,17 +25,6 @@
         </button>
     </div>
 
-    <form method="GET" class="mb-4 d-flex gap-4 align-items-center" id="filterForm">
-        <div class="form-check form-switch">
-            <input type="hidden" name="hide_unpaid" value="0">
-            <input class="form-check-input" type="checkbox" name="hide_unpaid" id="hide_unpaid"
-                   value="1" {{ $hideUnpaid ? 'checked' : '' }} onchange="this.form.submit()">
-            <label class="form-check-label" for="hide_unpaid">
-                @lang('orders.hide_unpaid_orders')
-            </label>
-        </div>
-    </form>
-
     <h2 class="mb-4 d-flex align-items-center">
         @lang('orders.todays_orders')
         <a href="{{ route('admin.orders.history') }}" class="btn btn-primary btn-sm ms-3">
@@ -47,39 +36,72 @@
         </button>
     </h2>
 
-    <div id="order-list">
-        <div class="d-flex flex-column flex-md-row gap-4">
+    <form method="GET" id="statusFilterForm" class="mb-4">
+        <input type="hidden" name="statuses_submitted" value="1">
+        <div class="btn-group flex-wrap" role="group" aria-label="Status filter">
             @foreach($statuses as $status)
-                <div class="flex-grow-1 d-flex flex-column w-100" style="max-width:400px; min-width:0; height:80vh;">
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="badge bg-{{ $statusMeta[$status]['color'] }} me-2" style="font-size:1rem;">
-                            <i class="bi {{ $statusMeta[$status]['icon'] }} me-1"></i>
-                            {{ $statusMeta[$status]['label'] }}
-                        </span>
-                        <span class="text-muted small">
-                            ({{ $todayOrders->where('status', $status)->count() }} @lang('orders.order_count'))
-                        </span>
-                    </div>
-                    <div class="d-flex flex-column gap-3 pb-2 flex-grow-1 bg-body-tertiary p-3 rounded" style="min-height:0; overflow-y:auto;">
-                        @forelse($todayOrders->where('status', $status) as $order)
-                            <div>
-                                @include('order::partials.order_card', [
-                                    'order' => $order,
-                                    'showProducts' => true,
-                                    'allStatuses' => $statuses
-                                ])
+                <input type="checkbox"
+                       class="btn-check"
+                       name="statuses[]"
+                       id="status-{{ $status }}"
+                       value="{{ $status }}"
+                       autocomplete="off"
+                       {{ in_array($status, $selectedStatuses ?? []) ? 'checked' : '' }}
+                       onchange="document.getElementById('statusFilterForm').submit();">
+                <label class="btn btn-outline-{{ $statusMeta[$status]['color'] }} d-flex align-items-center mb-2 me-2 {{ in_array($status, $selectedStatuses ?? []) ? 'active fw-bold shadow-sm border-2' : '' }}"
+                       for="status-{{ $status }}"
+                       style="min-width: 140px;">
+                    <span class="rounded-circle d-inline-block me-2"
+                          style="width:10px;height:10px;background-color: var(--bs-{{ $statusMeta[$status]['color'] }});"></span>
+                    <i class="bi {{ $statusMeta[$status]['icon'] }} me-1"></i>
+                    <span>{{ $statusMeta[$status]['label'] }}</span>
+                    <span class="small ms-2">({{ $allTodayOrders->where('status', $status)->count() }})</span>
+                </label>
+            @endforeach
+        </div>
+    </form>
+
+    <div id="order-list">
+        @php
+            $colClass = 'col-12';
+        @endphp
+        <div class="row g-4" style="min-height:80vh;">
+            @foreach($statuses as $status)
+                @if(!empty($selectedStatuses) && in_array($status, $selectedStatuses))
+                    <div class="{{ $colClass }}">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-{{ $statusMeta[$status]['color'] }} me-2" style="font-size:1rem;">
+                                <i class="bi {{ $statusMeta[$status]['icon'] }} me-1"></i>
+                                {{ $statusMeta[$status]['label'] }}
+                            </span>
+                            <span class="small">
+                                ({{ $allTodayOrders->where('status', $status)->count() }} @lang('orders.order_count'))
+                            </span>
+                        </div>
+                        <div class="bg-body-tertiary p-3 rounded">
+                            <div class="row g-3" style="max-height: 80vh; overflow-y: auto;">
+                                @forelse($allTodayOrders->where('status', $status) as $order)
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card mb-0 h-100">
+                                            @include('order::partials.order_card', [
+                                                'order' => $order,
+                                                'showProducts' => true,
+                                                'allStatuses' => $statuses
+                                            ])
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="text-muted align-self-center">@lang('orders.no_orders')</div>
+                                @endforelse
                             </div>
-                        @empty
-                            <div class="text-muted align-self-center">@lang('orders.no_orders')</div>
-                        @endforelse
+                        </div>
                     </div>
-                </div>
+                @endif
             @endforeach
         </div>
     </div>
 </div>
 @endsection
-
 
 @push('scripts')
     @include('order::partials.order_notify')

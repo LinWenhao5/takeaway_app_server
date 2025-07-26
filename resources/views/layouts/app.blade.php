@@ -37,23 +37,27 @@
                     <main class="py-4 h-100">
                         <div class="container h-100">
                             @yield('breadcrumb')
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show mx-auto" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            @endif
 
-                            @if ($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show mx-auto" role="alert">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            @endif
+                            <div style="position: fixed; bottom: 24px; right: 24px; z-index: 1080; min-width: 320px; max-width: 90vw;">
+                                @if (session('success'))
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="auto-dismiss-success">
+                                        {{ session('success') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
+
+                                @if ($errors->any())
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="auto-dismiss-error">
+                                        <ul class="mb-0">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
+                            </div>
+
                             @yield('content')
                         </div>
                     </main>
@@ -66,6 +70,22 @@
             </div>
         </div>
     </div>
+    @stack('scripts')
+    @push('scripts')
+    <script>
+        setTimeout(function() {
+            var success = document.getElementById('auto-dismiss-success');
+            if(success) {
+                success.classList.remove('show');
+            }
+            var error = document.getElementById('auto-dismiss-error');
+            if(error) {
+                error.classList.remove('show');
+            }
+        }, 3500);
+    </script>
+    @endpush
+
     @stack('scripts')
 </body>
 </html>

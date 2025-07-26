@@ -13,10 +13,17 @@ class OrderAdminController extends Controller
      */
     public function index(Request $request)
     {
-        $hideUnpaid = $request->get('hide_unpaid', 1) == 1;
-
         $allStatuses = collect(OrderStatus::cases())->map(fn($s) => $s->value)->toArray();
-        $statuses = $hideUnpaid ? array_diff($allStatuses, ['unpaid']) : $allStatuses;
+
+        $isSubmitted = $request->has('statuses_submitted');
+
+        if ($isSubmitted) {
+            $selectedStatuses = (array) $request->get('statuses', []);
+        } else {
+            $selectedStatuses = ['paid', 'waiting_pickup', 'delivering', 'completed'];
+        }
+        $statuses = $allStatuses;
+
         $statusMeta = [
             'unpaid' => ['label' => __('orders.unpaid'), 'color' => 'secondary', 'icon' => 'bi-hourglass'],
             'paid' => ['label' => __('orders.paid'), 'color' => 'success', 'icon' => 'bi-currency-euro'],
@@ -25,17 +32,13 @@ class OrderAdminController extends Controller
             'completed' => ['label' => __('orders.completed'), 'color' => 'primary', 'icon' => 'bi-check-circle'],
         ];
 
-        $todayOrdersQuery = Order::with(['customer'])
-            ->whereDate('created_at', now()->toDateString());
-
-        if ($hideUnpaid) {
-            $todayOrdersQuery->where('status', '!=', 'unpaid');
-        }
-
-        $todayOrders = $todayOrdersQuery->orderByDesc('created_at')->get();
+        $allTodayOrders = Order::with(['customer'])
+            ->whereDate('created_at', now()->toDateString())
+            ->orderByDesc('created_at')
+            ->get();
 
         return view('order::index', compact(
-            'hideUnpaid', 'statuses', 'statusMeta', 'todayOrders'
+            'statuses', 'statusMeta', 'allTodayOrders', 'selectedStatuses'
         ));
     }
 

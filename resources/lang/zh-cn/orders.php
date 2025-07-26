@@ -13,6 +13,8 @@ return [
     'waiting_pickup' => '等待取货',
     'delivering' => '配送中',
     'completed' => '已完成',
+    'all_status' => '所有状态',
+    'change_status' => '更改状态',
     'order_count' => '单',
     'no_orders' => '暂无订单',
     'order' => '订单',
