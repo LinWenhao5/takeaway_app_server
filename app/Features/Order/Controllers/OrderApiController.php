@@ -9,16 +9,19 @@ use Illuminate\Http\Request;
 use Exception;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
+use App\Features\Order\Services\OrderQueryService;
 
 class OrderApiController extends Controller
 {
     protected $orderService;
     protected $paymentService;
+    protected $orderQueryService;
 
-    public function __construct(OrderService $orderService, PaymentService $paymentService)
+    public function __construct(OrderService $orderService, PaymentService $paymentService, OrderQueryService $orderQueryService)
     {
         $this->orderService = $orderService;
         $this->paymentService = $paymentService;
+        $this->orderQueryService = $orderQueryService;
     }
 
     /**
@@ -148,7 +151,7 @@ class OrderApiController extends Controller
     {
         try {
             $customerId = $this->getAuthenticatedCustomer()->id;
-            $order = $this->orderService->getOrderById($orderId, $customerId, detail: true);
+            $order = $this->orderQueryService->getOrderById($orderId, $customerId, detail: true);
 
             if (!$order) {
                 return response()->json(['success' => false, 'message' => 'Order not found'], 404);
@@ -222,7 +225,7 @@ class OrderApiController extends Controller
     {
         try {
             $customerId = $this->getAuthenticatedCustomer()->id;
-            $order = $this->orderService->getOrderById($orderId, $customerId);
+            $order = $this->orderQueryService->getOrderById($orderId, $customerId);
             if (!$order) {
                 return response()->json(['success' => false, 'message' => 'Order not found'], 404);
             }
@@ -288,7 +291,7 @@ class OrderApiController extends Controller
     {
         $customerId = $this->getAuthenticatedCustomer()->id;
         $perPage = request()->input('per_page', 10);
-        $orders = $this->orderService->getOrdersByCustomerId($customerId, $perPage);
+        $orders = $this->orderQueryService->getOrdersByCustomerId($customerId, $perPage);
 
         return response()->json([
             'success' => true,
@@ -334,7 +337,7 @@ class OrderApiController extends Controller
     {
         try {
             $customerId = $this->getAuthenticatedCustomer()->id;
-            $order = $this->orderService->getOrderById($orderId, $customerId, detail: true);
+            $order = $this->orderQueryService->getOrderById($orderId, $customerId, detail: true);
             if (!$order) {
                 return response()->json(['success' => false, 'message' => 'Order not found'], 404);
             }

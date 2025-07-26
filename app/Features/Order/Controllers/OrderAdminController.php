@@ -20,6 +20,7 @@ class OrderAdminController extends Controller
         $statusMeta = [
             'unpaid' => ['label' => __('orders.unpaid'), 'color' => 'secondary', 'icon' => 'bi-hourglass'],
             'paid' => ['label' => __('orders.paid'), 'color' => 'success', 'icon' => 'bi-currency-euro'],
+            "waiting_pickup" => ['label' => __('orders.waiting_pickup'), 'color' => 'warning', 'icon' => 'bi-clock'],
             'delivering' => ['label' => __('orders.delivering'), 'color' => 'info', 'icon' => 'bi-truck'],
             'completed' => ['label' => __('orders.completed'), 'color' => 'primary', 'icon' => 'bi-check-circle'],
         ];
