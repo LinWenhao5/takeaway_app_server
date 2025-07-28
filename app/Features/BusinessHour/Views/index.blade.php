@@ -42,31 +42,41 @@
             <tr>
                 <td>{{ $weekdays[$hour->weekday] }}</td>
                 <td>
-                    <input type="time"
-                           name="open_time"
-                           value="{{ substr($hour->open_time, 0, 5) }}"
-                           class="form-control {{ $hour->is_closed ? 'bg-body-tertiary' : '' }}"
-                           {{ $hour->is_closed ? 'readonly' : '' }}
-                           form="form-{{ $hour->id }}">
-                </td>
-                <td>
-                    <input type="time"
-                           name="close_time"
-                           value="{{ substr($hour->close_time, 0, 5) }}"
-                           class="form-control {{ $hour->is_closed ? 'bg-body-tertiary' : '' }}"
-                           {{ $hour->is_closed ? 'readonly' : '' }}
-                           form="form-{{ $hour->id }}">
-                </td>
-                <td class="text-center">
-                    <input type="hidden" name="is_closed" value="0" form="form-{{ $hour->id }}">
-                    <input type="checkbox" name="is_closed" value="1" {{ $hour->is_closed ? 'checked' : '' }} onchange="document.getElementById('form-{{ $hour->id }}').submit();" form="form-{{ $hour->id }}">
-                </td>
-                <td>
-                    <form method="POST" action="{{ route('admin.business-hours.update', $hour->id) }}" id="form-{{ $hour->id }}">
+                    <form method="POST" action="{{ route('admin.business-hours.update-time', $hour->id) }}" id="form-time-{{ $hour->id }}" class="d-inline">
                         @csrf
                         @method('PUT')
-                        <button type="submit" class="btn btn-primary btn-sm">{{ __('business_hours.save') }}</button>
+                        <input type="time"
+                               name="open_time"
+                               value="{{ substr($hour->open_time, 0, 5) }}"
+                               class="form-control {{ $hour->is_closed ? 'bg-body-tertiary' : '' }}"
+                               {{ $hour->is_closed ? 'disabled' : '' }}
+                               style="width: 120px; display: inline-block;"
+                               {{ $hour->is_closed ? 'tabindex=-1' : '' }}>
+                </td>
+                <td>
+                        <input type="time"
+                               name="close_time"
+                               value="{{ substr($hour->close_time, 0, 5) }}"
+                               class="form-control {{ $hour->is_closed ? 'bg-body-tertiary' : '' }}"
+                               {{ $hour->is_closed ? 'disabled' : '' }}
+                               style="width: 120px; display: inline-block;"
+                               {{ $hour->is_closed ? 'tabindex=-1' : '' }}>
+                </td>
+                <td class="text-center">
                     </form>
+                    <form method="POST" action="{{ route('admin.business-hours.update-closed', $hour->id) }}" id="form-closed-{{ $hour->id }}" class="d-inline">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="is_closed" value="0">
+                        <input type="checkbox" name="is_closed" value="1"
+                            {{ $hour->is_closed ? 'checked' : '' }}
+                            onchange="this.form.submit();">
+                    </form>
+                </td>
+                <td>
+                    <button type="submit" form="form-time-{{ $hour->id }}" class="btn btn-primary btn-sm" {{ $hour->is_closed ? 'disabled' : '' }}>
+                        {{ __('business_hours.save') }}
+                    </button>
                 </td>
             </tr>
             @endforeach

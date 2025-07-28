@@ -31,4 +31,33 @@ class BusinessHourAdminController extends Controller
 
         return redirect()->back()->with('success', __('messages.update_success'));
     }
+    public function updateTime(Request $request, $id)
+    {
+        $request->validate([
+            'open_time' => 'required|date_format:H:i',
+            'close_time' => 'required|date_format:H:i',
+        ]);
+
+        $hour = BusinessHour::findOrFail($id);
+        $hour->update([
+            'open_time' => substr($request->input('open_time'), 0, 5),
+            'close_time' => substr($request->input('close_time'), 0, 5),
+        ]);
+
+        return redirect()->back()->with('success', __('messages.update_success'));
+    }
+
+    public function updateClosed(Request $request, $id)
+    {
+        $request->validate([
+            'is_closed' => 'required|boolean',
+        ]);
+
+        $hour = BusinessHour::findOrFail($id);
+        $hour->update([
+            'is_closed' => $request->boolean('is_closed'),
+        ]);
+
+        return redirect()->back()->with('success', __('messages.update_success'));
+    }
 }
