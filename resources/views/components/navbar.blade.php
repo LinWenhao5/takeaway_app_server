@@ -78,6 +78,11 @@
                                     @lang('navigation.allowed_postcodes')
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('admin.business-hours.index') }}" class="dropdown-item {{ request()->routeIs('admin.business-hours.*') ? 'active' : '' }}">
+                                    @lang('navigation.business_hours')
+                                </a>
+                            </li>
                         @endcan
                     </ul>
                 </li>

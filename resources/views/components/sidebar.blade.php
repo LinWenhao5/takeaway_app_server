@@ -57,6 +57,11 @@
                     <i class="bi bi-geo-alt-fill me-2"></i> @lang('navigation.allowed_postcodes')
                 </a>
             </li>
+            <li>
+                <a href="{{ route('admin.business-hours.index') }}" class="nav-link {{ request()->routeIs('admin.business-hours.*') ? 'active' : '' }}">
+                    <i class="bi bi-clock me-2"></i> @lang('navigation.business_hours')
+                </a>
+            </li>
             @endcan
 
             <li>

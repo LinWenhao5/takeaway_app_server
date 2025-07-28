@@ -12,6 +12,7 @@ return [
     'users' => '用户列表',
     'invite_user' => '邀请用户',
     'shop_management' => '店铺管理',
+    'business_hours' => '营业时间管理',
     'allowed_postcodes' => '配送范围管理',
     'order_management' => '订单管理',
     'orders' => '订单列表',

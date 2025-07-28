@@ -13,6 +13,7 @@ return [
     'invite_user' => 'Invite User',
     'shop_management' => 'Shop Management',
     'allowed_postcodes' => 'Allowed Postcodes',
+    'business_hours' => 'Business Hours',
     'order_management' => 'Order Management',
     'orders' => 'Orders',
     'order_history' => 'Order History',

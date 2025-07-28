@@ -12,4 +12,5 @@ return [
     App\Features\Address\Providers\AddressServiceProvider::class,
     App\Features\Setting\Providers\SettingServiceProvider::class,
     App\Features\Order\Providers\OrderServiceProvider::class,
+    App\Features\BusinessHour\Providers\BusinessHourServiceProvider::class,
 ];
