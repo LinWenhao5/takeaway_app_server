@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', __('business_hours.business_hours_management'))
+
 @section('breadcrumb')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-3">
@@ -43,7 +45,7 @@
                     <input type="time"
                            name="open_time"
                            value="{{ substr($hour->open_time, 0, 5) }}"
-                           class="form-control {{ $hour->is_closed ? 'bg-light' : '' }}"
+                           class="form-control {{ $hour->is_closed ? 'bg-body-tertiary' : '' }}"
                            {{ $hour->is_closed ? 'readonly' : '' }}
                            form="form-{{ $hour->id }}">
                 </td>
@@ -51,7 +53,7 @@
                     <input type="time"
                            name="close_time"
                            value="{{ substr($hour->close_time, 0, 5) }}"
-                           class="form-control {{ $hour->is_closed ? 'bg-light' : '' }}"
+                           class="form-control {{ $hour->is_closed ? 'bg-body-tertiary' : '' }}"
                            {{ $hour->is_closed ? 'readonly' : '' }}
                            form="form-{{ $hour->id }}">
                 </td>
