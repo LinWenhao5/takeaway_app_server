@@ -22,6 +22,7 @@ class Order extends Model
         'address_id',
         'address_snapshot',
         'order_type',
+        'reserve_time',
     ];
 
     protected $casts = [

@@ -35,7 +35,7 @@ class OrderApiController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"order_type"},
+     *             required={"order_type", "reserve_time"},
      *             @OA\Property(
      *                 property="order_type",
      *                 type="string",
@@ -47,6 +47,12 @@ class OrderApiController extends Controller
      *                 type="integer",
      *                 example=1,
      *                 description="Required if order_type is delivery. Address ID for delivery orders"
+     *             ),
+     *             @OA\Property(
+     *                 property="reserve_time",
+     *                 type="string",
+     *                 example="18:30",
+     *                 description="Reserve time for delivery or pickup"
      *             ),
      *             @OA\Property(
      *                 property="platform",
@@ -88,13 +94,15 @@ class OrderApiController extends Controller
         $validated = $request->validate([
             'order_type' => 'required|string|in:delivery,pickup',
             'address_id' => 'required_if:order_type,delivery|integer|exists:addresses,id',
+            'reserve_time' => 'required|string',
         ]);
 
         $orderType = OrderType::from($validated['order_type']);
         $addressId = $orderType === OrderType::DELIVERY ? $validated['address_id'] : null;
+        $reserveTime = $validated['reserve_time'];
 
         try {
-            $order = $this->orderService->createOrder($customerId, $addressId, $orderType);
+            $order = $this->orderService->createOrder($customerId, $addressId, $orderType, $reserveTime);
 
             $platform = $request->input('platform');
             $host = $request->input('host');

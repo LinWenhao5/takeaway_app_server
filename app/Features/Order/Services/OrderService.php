@@ -8,23 +8,31 @@ use Illuminate\Support\Facades\DB;
 use App\Features\Address\Models\Address;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
+use App\Features\BusinessHour\Services\BusinessHourService;
 use Exception;
 
 Class OrderService
 {
     protected $cartService;
+    protected $businessHourService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, BusinessHourService $businessHourService)
     {
         $this->cartService = $cartService;
+        $this->businessHourService = $businessHourService;
     }
 
-    public function createOrder($customerId, $addressId, OrderType $orderType)
+    public function createOrder($customerId, $addressId, OrderType $orderType, string $reserveTime)
     {
+        $availableTimes = $this->businessHourService->getAvailableTimes($orderType->value);
+        if (!in_array($reserveTime, $availableTimes)) {
+            throw new Exception('Selected time is not available');
+        }
+
         if ($orderType === OrderType::DELIVERY) {
-            return $this->createDeliveryOrder($customerId, $addressId);
+            return $this->createDeliveryOrder($customerId, $addressId, $reserveTime);
         } elseif ($orderType === OrderType::PICKUP) {
-            return $this->createPickupOrder($customerId);
+            return $this->createPickupOrder($customerId, $reserveTime);
         } else {
             throw new Exception('Invalid order type');
         }
@@ -64,9 +72,9 @@ Class OrderService
         return [$cart, $products, $totalPrice];
     }
 
-    private function createDeliveryOrder($customerId, $addressId)
+    private function createDeliveryOrder($customerId, $addressId, $reserveTime)
     {
-        return DB::transaction(function () use ($customerId, $addressId) {
+        return DB::transaction(function () use ($customerId, $addressId, $reserveTime) {
             [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($customerId);
 
             $address = Address::findOrFail($addressId);
@@ -79,6 +87,7 @@ Class OrderService
                 'address_id' => $address?->id,
                 'address_snapshot' => $addressSnapshot,
                 'order_type' => OrderType::DELIVERY,
+                'reserve_time' => $reserveTime,
             ]);
 
             foreach ($cart as $productId => $quantity) {
@@ -94,9 +103,9 @@ Class OrderService
         });
     }
 
-    private function createPickupOrder($customerId)
+    private function createPickupOrder($customerId, $reserveTime)
     {
-        return DB::transaction(function () use ($customerId) {
+        return DB::transaction(function () use ($customerId, $reserveTime) {
             [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($customerId);
 
             $order = Order::create([
@@ -106,6 +115,7 @@ Class OrderService
                 'address_id' => null,
                 'address_snapshot' => null,
                 'order_type' => OrderType::PICKUP,
+                'reserve_time' => $reserveTime,
             ]);
 
             foreach ($cart as $productId => $quantity) {
