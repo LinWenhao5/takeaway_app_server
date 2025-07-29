@@ -445,6 +445,77 @@
                 ]
             }
         },
+        "/api/business-hours/available-times": {
+            "get": {
+                "tags": [
+                    "BusinessHour"
+                ],
+                "summary": "Get available booking time slots for today",
+                "operationId": "64f2e6050329be893aec00038cf8b1c8",
+                "parameters": [
+                    {
+                        "name": "order_type",
+                        "in": "query",
+                        "description": "Order type: 'delivery' for delivery (45 min interval), 'pickup' for self-pickup (30 min interval)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "delivery",
+                            "enum": [
+                                "delivery",
+                                "pickup"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with available time slots",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "times": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "10:00"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get available time slots",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to get available time slots."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Some error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/cart": {
             "get": {
                 "tags": [
@@ -1787,6 +1858,10 @@
         {
             "name": "Addresses",
             "description": "Addresses"
+        },
+        {
+            "name": "BusinessHour",
+            "description": "BusinessHour"
         },
         {
             "name": "Cart",
