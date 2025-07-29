@@ -2,8 +2,7 @@
 namespace App\Features\BusinessHour\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Features\BusinessHour\Models\BusinessHour;
-use Carbon\Carbon;
+use App\Features\BusinessHour\Services\BusinessHourService;
 use Illuminate\Http\Request;
 
 
@@ -48,32 +47,8 @@ class BusinessHourApiController extends Controller
     {
         try {
             $orderType = $request->input('order_type', 'delivery');
-            $advance = $orderType === 'pickup' ? 30 : 45;
-            $interval = 10;
-
-            $weekday = now()->dayOfWeek;
-            $hour = BusinessHour::where('weekday', $weekday)->first();
-
-            if (!$hour || $hour->is_closed) {
-                return response()->json(['times' => []]);
-            }
-
-            $open = substr($hour->open_time, 0, 5);
-            $close = substr($hour->close_time, 0, 5);
-
-            $times = [];
-            $current = Carbon::createFromFormat('H:i', $open);
-            $end = Carbon::createFromFormat('H:i', $close);
-
-            $earliest = now()->addMinutes($advance);
-
-            while ($current < $end) {
-                $slot = $current->copy()->setDate(now()->year, now()->month, now()->day);
-                if ($slot->greaterThanOrEqualTo($earliest)) {
-                    $times[] = $current->format('H:i');
-                }
-                $current->addMinutes($interval);
-            }
+            $service = new BusinessHourService();
+            $times = $service->getAvailableTimes($orderType);
 
             return response()->json([
                 'success' => true,
