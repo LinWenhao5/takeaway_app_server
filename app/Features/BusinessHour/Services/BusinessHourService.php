@@ -6,12 +6,12 @@ use Carbon\Carbon;
 
 class BusinessHourService
 {
-    public function getAvailableTimes(string $orderType = 'delivery'): array
+    public function getAvailableTimesForDate(string $orderType, Carbon $date): array
     {
         $advance = $orderType === 'pickup' ? 30 : 45;
         $interval = 10;
 
-        $weekday = now()->dayOfWeek;
+        $weekday = $date->dayOfWeek;
         $hour = BusinessHour::where('weekday', $weekday)->first();
 
         if (!$hour || $hour->is_closed) {
@@ -25,10 +25,10 @@ class BusinessHourService
         $current = Carbon::createFromFormat('H:i', $open);
         $end = Carbon::createFromFormat('H:i', $close);
 
-        $earliest = now()->addMinutes($advance);
+        $earliest = $date->isToday() ? now()->addMinutes($advance) : $date->copy()->setTime($current->hour, $current->minute);
 
         while ($current < $end) {
-            $slot = $current->copy()->setDate(now()->year, now()->month, now()->day);
+            $slot = $date->copy()->setTime($current->hour, $current->minute);
             if ($slot->greaterThanOrEqualTo($earliest)) {
                 $times[] = $current->format('H:i');
             }
@@ -36,5 +36,12 @@ class BusinessHourService
         }
 
         return $times;
+    }
+
+
+    public function getAvailableTimes(string $orderType = 'delivery'): array
+    {
+        $today = now();
+        return $this->getAvailableTimesForDate($orderType, $today);
     }
 }

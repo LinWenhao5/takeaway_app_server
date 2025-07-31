@@ -450,7 +450,7 @@
                 "tags": [
                     "BusinessHour"
                 ],
-                "summary": "Get available booking time slots for today",
+                "summary": "Get available booking time slots for today or a specific date",
                 "operationId": "64f2e6050329be893aec00038cf8b1c8",
                 "parameters": [
                     {
@@ -466,6 +466,16 @@
                                 "pickup"
                             ]
                         }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Date for booking, format: Y-m-d or 'tomorrow'",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "tomorrow"
+                        }
                     }
                 ],
                 "responses": {
@@ -475,11 +485,19 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "example": "2025-08-01"
+                                        },
                                         "times": {
                                             "type": "array",
                                             "items": {
                                                 "type": "string",
-                                                "example": "10:00"
+                                                "example": "2025-08-01 10:00"
                                             }
                                         }
                                     },

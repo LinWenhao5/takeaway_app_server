@@ -9,6 +9,7 @@ use App\Features\Address\Models\Address;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
 use App\Features\BusinessHour\Services\BusinessHourService;
+use Carbon\Carbon;  
 use Exception;
 
 Class OrderService
@@ -24,8 +25,11 @@ Class OrderService
 
     public function createOrder($customerId, $addressId, OrderType $orderType, string $reserveTime)
     {
-        $availableTimes = $this->businessHourService->getAvailableTimes($orderType->value);
-        if (!in_array($reserveTime, $availableTimes)) {
+        $reserveDate = Carbon::parse($reserveTime)->startOfDay();
+        $availableTimes = $this->businessHourService->getAvailableTimesForDate($orderType->value, $reserveDate);
+
+        $reserveTimeOnly = Carbon::parse($reserveTime)->format('H:i');
+        if (!in_array($reserveTimeOnly, $availableTimes)) {
             throw new Exception('Selected time is not available');
         }
 

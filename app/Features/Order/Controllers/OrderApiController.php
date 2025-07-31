@@ -94,7 +94,7 @@ class OrderApiController extends Controller
         $validated = $request->validate([
             'order_type' => 'required|string|in:delivery,pickup',
             'address_id' => 'required_if:order_type,delivery|integer|exists:addresses,id',
-            'reserve_time' => 'required|string',
+            'reserve_time' => 'required|date_format:Y-m-d H:i',
         ]);
 
         $orderType = OrderType::from($validated['order_type']);
