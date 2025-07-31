@@ -27,7 +27,7 @@ class BusinessHourService
 
         $earliest = $date->isToday() ? now()->addMinutes($advance) : $date->copy()->setTime($current->hour, $current->minute);
 
-        while ($current < $end) {
+        while ($current <= $end) {
             $slot = $date->copy()->setTime($current->hour, $current->minute);
             if ($slot->greaterThanOrEqualTo($earliest)) {
                 $times[] = $current->format('H:i');
@@ -36,12 +36,5 @@ class BusinessHourService
         }
 
         return $times;
-    }
-
-
-    public function getAvailableTimes(string $orderType = 'delivery'): array
-    {
-        $today = now();
-        return $this->getAvailableTimesForDate($orderType, $today);
     }
 }

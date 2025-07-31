@@ -12,9 +12,8 @@
             $type = $order->order_type->value;
             $status = $order->status->value;
             $allStates = $allStatuses ?? [];
-            // 定义每种类型允许的状态顺序
             $typeStates = [
-                'pickup' => ['paid', 'waiting_pickup', 'completed'],
+                'pickup' => ['paid', 'completed'],
                 'delivery' => ['paid', 'delivering', 'completed'],
             ];
             $allowedStates = $typeStates[$type] ?? [];
@@ -27,7 +26,6 @@
             @php
                 $stateIcons = [
                     'paid' => 'bi-cash-coin',
-                    'waiting_pickup' => 'bi-clock',
                     'delivering' => 'bi-truck',
                     'completed' => 'bi-check-circle',
                 ];

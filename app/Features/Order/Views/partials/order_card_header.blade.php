@@ -20,7 +20,7 @@
     </span>
     <span class="text-muted ms-3" style="font-size:0.95em;">
         <i class="bi bi-clock me-1"></i>
-        {{ $order->created_at->format('H:i') }}
+        {{ \Carbon\Carbon::parse($order->reserve_time)->format('H:i') }}
     </span>
     @include('order::partials.order_card_dropdown', ['order' => $order, 'allStatuses' => $allStatuses ?? []])
 </div>

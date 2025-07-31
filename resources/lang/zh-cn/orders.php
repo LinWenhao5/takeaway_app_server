@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'today' => '今天',
     'order_management' => '订单管理',
     'orders' => '订单',
     'hide_unpaid_orders' => '隐藏未支付订单',
@@ -10,7 +11,6 @@ return [
     'pickup' => '自取',
     'unpaid' => '未支付',
     'paid' => '已支付',
-    'waiting_pickup' => '等待取货',
     'delivering' => '配送中',
     'completed' => '已完成',
     'all_status' => '所有状态',
@@ -27,6 +27,7 @@ return [
     'address' => '地址',
     'total' => '总价',
     'created' => '创建时间',
+    'reserve_time' => '预约时间',
     'view_dishes' => '查看菜品',
     'dishes' => '菜品',
     'dish' => '菜品',

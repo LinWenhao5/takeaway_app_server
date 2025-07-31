@@ -9,10 +9,17 @@ use Carbon\Carbon;
 
 class BusinessHourApiController extends Controller
 {
+    protected BusinessHourService $service;
+
+    public function __construct(BusinessHourService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * @OA\Get(
      *     path="/api/business-hours/available-times",
-     *     summary="Get available booking time slots for today or a specific date",
+     *     summary="Get available booking time slots for today",
      *     tags={"BusinessHour"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -22,24 +29,15 @@ class BusinessHourApiController extends Controller
      *         description="Order type: 'delivery' for delivery (45 min interval), 'pickup' for self-pickup (30 min interval)",
      *         @OA\Schema(type="string", enum={"delivery", "pickup"}, default="delivery")
      *     ),
-     *     @OA\Parameter(
-     *         name="date",
-     *         in="query",
-     *         required=false,
-     *         description="Date for booking, format: Y-m-d or 'tomorrow'",
-     *         @OA\Schema(type="string", example="tomorrow")
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful response with available time slots",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="date", type="string", example="2025-08-01"),
      *             @OA\Property(
      *                 property="times",
      *                 type="array",
-     *                 @OA\Items(type="string", example="2025-08-01 10:00")
+     *                 @OA\Items(type="string", example="10:00")
      *             )
      *         )
      *     ),
@@ -55,18 +53,17 @@ class BusinessHourApiController extends Controller
      */
     public function availableTimes(Request $request)
     {
-        try {
-            $orderType = $request->input('order_type', 'delivery');
-            $date = $request->input('date');
-            $service = new BusinessHourService();
+        $validated = $request->validate([
+            'order_type' => 'nullable|in:delivery,pickup',
+            'date' => 'nullable|date_format:Y-m-d',
+        ]);
 
-            if ($date) {
-                $carbonDate = Carbon::parse($date);
-                $times = $service->getAvailableTimesForDate($orderType, $carbonDate);
-            } else {
-                $carbonDate = now();
-                $times = $service->getAvailableTimes($orderType);
-            }
+        try {
+            $orderType = $validated['order_type'];
+            $date = $validated['date'];
+
+            $carbonDate = Carbon::parse($date);
+            $times = $this->service->getAvailableTimesForDate($orderType, $carbonDate);
 
             return response()->json([
                 'success' => true,

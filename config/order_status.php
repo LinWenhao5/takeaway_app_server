@@ -3,7 +3,6 @@ return [
     'status_badge_styles' => [
         'unpaid' => ['bg' => 'secondary', 'text' => 'white'],
         'paid' => ['bg' => 'success', 'text' => 'white'],
-        'waiting_pickup' => ['bg' => 'warning', 'text' => 'dark'],
         'delivering' => ['bg' => 'info', 'text' => 'white'],
         'completed' => ['bg' => 'primary', 'text' => 'white'],
     ],

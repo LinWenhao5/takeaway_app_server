@@ -34,6 +34,11 @@
                         <span class="badge {{ $bgClass }} {{ $textClass }}">
                             @lang('orders.' . $status)
                         </span>
+                        <span class="ms-2 text-muted">
+                            <i class="bi bi-clock me-1"></i>
+                            @lang('orders.reserve_time'):
+                            {{ \Carbon\Carbon::parse($order->reserve_time)->format('Y-m-d H:i') }}
+                        </span>
                     </div>
                 </div>
                 <div class="text-md-end mt-3 mt-md-0">
@@ -128,13 +133,12 @@
             @php
                 $type = $order->order_type->value;
                 $typeStates = [
-                    'pickup' => ['paid', 'waiting_pickup', 'completed'],
+                    'pickup' => ['paid', 'completed'],
                     'delivery' => ['paid', 'delivering', 'completed'],
                 ];
                 $allowedStates = $typeStates[$type] ?? [];
                 $stateIcons = [
                     'paid' => 'bi-cash-coin',
-                    'waiting_pickup' => 'bi-clock',
                     'delivering' => 'bi-truck',
                     'completed' => 'bi-check-circle',
                 ];

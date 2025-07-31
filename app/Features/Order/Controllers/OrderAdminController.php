@@ -16,25 +16,25 @@ class OrderAdminController extends Controller
         $allStatuses = collect(OrderStatus::cases())->map(fn($s) => $s->value)->toArray();
 
         $isSubmitted = $request->has('statuses_submitted');
-
         if ($isSubmitted) {
             $selectedStatuses = (array) $request->get('statuses', []);
         } else {
-            $selectedStatuses = ['paid', 'waiting_pickup', 'delivering', 'completed'];
+            $selectedStatuses = ['paid', 'delivering', 'completed'];
         }
         $statuses = $allStatuses;
 
         $statusMeta = [
             'unpaid' => ['label' => __('orders.unpaid'), 'color' => 'secondary', 'icon' => 'bi-hourglass'],
             'paid' => ['label' => __('orders.paid'), 'color' => 'success', 'icon' => 'bi-currency-euro'],
-            "waiting_pickup" => ['label' => __('orders.waiting_pickup'), 'color' => 'warning', 'icon' => 'bi-clock'],
             'delivering' => ['label' => __('orders.delivering'), 'color' => 'info', 'icon' => 'bi-truck'],
             'completed' => ['label' => __('orders.completed'), 'color' => 'primary', 'icon' => 'bi-check-circle'],
         ];
 
+        $date = $request->get('date', now()->toDateString());
+
         $allTodayOrders = Order::with(['customer'])
-            ->whereDate('created_at', now()->toDateString())
-            ->orderByDesc('created_at')
+            ->whereDate('reserve_time', $date)
+            ->orderByDesc('reserve_time')
             ->get();
 
         return view('order::index', compact(

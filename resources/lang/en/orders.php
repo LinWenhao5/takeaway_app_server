@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'today' => 'Today',
     'order_management' => 'Order Management',
     'orders' => 'Orders',
     'hide_unpaid_orders' => 'Hide Unpaid Orders',
@@ -11,7 +12,6 @@ return [
     'pickup' => 'Pickup',
     'unpaid' => 'Unpaid',
     'paid' => 'Paid',
-    'waiting_pickup' => 'Waiting for Pickup',
     'delivering' => 'Delivering',
     'completed' => 'Completed',
     'all_status' => 'All Statuses',
@@ -28,6 +28,7 @@ return [
     'address' => 'Address',
     'total' => 'Total',
     'created' => 'Created At',
+    'reserve_time' => 'Reserve Time',
     'view_dishes' => 'View Dishes',
     'dishes' => 'Dishes',
     'dish' => 'Dish',
