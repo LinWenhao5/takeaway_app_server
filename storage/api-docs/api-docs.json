@@ -450,7 +450,7 @@
                 "tags": [
                     "BusinessHour"
                 ],
-                "summary": "Get available booking time slots for today or a specific date",
+                "summary": "Get available booking time slots for today",
                 "operationId": "64f2e6050329be893aec00038cf8b1c8",
                 "parameters": [
                     {
@@ -466,16 +466,6 @@
                                 "pickup"
                             ]
                         }
-                    },
-                    {
-                        "name": "date",
-                        "in": "query",
-                        "description": "Date for booking, format: Y-m-d or 'tomorrow'",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "tomorrow"
-                        }
                     }
                 ],
                 "responses": {
@@ -485,19 +475,11 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "date": {
-                                            "type": "string",
-                                            "example": "2025-08-01"
-                                        },
                                         "times": {
                                             "type": "array",
                                             "items": {
                                                 "type": "string",
-                                                "example": "2025-08-01 10:00"
+                                                "example": "10:00"
                                             }
                                         }
                                     },
@@ -1866,6 +1848,76 @@
                     }
                 }
             }
+        },
+        "/api/store": {
+            "get": {
+                "tags": [
+                    "Store"
+                ],
+                "summary": "Get the store information",
+                "operationId": "0bed9813c0bf2b3daab9f0b6af14a798",
+                "responses": {
+                    "200": {
+                        "description": "Store information returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "phone": {
+                                            "type": "string"
+                                        },
+                                        "street": {
+                                            "type": "string"
+                                        },
+                                        "house_number": {
+                                            "type": "string"
+                                        },
+                                        "postcode": {
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        },
+                                        "country": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No store found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1910,6 +1962,10 @@
         {
             "name": "Product Categories",
             "description": "Product Categories"
+        },
+        {
+            "name": "Store",
+            "description": "Store"
         }
     ]
 }

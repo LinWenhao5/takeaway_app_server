@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             OwnerUserSeeder::class,
             AllowedPostcodeSeeder::class,
             BusinessHourSeeder::class,
+            StoreSeeder::class,
         ]);
     }
 }
