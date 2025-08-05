@@ -10,18 +10,26 @@ use Exception;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
 use App\Features\Order\Services\OrderQueryService;
+use App\Features\BusinessHour\Services\BusinessHourService;
+use Carbon\Carbon;
 
 class OrderApiController extends Controller
 {
     protected $orderService;
     protected $paymentService;
     protected $orderQueryService;
+    protected $businessHourService;
 
-    public function __construct(OrderService $orderService, PaymentService $paymentService, OrderQueryService $orderQueryService)
-    {
+    public function __construct(
+        OrderService $orderService,
+        PaymentService $paymentService,
+        OrderQueryService $orderQueryService,
+        BusinessHourService $businessHourService
+    ) {
         $this->orderService = $orderService;
         $this->paymentService = $paymentService;
         $this->orderQueryService = $orderQueryService;
+        $this->businessHourService = $businessHourService;
     }
 
     /**
@@ -174,6 +182,16 @@ class OrderApiController extends Controller
 
             if (!$isUnpaid) {
                 return response()->json(['success' => false, 'message' => 'Order already paid or cannot be repaid'], 400);
+            }
+
+            if (isset($order->reserve_time) && isset($order->order_type)) {
+                $reserveTime = Carbon::parse($order->reserve_time);
+                $orderType = $order->order_type->value;
+                $availableTimes = $this->businessHourService->getAvailableTimesForDate($orderType, $reserveTime);
+
+                if (!in_array($reserveTime->format('H:i'), $availableTimes)) {
+                    return response()->json(['success' => false, 'message' => 'The reserved time is not available, cannot repay.'], 400);
+                }
             }
 
             $platform = $request->input('platform');
