@@ -25,11 +25,9 @@ Class OrderService
 
     public function createOrder($customerId, $addressId, OrderType $orderType, string $reserveTime)
     {
-        $reserveDate = Carbon::parse($reserveTime)->startOfDay();
-        $availableTimes = $this->businessHourService->getAvailableTimesForDate($orderType->value, $reserveDate);
+        $reserveDate = Carbon::parse($reserveTime);
 
-        $reserveTimeOnly = Carbon::parse($reserveTime)->format('H:i');
-        if (!in_array($reserveTimeOnly, $availableTimes)) {
+        if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveDate)) {
             throw new Exception('Selected time is not available');
         }
 

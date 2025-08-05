@@ -11,6 +11,7 @@ Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])
         Route::get('/{order}/status', [OrderApiController::class, 'getOrderStatus'])->name('api.orders.status');
         Route::get('/{order}', [OrderApiController::class, 'getOrderDetail'])->name('api.orders.show');
         Route::get('/', [OrderApiController::class, 'getOrdersByCustomerId'])->name('api.orders.list');
+        Route::put('/{order}/reserve-time', [OrderApiController::class, 'updateReserveTime'])->name('api.orders.updateReserveTime');
     });
 
 

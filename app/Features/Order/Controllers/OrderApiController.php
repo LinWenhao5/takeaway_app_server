@@ -173,25 +173,15 @@ class OrderApiController extends Controller
                 return response()->json(['success' => false, 'message' => 'Order not found'], 404);
             }
 
-            $isUnpaid = false;
-            if ($order->status instanceof OrderStatus) {
-                $isUnpaid = $order->status === OrderStatus::Unpaid;
-            } else {
-                $isUnpaid = $order->status === OrderStatus::Unpaid->value;
-            }
-
-            if (!$isUnpaid) {
+            if ($order->status !== OrderStatus::Unpaid) {
                 return response()->json(['success' => false, 'message' => 'Order already paid or cannot be repaid'], 400);
             }
 
-            if (isset($order->reserve_time) && isset($order->order_type)) {
-                $reserveTime = Carbon::parse($order->reserve_time);
-                $orderType = $order->order_type->value;
-                $availableTimes = $this->businessHourService->getAvailableTimesForDate($orderType, $reserveTime);
+            $reserveTime = Carbon::parse($order->reserve_time);
+            $orderType = $order->order_type;
 
-                if (!in_array($reserveTime->format('H:i'), $availableTimes)) {
-                    return response()->json(['success' => false, 'message' => 'The reserved time is not available, cannot repay.'], 400);
-                }
+            if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
+                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 400);
             }
 
             $platform = $request->input('platform');
@@ -374,6 +364,94 @@ class OrderApiController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Update reserve time for an unpaid order.
+     *
+     * @OA\Put(
+     *     path="/api/orders/{orderId}/reserve-time",
+     *     summary="Update reserve time for an unpaid order",
+     *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="orderId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID of the order"
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"reserve_time"},
+     *             @OA\Property(
+     *                 property="reserve_time",
+     *                 type="string",
+     *                 example="2025-08-05 18:30",
+     *                 description="New reserve time, format: Y-m-d H:i"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Reserve time updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="order_id", type="integer", example=123),
+     *             @OA\Property(property="reserve_time", type="string", example="2025-08-05 18:30")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Error message")
+     *         )
+     *     )
+     * )
+     */
+    public function updateReserveTime(Request $request, $orderId)
+    {
+        try {
+            $customerId = $this->getAuthenticatedCustomer()->id;
+            $order = $this->orderQueryService->getOrderById($orderId, $customerId);
+
+            if (!$order) {
+                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+            }
+
+            if ($order->status != OrderStatus::Unpaid) {
+                return response()->json(['success' => false, 'message' => 'Only unpaid orders can update reserve time'], 400);
+            }
+
+            $request->validate([
+                'reserve_time' => 'required|date_format:Y-m-d H:i',
+            ]);
+
+            $reserveTime = Carbon::parse($request->input('reserve_time'));
+
+            $orderType = $order->order_type;
+            
+            if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
+                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 400);
+            }
+
+            $order->reserve_time = $reserveTime->format('Y-m-d H:i');
+            $order->save();
+
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id,
+                'reserve_time' => $order->reserve_time,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
         }
     }
 }

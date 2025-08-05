@@ -3,12 +3,13 @@ namespace App\Features\BusinessHour\Services;
 
 use App\Features\BusinessHour\Models\BusinessHour;
 use Carbon\Carbon;
+use App\Features\Order\Enums\OrderType;
 
 class BusinessHourService
 {
-    public function getAvailableTimesForDate(string $orderType, Carbon $date): array
+    public function getAvailableTimesForDate(OrderType $orderType, Carbon $date): array
     {
-        $advance = $orderType === 'pickup' ? 30 : 45;
+        $advance = $orderType === OrderType::PICKUP ? 30 : 45;
         $interval = 10;
 
         $weekday = $date->dayOfWeek;
@@ -36,5 +37,11 @@ class BusinessHourService
         }
 
         return $times;
+    }
+
+    public function isTimeAvailableForDate(OrderType $orderType, Carbon $date): bool
+    {
+        $availableTimes = $this->getAvailableTimesForDate($orderType, $date);
+        return in_array($date->format('H:i'), $availableTimes);
     }
 }

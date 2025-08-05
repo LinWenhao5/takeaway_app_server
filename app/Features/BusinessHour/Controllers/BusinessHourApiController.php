@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Features\BusinessHour\Services\BusinessHourService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use App\Features\Order\Enums\OrderType;
 
 class BusinessHourApiController extends Controller
 {
@@ -29,11 +29,24 @@ class BusinessHourApiController extends Controller
      *         description="Order type: 'delivery' for delivery (45 min interval), 'pickup' for self-pickup (30 min interval)",
      *         @OA\Schema(type="string", enum={"delivery", "pickup"}, default="delivery")
      *     ),
+     *     @OA\Parameter(
+     *         name="date",
+     *         in="query",
+     *         required=false,
+     *         description="Date for available times, format: Y-m-d. Default is today.",
+     *         @OA\Schema(type="string", format="date", example="2025-08-05")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful response with available time slots",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(
+     *                 property="success", type="boolean", example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="date", type="string", example="2025-08-05"
+     *             ),
      *             @OA\Property(
      *                 property="times",
      *                 type="array",
@@ -59,11 +72,13 @@ class BusinessHourApiController extends Controller
         ]);
 
         try {
-            $orderType = $validated['order_type'];
-            $date = $validated['date'];
+            $orderType = $validated['order_type'] ?? 'delivery';
+            $date = $validated['date'] ?? now()->format('Y-m-d');
+
+            $orderTypeEnum = OrderType::from($orderType);
 
             $carbonDate = Carbon::parse($date);
-            $times = $this->service->getAvailableTimesForDate($orderType, $carbonDate);
+            $times = $this->service->getAvailableTimesForDate($orderTypeEnum, $carbonDate);
 
             return response()->json([
                 'success' => true,
