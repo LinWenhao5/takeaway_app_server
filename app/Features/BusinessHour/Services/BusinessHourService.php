@@ -41,6 +41,9 @@ class BusinessHourService
 
     public function isTimeAvailableForDate(OrderType $orderType, Carbon $date): bool
     {
+        if ($date->lessThan(now())) {
+            return false;
+        }
         $availableTimes = $this->getAvailableTimesForDate($orderType, $date);
         return in_array($date->format('H:i'), $availableTimes);
     }
