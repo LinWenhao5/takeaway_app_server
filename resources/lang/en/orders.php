@@ -36,6 +36,7 @@ return [
     'quantity' => 'Quantity',
     'subtotal' => 'Subtotal',
     'status' => 'Status',
+    'note' => 'Note',
     'customer_info' => 'Customer Info',
     'email' => 'Email',
     'street' => 'Street',

@@ -104,14 +104,16 @@ class OrderPaymentApiController extends Controller
             'order_type' => 'required|string|in:delivery,pickup',
             'address_id' => 'required_if:order_type,delivery|integer|exists:addresses,id',
             'reserve_time' => 'required|date_format:Y-m-d H:i',
+            'note' => 'nullable|string|max:255',
         ]);
 
         $orderType = OrderType::from($validated['order_type']);
         $addressId = $orderType === OrderType::DELIVERY ? $validated['address_id'] : null;
         $reserveTime = $validated['reserve_time'];
+        $note = $validated['note'] ?? null;
 
         try {
-            $order = $this->orderService->createOrder($customerId, $addressId, $orderType, $reserveTime);
+            $order = $this->orderService->createOrder($customerId, $addressId, $orderType, $reserveTime, $note);
 
             $platform = $request->input('platform');
             $host = $request->input('host');

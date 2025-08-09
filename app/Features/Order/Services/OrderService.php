@@ -23,7 +23,7 @@ Class OrderService
         $this->businessHourService = $businessHourService;
     }
 
-    public function createOrder($customerId, $addressId, OrderType $orderType, string $reserveTime)
+    public function createOrder($customerId, $addressId, OrderType $orderType, string $reserveTime, $note = null)
     {
         $reserveDate = Carbon::parse($reserveTime);
 
@@ -32,9 +32,9 @@ Class OrderService
         }
 
         if ($orderType === OrderType::DELIVERY) {
-            return $this->createDeliveryOrder($customerId, $addressId, $reserveTime);
+            return $this->createDeliveryOrder($customerId, $addressId, $reserveTime, $note);
         } elseif ($orderType === OrderType::PICKUP) {
-            return $this->createPickupOrder($customerId, $reserveTime);
+            return $this->createPickupOrder($customerId, $reserveTime, $note);
         } else {
             throw new Exception('Invalid order type');
         }
@@ -74,9 +74,9 @@ Class OrderService
         return [$cart, $products, $totalPrice];
     }
 
-    private function createDeliveryOrder($customerId, $addressId, $reserveTime)
+    private function createDeliveryOrder($customerId, $addressId, $reserveTime, $note = null)
     {
-        return DB::transaction(function () use ($customerId, $addressId, $reserveTime) {
+        return DB::transaction(function () use ($customerId, $addressId, $reserveTime, $note) {
             [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($customerId);
 
             $address = Address::findOrFail($addressId);
@@ -90,6 +90,7 @@ Class OrderService
                 'address_snapshot' => $addressSnapshot,
                 'order_type' => OrderType::DELIVERY,
                 'reserve_time' => $reserveTime,
+                'note' => $note,
             ]);
 
             foreach ($cart as $productId => $quantity) {
@@ -105,9 +106,9 @@ Class OrderService
         });
     }
 
-    private function createPickupOrder($customerId, $reserveTime)
+    private function createPickupOrder($customerId, $reserveTime, $note = null)
     {
-        return DB::transaction(function () use ($customerId, $reserveTime) {
+        return DB::transaction(function () use ($customerId, $reserveTime, $note) {
             [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($customerId);
 
             $order = Order::create([
@@ -118,6 +119,7 @@ Class OrderService
                 'address_snapshot' => null,
                 'order_type' => OrderType::PICKUP,
                 'reserve_time' => $reserveTime,
+                'note' => $note,
             ]);
 
             foreach ($cart as $productId => $quantity) {

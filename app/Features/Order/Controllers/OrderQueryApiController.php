@@ -9,14 +9,10 @@ use Exception;
 
 class OrderQueryApiController extends Controller
 {
-    protected $orderService;
     protected $orderQueryService;
 
-    public function __construct(
-        OrderService $orderService,
-        OrderQueryService $orderQueryService
-    ) {
-        $this->orderService = $orderService;
+    public function __construct(OrderQueryService $orderQueryService) 
+    {
         $this->orderQueryService = $orderQueryService;
     }
 

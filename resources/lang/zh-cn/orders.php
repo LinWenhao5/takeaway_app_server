@@ -35,6 +35,7 @@ return [
     'quantity' => '数量',
     'subtotal' => '小计',
     'status' => '状态',
+    'note' => '备注',
     'customer_info' => '客户信息',
     'email' => '邮箱',
     'street' => '街道',

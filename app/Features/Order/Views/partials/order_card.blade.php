@@ -4,6 +4,7 @@
         @include('order::partials.order_card_customer', ['order' => $order])
         @include('order::partials.order_card_address', ['order' => $order])
         @include('order::partials.order_card_total', ['order' => $order])
+        @include('order::partials.order_card_note', ['order' => $order])
         @include('order::partials.order_card_products', ['order' => $order, 'showProducts' => $showProducts ?? false])
     </div>
 </div>

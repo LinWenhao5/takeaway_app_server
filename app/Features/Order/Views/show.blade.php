@@ -84,6 +84,20 @@
         </div>
     </div>
 
+    @if(!empty($order->note))
+        <div class="mb-4">
+            <div class="card">
+                <div class="card-body py-2 d-flex align-items-center">
+                    <i class="bi bi-chat-left-text me-2 text-primary" style="font-size: 1.3rem;"></i>
+                    <div>
+                        <div class="fw-bold">@lang('orders.note')</div>
+                        <div>{{ $order->note }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="mb-4">
         <div class="card">
             <div class="card-body">
