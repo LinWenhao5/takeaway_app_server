@@ -1143,6 +1143,96 @@
                 }
             }
         },
+        "/api/customer/reset-password": {
+            "post": {
+                "tags": [
+                    "Customer Authentication"
+                ],
+                "summary": "Reset password with captcha",
+                "operationId": "e9c3bb16b123c75baa0ebe8daa48e44d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "Customer's email",
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "captcha": {
+                                        "description": "Captcha code sent to the email",
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password": {
+                                        "description": "New password (min 8 chars)",
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successfully!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid captcha",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid captcha."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to reset password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to reset password."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detailed error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/customer/generate-captcha": {
             "post": {
                 "tags": [
@@ -1214,7 +1304,7 @@
                 ],
                 "summary": "Get all orders for the authenticated customer (paginated)",
                 "description": "Get all orders for the authenticated customer (with pagination).",
-                "operationId": "6bbf3789d3d27e09b6172c3c446c6725",
+                "operationId": "7b1be3658ec01b201e7c9106f4b57cd1",
                 "parameters": [
                     {
                         "name": "page",
@@ -1314,7 +1404,7 @@
                 ],
                 "summary": "Create a new order and get payment URL",
                 "description": "Create a new order and return payment URL.",
-                "operationId": "1523fb9aa00e54e4cde18ca6c3b4a06d",
+                "operationId": "ba810fa4904946d560e892ea4c047502",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1419,7 +1509,7 @@
                 ],
                 "summary": "Repay an unpaid order and get a new payment URL",
                 "description": "Repay an unpaid order and get a new payment URL.",
-                "operationId": "e173b1ee52be777c41a52d93cddd2477",
+                "operationId": "67a6206b18ff1004d647862b15994917",
                 "parameters": [
                     {
                         "name": "orderId",
@@ -1491,7 +1581,7 @@
                 ],
                 "summary": "Get order status by ID",
                 "description": "Get order status by ID.",
-                "operationId": "7babbd508938732b21edb462ce44a9ce",
+                "operationId": "e97fdfa60b01f3cb38466dc29fbfcae1",
                 "parameters": [
                     {
                         "name": "orderId",
@@ -1563,7 +1653,7 @@
                 ],
                 "summary": "Get order details by ID",
                 "description": "Get order details by ID.",
-                "operationId": "988d8f91e8a15f58a52454cdc3e9cdf6",
+                "operationId": "b06fd281d8e27f965d7a7aa131ee6284",
                 "parameters": [
                     {
                         "name": "orderId",
@@ -1630,7 +1720,7 @@
                 ],
                 "summary": "Update reserve time for an unpaid order",
                 "description": "Update reserve time for an unpaid order.",
-                "operationId": "60ffa6bdcc009a95fbc77b3fe7138f45",
+                "operationId": "85690c8fe1ce2a80e8171ce5ef2e3bc1",
                 "parameters": [
                     {
                         "name": "orderId",

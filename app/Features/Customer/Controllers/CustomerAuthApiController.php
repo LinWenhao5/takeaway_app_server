@@ -165,6 +165,78 @@ class CustomerAuthApiController extends Controller
         }
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/customer/reset-password",
+     *     summary="Reset password with captcha",
+     *     tags={"Customer Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com", description="Customer's email"),
+     *             @OA\Property(property="captcha", type="string", example="123456", description="Captcha code sent to the email"),
+     *             @OA\Property(property="password", type="string", example="newpassword123", description="New password (min 8 chars)")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Password reset successfully!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid captcha",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Invalid captcha.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to reset password",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Failed to reset password."),
+     *             @OA\Property(property="error", type="string", example="Detailed error message")
+     *         )
+     *     )
+     * )
+     */
+    public function resetPassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email|exists:customers,email',
+                'captcha' => 'required|string',
+                'password' => 'required|string|min:8',
+            ]);
+
+            $cachedCaptcha = Cache::get('captcha_' . $request->email);
+
+            if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
+                return response()->json([
+                    'message' => 'Invalid captcha.',
+                ], 400);
+            }
+
+            $customer = Customer::where('email', $request->email)->first();
+            $customer->password = $request->password;
+            $customer->save();
+
+            Cache::forget('captcha_' . $request->email);
+
+            return response()->json([
+                'message' => 'Password reset successfully!',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to reset password.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     /**
      * @OA\Post(
      *     path="/api/customer/generate-captcha",
