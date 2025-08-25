@@ -29,7 +29,7 @@
             @foreach ($products as $product)
             <tr>
                 <td>{{ $product->name }}</td>
-                <td>{{ $product->description }}</td>
+                <td>{{ \Illuminate\Support\Str::limit($product->description, 60) }}</td>
                 <td>{{ $product->price }}</td>
                 <td>
                     @foreach ($product->media->take(2) as $media)
