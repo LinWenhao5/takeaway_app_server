@@ -7,3 +7,6 @@ window.Swal = Swal;
 
 import Sortable from 'sortablejs';
 window.Sortable = Sortable;
+
+import 'trix';
+import 'trix/dist/trix.css';

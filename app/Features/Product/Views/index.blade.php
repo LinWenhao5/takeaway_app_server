@@ -3,7 +3,7 @@
 @section('breadcrumb')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-3">
-        <li class="breadcrumb-item"><a href="{{ route('admin.products.index') }}">Products</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.products.index') }}">@lang('products.product_management')</a></li>
     </ol>
 </nav>
 @endsection
@@ -11,25 +11,25 @@
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Product Management</h1>
-        <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Add New Product</a>
+        <h1 class="mb-0">@lang('products.product_management')</h1>
+        <a href="{{ route('admin.products.create') }}" class="btn btn-primary">@lang('products.add_new')</a>
     </div>
 
     <x-table class="mt-4">
         <x-slot:head>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Image</th>
-                <th>Actions</th>
+                <th>@lang('products.name')</th>
+                <th>@lang('products.description')</th>
+                <th>@lang('products.price')</th>
+                <th>@lang('products.image')</th>
+                <th>@lang('products.actions')</th>
             </tr>
         </x-slot:head>
         <x-slot:body>
             @foreach ($products as $product)
             <tr>
                 <td>{{ $product->name }}</td>
-                <td>{{ \Illuminate\Support\Str::limit($product->description, 60) }}</td>
+                <td>{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</td>
                 <td>{{ $product->price }}</td>
                 <td>
                     @foreach ($product->media->take(2) as $media)
@@ -41,17 +41,17 @@
                 </td>
                 <td>
                     <div class="d-flex align-items-center gap-1">
-                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-outline-primary btn-sm">@lang('products.edit')</a>
                         <x-delete-confirm
                             :action="route('admin.products.destroy', $product)"
-                            title="Delete Product?"
-                            text="Are you sure you want to delete the product '{{ $product->name }}'?"
-                            confirm-button-text="Yes, delete it!"
-                            success-message="Product deleted successfully!"
-                            error-message="Failed to delete the product."
+                            :title="__('products.delete_title')"
+                            :text="__('products.delete_text', ['name' => $product->name])"
+                            :confirm-button-text="__('products.confirm_delete')"
+                            :success-message="__('products.success_delete')"
+                            :error-message="__('products.error_delete')"
                             button-class="btn btn-outline-danger btn-sm"
                         >
-                            <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm">@lang('products.delete')</button>
                         </x-delete-confirm>
                     </div>
                 </td>
