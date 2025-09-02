@@ -84,7 +84,7 @@
                                 <li class="d-flex justify-content-between align-items-center">
                                     <div class="d-flex flex-column">
                                         <strong class="fw-bold">{{ $product->id }}. {{ $product->name }}</strong>
-                                        <p class="mb-1 text-muted small">{{ $product->description }}</p>
+                                        <p class="mb-1 text-muted small">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</p>
                                         <span class="fw-bold text-success">€ {{ number_format($product->price, 2) }}</span>
                                     </div>
                                     <div>
