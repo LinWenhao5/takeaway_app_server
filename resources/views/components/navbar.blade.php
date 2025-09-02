@@ -83,6 +83,11 @@
                                     @lang('navigation.business_hours')
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('admin.delivery.index') }}" class="dropdown-item {{ request()->routeIs('admin.delivery.*') ? 'active' : '' }}">
+                                    @lang('navigation.delivery')
+                                </a>
+                            </li>
                         @endcan
                     </ul>
                 </li>
