@@ -60,7 +60,7 @@ class OrderPaymentApiController extends Controller
      *             @OA\Property(
      *                 property="reserve_time",
      *                 type="string",
-     *                 example="18:30",
+     *                 example="2025-09-06 18:30",
      *                 description="Reserve time for delivery or pickup"
      *             ),
      *             @OA\Property(

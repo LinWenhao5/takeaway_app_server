@@ -1297,6 +1297,41 @@
                 }
             }
         },
+        "/api/delivery/settings": {
+            "get": {
+                "tags": [
+                    "Delivery"
+                ],
+                "summary": "Get delivery fee and minimum delivery amount",
+                "operationId": "e5449eb8dbd88f77a58f9202bdc41e0d",
+                "responses": {
+                    "200": {
+                        "description": "Successfully returns delivery fee and minimum delivery amount",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "minimum_amount": {
+                                            "description": "Minimum delivery amount",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 20
+                                        },
+                                        "fee": {
+                                            "description": "Delivery fee",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 5
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/orders": {
             "get": {
                 "tags": [
@@ -1431,7 +1466,7 @@
                                     "reserve_time": {
                                         "description": "Reserve time for delivery or pickup",
                                         "type": "string",
-                                        "example": "18:30"
+                                        "example": "2025-09-06 18:30"
                                     },
                                     "platform": {
                                         "description": "Platform (optional)",
@@ -2151,6 +2186,10 @@
         {
             "name": "Customer Authentication",
             "description": "Customer Authentication"
+        },
+        {
+            "name": "Delivery",
+            "description": "Delivery"
         },
         {
             "name": "Orders",

@@ -9,18 +9,25 @@ use App\Features\Address\Models\Address;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
 use App\Features\BusinessHour\Services\BusinessHourService;
-use Carbon\Carbon;  
+use App\Features\Delivery\Services\DeliveryService;
+use Carbon\Carbon;
 use Exception;
 
 Class OrderService
 {
     protected $cartService;
     protected $businessHourService;
+    protected $deliveryService;
 
-    public function __construct(CartService $cartService, BusinessHourService $businessHourService)
+    public function __construct(
+        CartService $cartService, 
+        BusinessHourService $businessHourService,
+        DeliveryService $deliveryService
+    )
     {
         $this->cartService = $cartService;
         $this->businessHourService = $businessHourService;
+        $this->deliveryService = $deliveryService;
     }
 
     public function createOrder($customerId, $addressId, OrderType $orderType, string $reserveTime, $note = null)
@@ -78,6 +85,11 @@ Class OrderService
     {
         return DB::transaction(function () use ($customerId, $addressId, $reserveTime, $note) {
             [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($customerId);
+
+            $minimumAmount = $this->deliveryService->getMinimumAmount();
+            if ($totalPrice < $minimumAmount) {
+                throw new Exception('Order amount does not meet the minimum delivery amount: ' . $minimumAmount);
+            }
 
             $address = Address::findOrFail($addressId);
             $addressSnapshot = $this->makeSnapshot($address);
