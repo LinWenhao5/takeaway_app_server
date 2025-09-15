@@ -91,13 +91,16 @@ Class OrderService
                 throw new Exception('Order amount does not meet the minimum delivery amount: ' . $minimumAmount);
             }
 
+            $deliveryFee = $this->deliveryService->getFee();
+            $totalPriceWithFee = $totalPrice + $deliveryFee;
+
             $address = Address::findOrFail($addressId);
             $addressSnapshot = $this->makeSnapshot($address);
 
             $order = Order::create([
                 'customer_id' => $customerId,
                 'status' => OrderStatus::Unpaid,
-                'total_price' => $totalPrice,
+                'total_price' => $totalPriceWithFee,
                 'address_id' => $address?->id,
                 'address_snapshot' => $addressSnapshot,
                 'order_type' => OrderType::DELIVERY,

@@ -29,7 +29,7 @@ class PaymentService
             "description" => "Order #{$order->id}",
             "redirectUrl" => $redirectUrl,
             "webhookUrl" => route('api.payment.webhook'),
-            // "webhookUrl" => "https://a0f9c4544641.ngrok-free.app/api/payments/webhook",
+            // "webhookUrl" => "https://4995da873038.ngrok-free.app/api/payments/webhook",
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
                 "order_id" => $order->id,

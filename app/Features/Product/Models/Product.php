@@ -27,6 +27,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Media::class, 'media_product');
     }
+    
 
     protected static function boot()
     {
