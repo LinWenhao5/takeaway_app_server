@@ -19,6 +19,7 @@ class Order extends Model
         'status',
         'payment_id',
         'total_price',
+        'delivery_fee',
         'address_id',
         'address_snapshot',
         'order_type',
@@ -29,8 +30,7 @@ class Order extends Model
     protected $casts = [
         'address_snapshot' => 'array',
         'status' => OrderStatus::class,
-        'order_type' => OrderType::class,
-        
+        'order_type' => OrderType::class,  
     ];
     
 

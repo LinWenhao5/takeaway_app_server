@@ -101,6 +101,7 @@ Class OrderService
                 'customer_id' => $customerId,
                 'status' => OrderStatus::Unpaid,
                 'total_price' => $totalPriceWithFee,
+                'delivery_fee' => $deliveryFee,
                 'address_id' => $address?->id,
                 'address_snapshot' => $addressSnapshot,
                 'order_type' => OrderType::DELIVERY,
