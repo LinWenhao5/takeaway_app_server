@@ -168,8 +168,8 @@ class CustomerAuthApiController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/customer/reset-password",
-     *     summary="Reset password with captcha",
+     *     path="/api/customer/forgot-password",
+     *     summary="Reset customer password using captcha",
      *     tags={"Customer Authentication"},
      *     @OA\RequestBody(
      *         required=true,
@@ -203,7 +203,7 @@ class CustomerAuthApiController extends Controller
      *     )
      * )
      */
-    public function resetPassword(Request $request)
+    public function forgotPassword(Request $request)
     {
         try {
             $request->validate([

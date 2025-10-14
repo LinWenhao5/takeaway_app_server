@@ -955,6 +955,91 @@
                 ]
             }
         },
+        "/api/customer/reset-password": {
+            "post": {
+                "tags": [
+                    "Customer Account"
+                ],
+                "summary": "Reset current customer's password",
+                "operationId": "7f7041a730bc9773c1fb6caf4c66ad69",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "password": {
+                                        "description": "New password (min 8 chars)",
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successfully!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to reset password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to reset password."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detailed error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/customer/register": {
             "post": {
                 "tags": [
@@ -1143,13 +1228,13 @@
                 }
             }
         },
-        "/api/customer/reset-password": {
+        "/api/customer/forgot-password": {
             "post": {
                 "tags": [
                     "Customer Authentication"
                 ],
-                "summary": "Reset password with captcha",
-                "operationId": "e9c3bb16b123c75baa0ebe8daa48e44d",
+                "summary": "Reset customer password using captcha",
+                "operationId": "e78b51a7e55a04b3fb5ce031054ba67d",
                 "requestBody": {
                     "required": true,
                     "content": {
