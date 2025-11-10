@@ -23,3 +23,4 @@ yarn-error.log
 .DS_Store
 /.zed
 _ide_helper.php
+compose.yaml

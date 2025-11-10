@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             BusinessHourSeeder::class,
             StoreSeeder::class,
             DeliverySettingSeeder::class,
+            SushiSeeder::class,
         ]);
     }
 }
