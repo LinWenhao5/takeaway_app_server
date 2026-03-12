@@ -15,6 +15,7 @@ return [
     'allowed_postcodes' => 'Allowed Postcodes',
     'business_hours' => 'Business Hours',
     'delivery' => 'Delivery',
+    'vat' => 'VAT',
     'order_management' => 'Order Management',
     'orders' => 'Orders',
     'order_history' => 'Order History',

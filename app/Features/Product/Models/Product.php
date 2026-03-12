@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Features\Media\Models\Media;
 use App\Features\ProductCategory\Models\ProductCategory;
+use App\Features\Vat\Models\VatRate;
 
 class Product extends Model
 {
@@ -16,11 +17,17 @@ class Product extends Model
         'description',
         'price',
         'product_category_id',
+        'vat_rate_id',
     ];
 
     public function category()
     {
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+
+    public function vatRate()
+    {
+        return $this->belongsTo(VatRate::class, 'vat_rate_id');
     }
 
     public function media()

@@ -1,0 +1,20 @@
+<?php
+return [
+    'vat_management' => '税率管理',
+    'actions' => '操作',
+    'add_new' => '添加税率',
+    'name' => '税率名称',
+    'rate' => '税率',
+    'create' => '新增税率',
+    'edit' => '编辑税率',
+    'delete' => '删除',
+    'delete_title' => '删除税率',
+    'delete_text' => '您确定要删除这个税率吗？',
+    'list' => '税率列表',
+    'success_create' => '税率创建成功。',
+    'success_edit' => '税率更新成功。',
+    'success_delete' => '税率删除成功。',
+    'error_create' => '创建税率失败',
+    'error_edit' => '编辑税率失败',
+    'back' => '返回',
+];

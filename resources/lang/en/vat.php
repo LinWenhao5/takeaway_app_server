@@ -1,0 +1,21 @@
+<?php
+return [
+    'vat_management' => 'VAT Management',
+    'actions' => 'Actions',
+    'add_new' => 'Add VAT',
+    'name' => 'VAT Name',
+    'rate' => 'Rate',
+    'create' => 'Create VAT',
+    'edit' => 'Edit VAT',
+    'delete' => 'Delete',
+    'delete_title' => 'Delete VAT Rate',
+    'delete_text' => 'Are you sure you want to delete this VAT rate?',
+    'list' => 'VAT List',
+    'success_create' => 'VAT rate created successfully.',
+    'success_edit' => 'VAT rate updated successfully.',
+    'success_delete' => 'VAT rate deleted successfully.',
+    'error_create' => 'Failed to create VAT rate',
+    'error_edit' => 'Failed to edit VAT rate',
+    'error_delete' => 'Failed to delete VAT rate',
+    'back' => 'Back',
+];

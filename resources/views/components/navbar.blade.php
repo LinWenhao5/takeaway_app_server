@@ -88,6 +88,11 @@
                                     @lang('navigation.delivery')
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('admin.vat.index') }}" class="dropdown-item {{ request()->routeIs('admin.vat.*') ? 'active' : '' }}">
+                                    @lang('navigation.vat')
+                                </a>
+                            </li>
                         @endcan
                     </ul>
                 </li>
