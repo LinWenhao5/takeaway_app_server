@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_product', function (Blueprint $table) {
-            $table->decimal('vat_amount', 10, 2)->nullable();
-            $table->decimal('vat_rate', 5, 2)->nullable();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->decimal('total_vat_amount', 10, 2)->nullable();
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_product', function (Blueprint $table) {
-            $table->dropColumn('vat_amount');
-            $table->dropColumn('vat_rate');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('total_vat_amount');
         });
     }
 };

@@ -25,6 +25,7 @@ class Order extends Model
         'vat_snapshot',
         'order_type',
         'reserve_time',
+        'total_vat_amount',
         'note',
     ];
 

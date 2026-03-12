@@ -70,6 +70,8 @@ class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
     protected function calculateVatSummary(Order $order): array
     {
         $vatSummary = [];
+        $totalVatAmount = 0;
+
         foreach ($order->products as $product) {
             $vatName = $product->pivot->vat_name ?? 'No VAT';
             $vatAmount = $product->pivot->vat_amount * $product->pivot->quantity;
@@ -83,10 +85,12 @@ class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
             }
             $vatSummary[$vatName]['vat_total'] += $vatAmount;
             $vatSummary[$vatName]['product_total'] += $productAmount;
+            $totalVatAmount += $vatAmount;
         }
+
         $deliveryFee = $order->delivery_fee ?? 0;
         $deliveryVatRate = 9.00;
-        $deliveryVatName = 'Delivery VAT';
+        $deliveryVatName = 'Delivery VAT 9%';
         if ($deliveryFee > 0) {
             $deliveryVatAmount = round($deliveryFee * $deliveryVatRate / 100, 2);
             if (!isset($vatSummary[$deliveryVatName])) {
@@ -97,7 +101,10 @@ class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
             }
             $vatSummary[$deliveryVatName]['vat_total'] += $deliveryVatAmount;
             $vatSummary[$deliveryVatName]['product_total'] += $deliveryFee;
+            $totalVatAmount += $deliveryVatAmount;
         }
+        $vatSummary['total_vat_amount'] = $totalVatAmount;
+
         return $vatSummary;
     }
 }

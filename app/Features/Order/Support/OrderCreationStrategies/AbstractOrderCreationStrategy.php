@@ -32,8 +32,12 @@ abstract class AbstractOrderCreationStrategy
             $this->attachProductsToOrder($order, $cart, $products);
 
             $vatSummary = $this->calculateVatSummary($order);
+            $totalVatAmount = $vatSummary['total_vat_amount'] ?? 0;
 
-            $order->update(['vat_snapshot' => $vatSummary]);
+            $order->update([
+                'vat_snapshot' => $vatSummary,
+                'total_vat_amount' => $totalVatAmount,
+            ]);
 
             $this->cartService->clearCart($customerId);
 
