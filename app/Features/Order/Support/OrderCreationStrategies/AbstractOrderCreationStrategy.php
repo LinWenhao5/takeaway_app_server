@@ -31,6 +31,10 @@ abstract class AbstractOrderCreationStrategy
 
             $this->attachProductsToOrder($order, $cart, $products);
 
+            $vatSummary = $this->calculateVatSummary($order);
+
+            $order->update(['vat_snapshot' => $vatSummary]);
+
             $this->cartService->clearCart($customerId);
 
             return $order;
@@ -51,6 +55,15 @@ abstract class AbstractOrderCreationStrategy
             if (!$product) {
                 throw new Exception('Product not found: ' . $productId);
             }
+
+            $vatRate = $product->vatRate?->rate ?? 0;
+            $vatName = $product->vatRate?->name ?? 'No VAT';
+            $vatAmount = round($product->price * $vatRate / 100, 2);
+
+            $product->vat_rate = $vatRate;
+            $product->vat_amount = $vatAmount;
+            $product->vat_name = $vatName;
+
             $totalPrice += $product->price * $quantity;
             $products[$productId] = $product;
         }
@@ -61,12 +74,18 @@ abstract class AbstractOrderCreationStrategy
     protected function attachProductsToOrder(Order $order, array $cart, array $products): void
     {
         foreach ($cart as $productId => $quantity) {
+            $product = $products[$productId];
             $order->products()->attach($productId, [
                 'quantity' => $quantity,
-                'price' => $products[$productId]->price,
+                'price' => $product->price,
+                'vat_amount' => $product->vat_amount,
+                'vat_rate' => $product->vat_rate,
+                'vat_name' => $product->vat_name,
             ]);
         }
     }
+
+    abstract protected function calculateVatSummary(Order $order): array;
 
     abstract public function validateOrder($totalPrice, $addressId): void;
     

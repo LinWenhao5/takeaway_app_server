@@ -4,6 +4,7 @@ namespace App\Features\Order\Support\OrderCreationStrategies;
 use App\Features\Cart\Services\CartService;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
+use App\Features\Order\Models\Order;
 
 class PickupOrderStrategy extends AbstractOrderCreationStrategy
 {
@@ -35,5 +36,25 @@ class PickupOrderStrategy extends AbstractOrderCreationStrategy
             'reserve_time' => $reserveTime,
             'note' => $note,
         ];
+    }
+
+    protected function calculateVatSummary(Order $order): array
+    {
+        $vatSummary = [];
+        foreach ($order->products as $product) {
+            $vatName = $product->pivot->vat_name ?? 'No VAT';
+            $vatAmount = $product->pivot->vat_amount * $product->pivot->quantity;
+            $productAmount = $product->pivot->price * $product->pivot->quantity;
+
+            if (!isset($vatSummary[$vatName])) {
+                $vatSummary[$vatName] = [
+                    'vat_total' => 0,
+                    'product_total' => 0,
+                ];
+            }
+            $vatSummary[$vatName]['vat_total'] += $vatAmount;
+            $vatSummary[$vatName]['product_total'] += $productAmount;
+        }
+        return $vatSummary;
     }
 }

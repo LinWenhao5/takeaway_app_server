@@ -22,6 +22,7 @@ class Order extends Model
         'delivery_fee',
         'address_id',
         'address_snapshot',
+        'vat_snapshot',
         'order_type',
         'reserve_time',
         'note',
@@ -29,6 +30,7 @@ class Order extends Model
 
     protected $casts = [
         'address_snapshot' => 'array',
+        'vat_snapshot' => 'array',
         'status' => OrderStatus::class,
         'order_type' => OrderType::class,  
     ];
@@ -42,7 +44,8 @@ class Order extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_product')
-                    ->withPivot('quantity', 'price');
+                    ->withPivot('quantity', 'price', 'vat_amount', 'vat_rate', 'vat_name')
+                    ->withTimestamps();
     }
 
     public function address()
