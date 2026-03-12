@@ -21,6 +21,7 @@
                 <th>@lang('products.name')</th>
                 <th>@lang('products.description')</th>
                 <th>@lang('products.price')</th>
+                <th>@lang('products.vat_rate')</th>
                 <th>@lang('products.image')</th>
                 <th>@lang('products.actions')</th>
             </tr>
@@ -31,6 +32,13 @@
                 <td>{{ $product->name }}</td>
                 <td>{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</td>
                 <td>{{ $product->price }}</td>
+                <td>
+                    @if($product->vatRate)
+                        {{ $product->vatRate->name }} ({{ $product->vatRate->rate }}%)
+                    @else
+                        <span class="text-muted">-</span>
+                    @endif
+                </td>
                 <td>
                     @foreach ($product->media->take(2) as $media)
                     <img src="{{ $media->path }}" alt="Image" width="50" style="margin-right: 4px;">

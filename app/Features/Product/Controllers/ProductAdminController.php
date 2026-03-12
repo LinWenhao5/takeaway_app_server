@@ -3,6 +3,7 @@ namespace App\Features\Product\Controllers;
 
 use App\Features\Product\Models\Product;
 use App\Features\Media\Models\Media;
+use App\Features\Vat\Models\VatRate;
 use App\Features\ProductCategory\Models\ProductCategory;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -43,8 +44,9 @@ class ProductAdminController extends Controller
         try {
             $media = Media::all();
             $categories = ProductCategory::all();
+            $vats = VatRate::all();
             $selectedMedia = $product->media->pluck('id')->toArray();
-            return view('product::edit', compact('product', 'media', 'selectedMedia', 'categories'));
+            return view('product::edit', compact('product', 'media', 'selectedMedia', 'categories', 'vats'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load edit form: ' . $e->getMessage()]);
         }

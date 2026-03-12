@@ -56,6 +56,24 @@
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary w-100">@lang('products.assign_category')</button>
             </form>
+
+            <hr>
+            <h5 class="card-title mb-3">@lang('products.assign_vat')</h5>
+            <form action="{{ route('admin.products.assignVat') }}" method="POST">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                <div class="mb-2">
+                    <label for="vat_rate_id" class="form-label">@lang('products.vat_rate')</label>
+                    <select name="vat_rate_id" id="vat_rate_id" class="form-select" required>
+                        @foreach($vats as $vat)
+                            <option value="{{ $vat->id }}" @if($product->vat_rate_id == $vat->id) selected @endif>
+                                {{ $vat->name }} ({{ $vat->rate }}%)
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm btn-outline-success w-100">@lang('products.assign_vat')</button>
+            </form>
         </div>
     </div>
 @endsection

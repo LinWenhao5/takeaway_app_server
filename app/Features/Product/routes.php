@@ -13,6 +13,7 @@ Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit
         Route::put('/{product}', [ProductAdminController::class, 'update'])->name('admin.products.update'); // Update product
         Route::delete('/{product}', [ProductAdminController::class, 'destroy'])->name('admin.products.destroy'); // Delete product
         Route::post('/assign-category', [ProductAssignmentController::class, 'assignCategory'])->name('admin.products.assignCategory'); // Assign category to product
+        Route::post('/assign-vat', [ProductAssignmentController::class, 'assignVat'])->name('admin.products.assignVat'); // Assign VAT rate to product
 });
 
 // API Routes
