@@ -1086,6 +1086,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "REGISTRATION_SUCCESS"
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Customer registered successfully!"
@@ -1101,14 +1105,19 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid captcha",
+                        "description": "Bad Request: Email already exists, invalid captcha, or other validation errors",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "code": {
+                                            "description": "Email already exists, invalid captcha, or validation failed",
+                                            "type": "string",
+                                            "example": "EMAIL_ALREADY_EXISTS"
+                                        },
                                         "message": {
                                             "type": "string",
-                                            "example": "Invalid captcha."
+                                            "example": "The email has already been taken or Invalid captcha."
                                         }
                                     },
                                     "type": "object"
@@ -1122,6 +1131,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "REGISTRATION_FAILED"
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Failed to register customer."
@@ -1179,6 +1192,10 @@
                                             "type": "string",
                                             "example": "Login successful!"
                                         },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "LOGIN_SUCCESS"
+                                        },
                                         "token": {
                                             "type": "string",
                                             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -1198,6 +1215,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Invalid credentials."
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "INVALID_CREDENTIALS"
                                         }
                                     },
                                     "type": "object"
@@ -1214,6 +1235,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Failed to login."
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "LOGIN_FAILED"
                                         },
                                         "error": {
                                             "type": "string",

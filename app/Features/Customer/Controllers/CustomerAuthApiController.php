@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CaptchaMail;
 use Exception;
+use Illuminate\Validation\ValidationException;
 
 class CustomerAuthApiController extends Controller
 {
@@ -30,21 +31,24 @@ class CustomerAuthApiController extends Controller
      *         response=201,
      *         description="Customer registered successfully",
      *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="string", example="REGISTRATION_SUCCESS"),
      *             @OA\Property(property="message", type="string", example="Customer registered successfully!"),
      *             @OA\Property(property="customer", type="object", description="Customer details")
      *         )
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Invalid captcha",
+     *         description="Bad Request: Email already exists, invalid captcha, or other validation errors",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Invalid captcha.")
+     *             @OA\Property(property="code", type="string", example="EMAIL_ALREADY_EXISTS", description="Email already exists, invalid captcha, or validation failed"),
+     *             @OA\Property(property="message", type="string", example="The email has already been taken or Invalid captcha.")
      *         )
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Failed to register customer",
      *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="string", example="REGISTRATION_FAILED"),
      *             @OA\Property(property="message", type="string", example="Failed to register customer."),
      *             @OA\Property(property="error", type="string", example="Detailed error message")
      *         )
@@ -53,8 +57,8 @@ class CustomerAuthApiController extends Controller
      */
     public function register(Request $request)
     {
+        $response = null;
         try {
-            // Validate the request data
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:customers,email',
@@ -62,36 +66,47 @@ class CustomerAuthApiController extends Controller
                 'captcha' => 'required|string',
             ]);
 
-            // Get the cached captcha for the email
             $cachedCaptcha = Cache::get('captcha_' . $request->email);
 
-            // Check if the captcha is valid
             if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
-                return response()->json([
+                $response = response()->json([
+                    'code' => 'INVALID_CAPTCHA',
                     'message' => 'Invalid captcha.',
                 ], 400);
+            } else {
+                $customer = Customer::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => $request->password,
+                ]);
+                Cache::forget('captcha_' . $request->email);
+                $response = response()->json([
+                    'code' => 'REGISTRATION_SUCCESS',
+                    'message' => 'Customer registered successfully!',
+                    'customer' => $customer,
+                ], 201);
             }
-
-            // Create a new customer
-            $customer = Customer::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => $request->password,
-            ]);
-
-            Cache::forget('captcha_' . $request->email);
-
-            // Return a success response
-            return response()->json([
-                'message' => 'Customer registered successfully!',
-                'customer' => $customer,
-            ], 201);
+        } catch (ValidationException $e) {
+            $errors = $e->errors();
+            if (isset($errors['email'])) {
+                $response = response()->json([
+                    'code' => 'EMAIL_ALREADY_EXISTS',
+                    'message' => $errors['email'][0],
+                ], 400);
+            } else {
+                $response = response()->json([
+                    'code' => 'VALIDATION_FAILED',
+                    'message' => $errors,
+                ], 400);
+            }
         } catch (Exception $e) {
-            return response()->json([
+            $response = response()->json([
+                'code' => 'REGISTRATION_FAILED',
                 'message' => 'Failed to register customer.',
                 'error' => $e->getMessage(),
             ], 500);
         }
+        return $response;
     }
 
     /**
@@ -111,6 +126,7 @@ class CustomerAuthApiController extends Controller
      *         description="Login successful",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Login successful!"),
+     *             @OA\Property(property="code", type="string", example="LOGIN_SUCCESS"),
      *             @OA\Property(property="token", type="string", example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
      *         )
      *     ),
@@ -118,7 +134,8 @@ class CustomerAuthApiController extends Controller
      *         response=401,
      *         description="Invalid credentials",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Invalid credentials.")
+     *             @OA\Property(property="message", type="string", example="Invalid credentials."),
+     *             @OA\Property(property="code", type="string", example="INVALID_CREDENTIALS")
      *         )
      *     ),
      *     @OA\Response(
@@ -126,6 +143,7 @@ class CustomerAuthApiController extends Controller
      *         description="Failed to login",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Failed to login."),
+     *             @OA\Property(property="code", type="string", example="LOGIN_FAILED"),
      *             @OA\Property(property="error", type="string", example="Detailed error message")
      *         )
      *     )
@@ -146,6 +164,7 @@ class CustomerAuthApiController extends Controller
             if (!$customer || !Hash::check($request->password, $customer->password)) {
                 return response()->json([
                     'message' => 'Invalid credentials.',
+                    'code' => 'INVALID_CREDENTIALS',
                 ], 401);
             }
 
@@ -155,11 +174,13 @@ class CustomerAuthApiController extends Controller
             // Return a success response with the token
             return response()->json([
                 'message' => 'Login successful!',
+                'code' => 'LOGIN_SUCCESS',
                 'token' => $token,
             ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Failed to login.',
+                'code' => 'LOGIN_FAILED',
                 'error' => $e->getMessage(),
             ], 500);
         }
