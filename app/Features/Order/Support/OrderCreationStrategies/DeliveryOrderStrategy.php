@@ -6,7 +6,6 @@ use App\Features\Delivery\Services\DeliveryService;
 use App\Features\Address\Models\Address;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
-use App\Features\Order\Models\Order;
 use Exception;
 
 class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
@@ -65,46 +64,5 @@ class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
             'city' => $address->city,
             'country' => $address->country,
         ];
-    }
-
-    protected function calculateVatSummary(Order $order): array
-    {
-        $vatSummary = [];
-        $totalVatAmount = 0;
-
-        foreach ($order->products as $product) {
-            $vatName = $product->pivot->vat_name ?? 'No VAT';
-            $vatAmount = $product->pivot->vat_amount * $product->pivot->quantity;
-            $productAmount = $product->pivot->price * $product->pivot->quantity;
-
-            if (!isset($vatSummary[$vatName])) {
-                $vatSummary[$vatName] = [
-                    'vat_total' => 0,
-                    'product_total' => 0,
-                ];
-            }
-            $vatSummary[$vatName]['vat_total'] += $vatAmount;
-            $vatSummary[$vatName]['product_total'] += $productAmount;
-            $totalVatAmount += $vatAmount;
-        }
-
-        $deliveryFee = $order->delivery_fee ?? 0;
-        $deliveryVatRate = 9.00;
-        $deliveryVatName = 'Delivery VAT 9%';
-        if ($deliveryFee > 0) {
-            $deliveryVatAmount = round($deliveryFee * $deliveryVatRate / 100, 2);
-            if (!isset($vatSummary[$deliveryVatName])) {
-                $vatSummary[$deliveryVatName] = [
-                    'vat_total' => 0,
-                    'product_total' => 0,
-                ];
-            }
-            $vatSummary[$deliveryVatName]['vat_total'] += $deliveryVatAmount;
-            $vatSummary[$deliveryVatName]['product_total'] += $deliveryFee;
-            $totalVatAmount += $deliveryVatAmount;
-        }
-        $vatSummary['total_vat_amount'] = $totalVatAmount;
-
-        return $vatSummary;
     }
 }

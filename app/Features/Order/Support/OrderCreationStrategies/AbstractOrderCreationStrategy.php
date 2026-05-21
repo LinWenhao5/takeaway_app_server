@@ -89,7 +89,30 @@ abstract class AbstractOrderCreationStrategy
         }
     }
 
-    abstract protected function calculateVatSummary(Order $order): array;
+    protected function calculateVatSummary(Order $order): array
+    {
+        $vatSummary = [];
+        $totalVatAmount = 0;
+
+        foreach ($order->products as $product) {
+            $vatName = $product->pivot->vat_name ?? 'No VAT';
+            $vatAmount = $product->pivot->vat_amount * $product->pivot->quantity;
+            $productAmount = $product->pivot->price * $product->pivot->quantity;
+
+            if (!isset($vatSummary[$vatName])) {
+                $vatSummary[$vatName] = [
+                    'vat_total' => 0,
+                    'product_total' => 0,
+                ];
+            }
+            $vatSummary[$vatName]['vat_total'] += $vatAmount;
+            $vatSummary[$vatName]['product_total'] += $productAmount;
+            $totalVatAmount += $vatAmount;
+        }
+
+        $vatSummary['total_vat_amount'] = $totalVatAmount;
+        return $vatSummary;
+    }
 
     abstract public function validateOrder($totalPrice, $addressId): void;
     

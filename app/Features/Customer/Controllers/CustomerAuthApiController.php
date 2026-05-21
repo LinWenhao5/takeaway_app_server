@@ -271,8 +271,9 @@ class CustomerAuthApiController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Captcha sent successfully",
+     *         description="Captcha sent successfully or already sent",
      *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="string", example="CAPTCHA_SENT_SUCCESS"),
      *             @OA\Property(property="message", type="string", example="Captcha sent successfully!")
      *         )
      *     ),
@@ -280,6 +281,7 @@ class CustomerAuthApiController extends Controller
      *         response=500,
      *         description="Failed to generate captcha",
      *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="string", example="CAPTCHA_GENERATE_FAILED"),
      *             @OA\Property(property="message", type="string", example="Failed to generate captcha."),
      *             @OA\Property(property="error", type="string", example="Detailed error message")
      *         )
@@ -293,6 +295,13 @@ class CustomerAuthApiController extends Controller
                 'email' => 'required|email',
             ]);
 
+            if (Cache::has('captcha_' . $request->email)) {
+                return response()->json([
+                    'code' => 'CAPTCHA_ALREADY_SENT',
+                    'message' => 'Captcha has already been sent. Please do not request repeatedly.',
+                ], 200);
+            }
+
             $captchaCode = rand(100000, 999999);
 
             Cache::put('captcha_' . $request->email, $captchaCode, now()->addMinutes(5));
@@ -300,10 +309,12 @@ class CustomerAuthApiController extends Controller
             Mail::to($request->email)->queue(new CaptchaMail($captchaCode));
 
             return response()->json([
+                'code' => 'CAPTCHA_SENT_SUCCESS',
                 'message' => 'Captcha sent successfully!',
             ], 200);
         } catch (Exception $e) {
             return response()->json([
+                'code' => 'CAPTCHA_GENERATE_FAILED',
                 'message' => 'Failed to generate captcha.',
                 'error' => $e->getMessage(),
             ], 500);
