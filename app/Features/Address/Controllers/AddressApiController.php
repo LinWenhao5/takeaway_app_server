@@ -99,22 +99,40 @@ class AddressApiController extends Controller
                 'country' => 'required|string|max:100',
             ]); 
 
+            // Check if the address already exists for the customer
+            $existingAddress = $customer->addresses()->where([
+                ['street', $validated['street']],
+                ['house_number', $validated['house_number']],
+                ['postcode', $validated['postcode']],
+                ['city', $validated['city']],
+                ['country', $validated['country']],
+            ])->first();
+
+            if ($existingAddress) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 'ADDRESS_ALREADY_EXISTS',
+                    'message' => 'The address already exists.',
+                ], 409);
+            }
+
             $address = $customer->addresses()->create($validated);
 
             return response()->json([
                 'success' => true,
+                'message' => 'Address created successfully.',
                 'address' => $address,
             ], 201);
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation failed',
+                'message' => 'Validation failed.',
                 'error' => $e->getMessage(),
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to add address',
+                'message' => 'Failed to add address.',
                 'error' => $e->getMessage(),
             ], 500);
         }

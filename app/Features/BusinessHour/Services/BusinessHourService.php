@@ -9,6 +9,10 @@ class BusinessHourService
 {
     public function getAvailableTimesForDate(OrderType $orderType, Carbon $date): array
     {
+        if ($date->copy()->startOfDay()->lessThan(now()->startOfDay())) {
+            return [];
+        }
+
         $advance = $orderType === OrderType::PICKUP ? 30 : 45;
         $interval = 10;
 
@@ -41,7 +45,7 @@ class BusinessHourService
 
     public function isTimeAvailableForDate(OrderType $orderType, Carbon $date): bool
     {
-        if ($date->lessThan(now())) {
+        if ($date->copy()->startOfDay()->lessThan(now()->startOfDay())) {
             return false;
         }
         $availableTimes = $this->getAvailableTimesForDate($orderType, $date);
