@@ -1369,11 +1369,15 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Captcha sent successfully",
+                        "description": "Captcha sent successfully or already sent",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "CAPTCHA_SENT_SUCCESS"
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Captcha sent successfully!"
@@ -1390,6 +1394,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "CAPTCHA_GENERATE_FAILED"
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Failed to generate captcha."
@@ -1587,6 +1595,11 @@
                                         "description": "Request host (optional)",
                                         "type": "string",
                                         "example": "example.com"
+                                    },
+                                    "note": {
+                                        "description": "Additional note for the order (optional)",
+                                        "type": "string",
+                                        "example": "Please add extra wasabi"
                                     }
                                 },
                                 "type": "object"

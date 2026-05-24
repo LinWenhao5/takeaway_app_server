@@ -74,8 +74,14 @@ class OrderPaymentApiController extends Controller
      *                 type="string",
      *                 example="example.com",
      *                 description="Request host (optional)"
-     *             )
-     *         )
+    *             ),
+     *             @OA\Property(
+    *                 property="note",
+    *                 type="string",
+    *                 example="Please add extra wasabi",
+    *                 description="Additional note for the order (optional)"
+    *             )
+    *         )
      *     ),
      *     @OA\Response(
      *         response=200,
