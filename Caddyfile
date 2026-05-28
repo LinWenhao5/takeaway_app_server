@@ -1,0 +1,9 @@
+:8080 {
+    root * /app/public
+    
+    # FrankenPHP 的 socket 路径
+    php_fastcgi unix//var/run/frankenphp/frankenphp.sock
+    
+    file_server
+    try_files {path} {path}/ /index.php?{query}
+}

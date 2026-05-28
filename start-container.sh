@@ -14,5 +14,5 @@ php artisan db:seed --force
 php artisan l5-swagger:generate
 
 echo "Starting FrankenPHP server..."
-exec frankenphp run --config /etc/caddy/Caddyfile
+exec frankenphp run --config /app/Caddyfile --debug
 
