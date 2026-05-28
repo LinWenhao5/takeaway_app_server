@@ -17,8 +17,8 @@ class CustomerAccountApiController extends Controller
      *         response=200,
      *         description="Username fetched successfully",
      *         @OA\JsonContent(
-     *             @OA\Property(property="username", type="string", example="SushiLover")
-    *              @OA\Property(property="email", type="string", example="sushilover@example.com")
+    *             @OA\Property(property="username", type="string", example="SushiLover"),
+    *             @OA\Property(property="email", type="string", example="sushilover@example.com")
      *         )
      *     ),
      *     @OA\Response(

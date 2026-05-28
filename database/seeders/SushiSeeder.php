@@ -4,11 +4,22 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Features\Product\Models\Product;
 use App\Features\ProductCategory\Models\ProductCategory;
+use App\Features\Vat\Models\VatRate;
 
 class SushiSeeder extends Seeder
 {
     public function run()
     {
+        $foodVatRate = VatRate::updateOrCreate(
+            ['name' => 'Food VAT 9%'],
+            ['rate' => 9.00]
+        );
+
+        $drinkVatRate = VatRate::updateOrCreate(
+            ['name' => 'Drink VAT 21%'],
+            ['rate' => 21.00]
+        );
+
         $categories = [
             'Sushi Boxes' => [
                 [
@@ -291,8 +302,10 @@ class SushiSeeder extends Seeder
                 ['name' => $categoryName]
             );
 
+            $vatRate = $categoryName === 'Drinks' ? $drinkVatRate : $foodVatRate;
+
             foreach ($products as $sushi) {
-                Product::firstOrCreate(
+                Product::updateOrCreate(
                     [
                         'name' => $sushi['name'],
                         'product_category_id' => $category->id,
@@ -300,6 +313,7 @@ class SushiSeeder extends Seeder
                     [
                         'description' => $sushi['description'],
                         'price' => $sushi['price'],
+                        'vat_rate_id' => $vatRate->id,
                     ]
                 );
             }
