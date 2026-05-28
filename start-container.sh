@@ -13,3 +13,6 @@ php artisan db:seed --force
 # Generate Swagger documentation
 php artisan l5-swagger:generate
 
+echo "Starting FrankenPHP server..."
+exec frankenphp run --config /etc/caddy/Caddyfile
+
