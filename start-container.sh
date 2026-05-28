@@ -4,9 +4,6 @@
 # Exit the script if any command fails
 set -e
 
-# Run database migrations
-php artisan migrate --force
-
 # Run database seeder
 php artisan db:seed --force
 
