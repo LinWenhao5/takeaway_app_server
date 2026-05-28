@@ -4,15 +4,6 @@
 # Exit the script if any command fails
 set -e
 
-# Run database migrations
-php artisan migrate --force
-
-# Run database seeder
-php artisan db:seed --force
-
 # Generate Swagger documentation
 php artisan l5-swagger:generate
-
-echo "Starting FrankenPHP server..."
-exec frankenphp run --config /app/Caddyfile --listen :8080
 

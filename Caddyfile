@@ -1,6 +1,0 @@
-0.0.0.0:8080 {
-    root * /app/public
-    php_fastcgi unix//var/run/frankenphp/frankenphp.sock
-    file_server
-    try_files {path} {path}/ /index.php?{query}
-}
