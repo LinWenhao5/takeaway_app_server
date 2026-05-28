@@ -108,7 +108,7 @@ class OrderPaymentApiController extends Controller
 
         $validated = $request->validate([
             'order_type' => 'required|string|in:delivery,pickup',
-            'address_id' => 'required_if:order_type,delivery|integer|exists:addresses,id',
+            'address_id' => 'required_if:order_type,delivery|nullable|integer|exists:addresses,id',
             'reserve_time' => 'required|date_format:Y-m-d H:i',
             'note' => 'nullable|string|max:255',
         ]);

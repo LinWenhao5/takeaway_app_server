@@ -16,7 +16,7 @@ class PaymentService
     )
     {
         if ($platform === 'web') {
-            $redirectUrl = "{$host}/payment-callback?order_id={$order->id}";
+            $redirectUrl = "{$host}/order/{$order->id}";
         } else {
             $redirectUrl = "takeawayapp://payment-callback?order_id={$order->id}";
         }
@@ -28,8 +28,8 @@ class PaymentService
             ],
             "description" => "Order #{$order->id}",
             "redirectUrl" => $redirectUrl,
-            // "webhookUrl" => route('api.payment.webhook'),
-            "webhookUrl" => "https://5711-77-174-43-56.ngrok-free.app/api/payments/webhook",
+            "webhookUrl" => route('api.payment.webhook'),
+            // "webhookUrl" => "https://ff6d-86-94-222-170.ngrok-free.app/api/payments/webhook",
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
                 "order_id" => $order->id,

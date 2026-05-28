@@ -18,6 +18,7 @@ class CustomerAccountApiController extends Controller
      *         description="Username fetched successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="username", type="string", example="SushiLover")
+    *              @OA\Property(property="email", type="string", example="sushilover@example.com")
      *         )
      *     ),
      *     @OA\Response(
@@ -43,6 +44,7 @@ class CustomerAccountApiController extends Controller
             $customer = $this->getAuthenticatedCustomer();
             return response()->json([
                 'username' => $customer->name,
+                'email' => $customer->email,
             ]);
         } catch (Exception $e) {
             return response()->json([
