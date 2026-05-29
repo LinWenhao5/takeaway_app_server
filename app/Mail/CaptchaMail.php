@@ -40,6 +40,7 @@ class CaptchaMail extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.captcha',
+            text: 'emails.captcha-plain',
             with: ['captcha' => $this->captcha],
         );
     }

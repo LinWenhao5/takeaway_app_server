@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Verificatiecode</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8">
 </head>
-<body class="bg-light text-dark">
-    <div class="container mt-5">
-        <div class="card border-danger shadow-sm">
-            <div class="card-header bg-danger text-white text-center">
-                <h2 class="mb-0">Zen Sushi Verificatiecode</h2>
-            </div>
-            <div class="card-body">
-                <p class="mb-3">Beste Sushi Liefhebber,</p>
-                <p class="mb-3">Uw verificatiecode is:</p>
-                <h1 class="text-center text-danger"><strong>{{ $captcha }}</strong></h1>
-                <p class="mt-3">Deze code is geldig voor <strong>5 minuten</strong>.</p>
-                <p class="mt-3">Bedankt dat u Zen Sushi kiest, waar elke hap een genot is!</p>
-            </div>
-            <div class="card-footer text-center bg-light">
-                <small class="text-danger">© {{ date('Y') }} Zen Sushi - Versheid Bezorgd</small>
-            </div>
-        </div>
-    </div>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcfcfc; color: #222;">
+
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding: 80px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="450" cellspacing="0" cellpadding="0" border="0" style="background: #ffffff;">
+                    
+                    <tr>
+                        <td align="center" style="padding-top: 50px;">
+                            <div style="font-size: 11px; letter-spacing: 6px; color: #333; text-transform: uppercase;">Zen Sushi</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="center" style="padding: 60px 40px;">
+                            <h1 style="font-weight: 300; font-size: 20px; color: #333; margin: 0 0 40px 0; letter-spacing: 1px;">
+                                Gebruik de code hieronder om uw aanvraag te bevestigen.
+                            </h1>
+                            
+                            <div style="font-size: 48px; font-weight: 500; color: #000; letter-spacing: 12px; margin-bottom: 40px;">
+                                {{ $captcha }}
+                            </div>
+
+                            <p style="font-size: 12px; color: #888; letter-spacing: 1px;">
+                                Code is 5 minuten geldig.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding-bottom: 50px;"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
