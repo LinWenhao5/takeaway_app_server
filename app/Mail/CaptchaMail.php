@@ -29,7 +29,7 @@ class CaptchaMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Verification Code',
+            subject: 'Uw verificatiecode',
         );
     }
 
