@@ -23,6 +23,7 @@
                 <th>{{ __('business_hours.open_time') }}</th>
                 <th>{{ __('business_hours.close_time') }}</th>
                 <th>{{ __('business_hours.is_closed') }}</th>
+                <th>{{ __('business_hours.delivery_closed') }}</th>
                 <th>{{ __('business_hours.action') }}</th>
             </tr>
         </x-slot:head>
@@ -70,6 +71,16 @@
                         <input type="hidden" name="is_closed" value="0">
                         <input type="checkbox" name="is_closed" value="1"
                             {{ $hour->is_closed ? 'checked' : '' }}
+                            onchange="this.form.submit();">
+                    </form>
+                </td>
+                <td class="text-center">
+                    <form method="POST" action="{{ route('admin.business-hours.update-delivery-closed', $hour->id) }}" id="form-delivery-closed-{{ $hour->id }}" class="d-inline">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="is_delivery_closed" value="0">
+                        <input type="checkbox" name="is_delivery_closed" value="1"
+                            {{ $hour->is_delivery_closed ? 'checked' : '' }}
                             onchange="this.form.submit();">
                     </form>
                 </td>

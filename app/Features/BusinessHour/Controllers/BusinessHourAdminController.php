@@ -20,6 +20,7 @@ class BusinessHourAdminController extends Controller
             'open_time' => 'required|date_format:H:i',
             'close_time' => 'required|date_format:H:i',
             'is_closed' => 'boolean',
+            'is_delivery_closed' => 'boolean',
         ]);
 
         $hour = BusinessHour::findOrFail($id);
@@ -27,10 +28,12 @@ class BusinessHourAdminController extends Controller
             'open_time' => substr($request->input('open_time'), 0, 5),
             'close_time' => substr($request->input('close_time'), 0, 5),
             'is_closed' => $request->boolean('is_closed', false),
+            'is_delivery_closed' => $request->boolean('is_delivery_closed', false),
         ]);
 
         return redirect()->back()->with('success', __('messages.update_success'));
     }
+
     public function updateTime(Request $request, $id)
     {
         $request->validate([
@@ -56,6 +59,20 @@ class BusinessHourAdminController extends Controller
         $hour = BusinessHour::findOrFail($id);
         $hour->update([
             'is_closed' => $request->boolean('is_closed'),
+        ]);
+
+        return redirect()->back()->with('success', __('messages.update_success'));
+    }
+
+    public function updateDeliveryClosed(Request $request, $id)
+    {
+        $request->validate([
+            'is_delivery_closed' => 'required|boolean',
+        ]);
+
+        $hour = BusinessHour::findOrFail($id);
+        $hour->update([
+            'is_delivery_closed' => $request->boolean('is_delivery_closed'),
         ]);
 
         return redirect()->back()->with('success', __('messages.update_success'));

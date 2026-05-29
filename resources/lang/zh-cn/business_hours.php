@@ -5,6 +5,7 @@ return [
     'open_time' => '开门时间',
     'close_time' => '关门时间',
     'is_closed' => '是否休息',
+    'delivery_closed' => '关闭配送',
     'action' => '操作',
     'save' => '保存',
     'sunday' => '周日',

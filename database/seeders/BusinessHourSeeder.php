@@ -9,7 +9,7 @@ class BusinessHourSeeder extends Seeder
 {
     public function run()
     {
-        $defaultOpen = '09:00';
+        $defaultOpen = '13:00';
         $defaultClose = '21:00';
 
         foreach (range(0, 6) as $weekday) {
@@ -20,6 +20,7 @@ class BusinessHourSeeder extends Seeder
                     'open_time' => $defaultOpen,
                     'close_time' => $defaultClose,
                     'is_closed' => false,
+                    'is_delivery_closed' => false,
                 ]);
             }
         }

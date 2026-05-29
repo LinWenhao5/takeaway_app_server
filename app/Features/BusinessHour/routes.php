@@ -10,6 +10,7 @@ Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit
         Route::get('/', [BusinessHourAdminController::class, 'index'])->name('index');
         Route::put('{id}/time', [BusinessHourAdminController::class, 'updateTime'])->name('update-time');
         Route::put('{id}/closed', [BusinessHourAdminController::class, 'updateClosed'])->name('update-closed');
+        Route::put('{id}/delivery-closed', [BusinessHourAdminController::class, 'updateDeliveryClosed'])->name('update-delivery-closed');
     });
 
 Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])

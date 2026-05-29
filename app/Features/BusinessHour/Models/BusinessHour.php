@@ -14,9 +14,11 @@ class BusinessHour extends Model
         'open_time',
         'close_time',
         'is_closed',
+        'is_delivery_closed',
     ];
 
     protected $casts = [
         'is_closed' => 'boolean',
+        'is_delivery_closed' => 'boolean',
     ];
 }

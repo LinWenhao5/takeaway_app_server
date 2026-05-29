@@ -14,12 +14,12 @@ class BusinessHourService
         }
 
         $advance = $orderType === OrderType::PICKUP ? 30 : 45;
-        $interval = 10;
+        $interval = 15;
 
         $weekday = $date->dayOfWeek;
         $hour = BusinessHour::where('weekday', $weekday)->first();
 
-        if (!$hour || $hour->is_closed) {
+        if (!$hour || $hour->is_closed || ($orderType === OrderType::DELIVERY && $hour->is_delivery_closed)) {
             return [];
         }
 
