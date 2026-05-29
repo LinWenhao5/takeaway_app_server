@@ -120,7 +120,7 @@
                 </li>
                 @endcanany
 
-                @canany(['manage_settings', 'view_horizon'])
+                @can('manage_settings')
                 <!-- System Management -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="systemDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -134,16 +134,9 @@
                             </a>
                         </li>
                         @endcan
-                        @can('view_horizon')
-                        <li>
-                            <a href="{{ url('/horizon') }}" class="dropdown-item {{ request()->is('horizon*') ? 'active' : '' }}">
-                                @lang('navigation.horizon')
-                            </a>
-                        </li>
-                        @endcan
                     </ul>
                 </li>
-                @endcanany
+                @endcan
             </ul>
 
             <!-- Logout Button -->

@@ -42,7 +42,7 @@ This is the backend service for a takeaway application, built with the Laravel f
 ### 7. Admin Panel
 - Role-based access control for admin features
 - Custom rate limiting
-- Queue monitoring with Laravel Horizon
+- Queue processing with Laravel's built-in worker
 
 ---
 
@@ -53,7 +53,7 @@ This is the backend service for a takeaway application, built with the Laravel f
 - **Authentication**: Laravel Sanctum
 - **Authorization**: spatie/laravel-permission
 - **Queue/Cache**: Redis
-- **Queue Monitoring**: Laravel Horizon
+- **Queue Processing**: Laravel queue worker
 - **API**: RESTful, with Swagger documentation support
 - **Frontend**: Blade + Bootstrap 5
 
@@ -83,11 +83,11 @@ php artisan migrate --seed
 ### 5. Start Required Services
 Make sure MySQL and Redis are running.
 
-### 6. Start Laravel Horizon (for queue monitoring)
+### 6. Start the Queue Worker
 ```bash
-php artisan horizon
+php artisan queue:work --tries=1
 ```
-Access the Horizon dashboard at `http://your-app-url/horizon`.
+The worker will process queued jobs using Laravel's built-in queue system.
 
 ### 7. Start the Development Server
 ```bash

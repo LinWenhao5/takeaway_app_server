@@ -2,7 +2,6 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    App\Providers\HorizonServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     App\Features\Product\Providers\ProductServiceProvider::class,
     App\Features\Auth\Providers\AuthServiceProvider::class,

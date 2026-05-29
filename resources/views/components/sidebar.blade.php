@@ -116,7 +116,7 @@
             </div>
             @endcan
             <!-- 系统管理分组 -->
-            @canany(['manage_settings', 'view_horizon'])
+            @can('manage_settings')
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingSystem">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSystem" aria-expanded="false" aria-controls="collapseSystem">
@@ -133,18 +133,11 @@
                                 </a>
                             </li>
                             @endcan
-                            @can('view_horizon')
-                            <li>
-                                <a href="{{ url('/horizon') }}" class="nav-link {{ request()->is('horizon*') ? 'active' : '' }}">
-                                    @lang('navigation.horizon')
-                                </a>
-                            </li>
-                            @endcan
                         </ul>
                     </div>
                 </div>
             </div>
-            @endcanany
+            @endcan
         </div>
 
         <div class="d-flex align-items-center justify-content-between mt-3">

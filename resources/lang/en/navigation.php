@@ -21,6 +21,5 @@ return [
     'order_history' => 'Order History',
     'system_management' => 'System Management',
     'settings' => 'Settings',
-    'horizon' => 'Horizon',
     'logout' => 'Logout',
 ];
