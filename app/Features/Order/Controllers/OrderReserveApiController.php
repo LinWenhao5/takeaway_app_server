@@ -12,14 +12,10 @@ use Carbon\Carbon;
 
 class OrderReserveApiController extends Controller
 {
-    protected $orderQueryService;
-    protected $businessHourService;
-
-    public function __construct(OrderQueryService $orderQueryService, BusinessHourService $businessHourService)
-    {
-        $this->orderQueryService = $orderQueryService;
-        $this->businessHourService = $businessHourService;
-    }
+    public function __construct(
+        protected OrderQueryService $orderQueryService, 
+        protected BusinessHourService $businessHourService
+    ) {}
 
     /**
      * Update reserve time for an unpaid order.

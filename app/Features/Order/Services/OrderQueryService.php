@@ -6,7 +6,7 @@ use Exception;
 
 class OrderQueryService
 {
-    public function getOrderById($orderId, $customerId, $detail = false)
+    public function getOrderById(int $orderId, int $customerId, bool $detail = false)
     {
         $query = Order::query();
 
@@ -27,7 +27,7 @@ class OrderQueryService
         return $order;
     }
 
-    public function getOrdersByCustomerId($customerId, $perPage = 10)
+    public function getOrdersByCustomerId(int $customerId, int $perPage = 10)
     {
         return Order::with(['products'])
             ->where('customer_id', $customerId)

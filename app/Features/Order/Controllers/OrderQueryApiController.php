@@ -3,18 +3,14 @@
 namespace App\Features\Order\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Features\Order\Services\OrderService;
 use App\Features\Order\Services\OrderQueryService;
 use Exception;
 
 class OrderQueryApiController extends Controller
 {
-    protected $orderQueryService;
-
-    public function __construct(OrderQueryService $orderQueryService) 
-    {
-        $this->orderQueryService = $orderQueryService;
-    }
+    public function __construct( 
+        protected OrderQueryService $orderQueryService
+    ) {}
 
     /**
      * Get order status by ID.
@@ -50,7 +46,7 @@ class OrderQueryApiController extends Controller
      *     ),
      * )
      */
-    public function getOrderStatus($orderId)
+    public function getOrderStatus(int $orderId)
     {
         try {
             $customerId = $this->getAuthenticatedCustomer()->id;
@@ -162,7 +158,7 @@ class OrderQueryApiController extends Controller
      *     )
      * )
      */
-    public function getOrderDetail($orderId)
+    public function getOrderDetail(int $orderId)
     {
         try {
             $customerId = $this->getAuthenticatedCustomer()->id;

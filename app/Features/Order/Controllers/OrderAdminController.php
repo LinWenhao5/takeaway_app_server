@@ -45,7 +45,7 @@ class OrderAdminController extends Controller
     /**
      * Show the details of a specific order.
      */
-    public function show($id)
+    public function show(int $id)
     {
         $order = Order::with(['customer', 'products'])->findOrFail($id);
 
@@ -62,7 +62,7 @@ class OrderAdminController extends Controller
     /**
      * Update the status of an order.
      */
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, int $id)
     {
         $request->validate([
             'status' => 'required|string|max:50',
@@ -79,7 +79,7 @@ class OrderAdminController extends Controller
     /**
      * Delete an order.
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $order = Order::findOrFail($id);
         $order->delete();

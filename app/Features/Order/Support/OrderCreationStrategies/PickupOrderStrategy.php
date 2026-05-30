@@ -2,38 +2,38 @@
 namespace App\Features\Order\Support\OrderCreationStrategies;
 
 use App\Features\Cart\Services\CartService;
+use App\Features\Order\DTOs\CreateOrderDto;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
 
 class PickupOrderStrategy extends AbstractOrderCreationStrategy
 {
-    public function __construct(CartService $cartService)
-    {
-        parent::__construct($cartService);
-    }
+    public function __construct (
+        protected CartService $cartService
+    ) {}
 
-    public function validateOrder($totalPrice, $addressId): void
-    {
-        // No specific validation for pickup orders
-    }
+        public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void
+        {
+            // No specific validation for pickup orders
+        }
 
-    protected function calculateFinalPrice($totalPrice): float
+    protected function calculateFinalPrice(float $totalPrice): float
     {
         return $totalPrice;
     }
 
-    protected function buildOrderData($customerId, $addressId, $reserveTime, $note, $finalPrice): array
+    protected function buildOrderData(CreateOrderDto $createOrderDto, float $finalPrice): array
     {
         return [
-            'customer_id' => $customerId,
+            'customer_id' => $createOrderDto->customerId,
             'status' => OrderStatus::Unpaid,
             'total_price' => $finalPrice,
             'delivery_fee' => 0,
             'address_id' => null,
             'address_snapshot' => null,
             'order_type' => OrderType::PICKUP,
-            'reserve_time' => $reserveTime,
-            'note' => $note,
+            'reserve_time' => $createOrderDto->reserveTime,
+            'note' => $createOrderDto->note,
         ];
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Features\Order\Support\OrderCreationStrategies;
 
 use App\Features\Cart\Services\CartService;
+use App\Features\Order\DTOs\CreateOrderDto;
 use App\Features\Product\Models\Product;
 use App\Features\Order\Models\Order;
 use Illuminate\Support\Facades\DB;
@@ -9,23 +10,21 @@ use Exception;
 
 abstract class AbstractOrderCreationStrategy 
 {
-    protected CartService $cartService;
+    public function __construct( 
+        protected CartService $cartService
+    )
+    {}
 
-    public function __construct(CartService $cartService)
+    public function createOrder(CreateOrderDto $createOrderDto): Order
     {
-        $this->cartService = $cartService;
-    }
-
-    public function createOrder($customerId, $addressId, $reserveTime, $note = null): Order
-    {
-        return DB::transaction(function () use ($customerId, $addressId, $reserveTime, $note) {
-            [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($customerId);
+        return DB::transaction(function () use ($createOrderDto) {
+            [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($createOrderDto->customerId);
             
-            $this->validateOrder($totalPrice, $addressId);
+            $this->validateOrder($createOrderDto, $totalPrice);
             
             $finalPrice = $this->calculateFinalPrice($totalPrice);
             
-            $orderData = $this->buildOrderData($customerId, $addressId, $reserveTime, $note, $finalPrice);
+            $orderData = $this->buildOrderData($createOrderDto, $finalPrice);
             
             $order = Order::create($orderData);
 
@@ -39,13 +38,13 @@ abstract class AbstractOrderCreationStrategy
                 'total_vat_amount' => $totalVatAmount,
             ]);
 
-            $this->cartService->clearCart($customerId);
+            $this->cartService->clearCart($createOrderDto->customerId);
 
             return $order;
         });
     }
 
-    protected function prepareCartProductsAndTotal($customerId): array
+    protected function prepareCartProductsAndTotal(int $customerId): array
     {
         $cart = $this->cartService->getCart($customerId);
         if (empty($cart)) {
@@ -114,9 +113,9 @@ abstract class AbstractOrderCreationStrategy
         return $vatSummary;
     }
 
-    abstract public function validateOrder($totalPrice, $addressId): void;
+    abstract public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void;
     
-    abstract protected function calculateFinalPrice($totalPrice): float;
+    abstract protected function calculateFinalPrice(float $totalPrice): float;
     
-    abstract protected function buildOrderData($customerId, $addressId, $reserveTime, $note, $finalPrice): array;
+    abstract protected function buildOrderData(CreateOrderDto $createOrderDto, float $finalPrice): array;
 }

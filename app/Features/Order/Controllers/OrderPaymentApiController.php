@@ -10,26 +10,19 @@ use Exception;
 use App\Features\BusinessHour\Services\BusinessHourService;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
+use App\Features\Order\DTOs\CreateOrderDto;
 use App\Features\Order\Services\OrderService;
 use Carbon\Carbon;
 
 class OrderPaymentApiController extends Controller
 {
-    protected $orderQueryService;
-    protected $orderService;
-    protected $paymentService;
-    protected $businessHourService;
 
     public function __construct(
-        OrderQueryService $orderQueryService,
-        OrderService $orderService,
-        PaymentService $paymentService,
-        BusinessHourService $businessHourService
+        protected OrderQueryService $orderQueryService,
+        protected OrderService $orderService,
+        protected PaymentService $paymentService,
+        protected BusinessHourService $businessHourService
     ) {
-        $this->orderQueryService = $orderQueryService;
-        $this->orderService = $orderService;
-        $this->paymentService = $paymentService;
-        $this->businessHourService = $businessHourService;
     }
     
 
@@ -118,8 +111,16 @@ class OrderPaymentApiController extends Controller
         $reserveTime = $validated['reserve_time'];
         $note = $validated['note'] ?? null;
 
+        $createOrderDto = new CreateOrderDto(
+            customerId: $customerId,
+            addressId: $addressId,
+            orderType: $orderType,
+            reserveTime: $reserveTime,
+            note: $note,
+        );
+
         try {
-            $order = $this->orderService->createOrder($customerId, $addressId, $orderType, $reserveTime, $note);
+            $order = $this->orderService->createOrder($createOrderDto);
 
             $platform = $request->input('platform');
             $host = $request->input('host');
@@ -172,7 +173,7 @@ class OrderPaymentApiController extends Controller
      *     )
      * )
      */
-    public function repayOrder(Request $request, $orderId)
+    public function repayOrder(Request $request, int $orderId)
     {
         try {
             $customerId = $this->getAuthenticatedCustomer()->id;
