@@ -22,6 +22,8 @@ class OrderService
 
     public function createOrder(CreateOrderDto $createOrderDto)
     {
+        $this->cartService->ensureCartProductsAreAvailable($createOrderDto->customerId);
+
         $reserveDate = Carbon::parse($createOrderDto->reserveTime);
 
         if (!$this->businessHourService->isTimeAvailableForDate($createOrderDto->orderType, $reserveDate)) {

@@ -16,8 +16,13 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'is_out_of_stock',
         'product_category_id',
         'vat_rate_id',
+    ];
+
+    protected $casts = [
+        'is_out_of_stock' => 'boolean',
     ];
 
     public function category()

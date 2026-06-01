@@ -28,6 +28,17 @@
             <label for="price" class="form-label">@lang('products.price')</label>
             <input type="number" name="price" id="price" class="form-control" value="{{ $product->price }}" required step="0.01">
         </div>
+        <div class="mb-3 form-check">
+            <input
+                type="checkbox"
+                name="is_out_of_stock"
+                id="is_out_of_stock"
+                class="form-check-input"
+                value="1"
+                @checked(old('is_out_of_stock', $product->is_out_of_stock))
+            >
+            <label class="form-check-label" for="is_out_of_stock">@lang('products.mark_as_out_of_stock')</label>
+        </div>
         <div class="mb-3">
             <x-media-selector :media="$media" :selected="$selectedMedia" :label="__('products.select_media')" name="media" :multiple="true"/>
         </div>

@@ -3,9 +3,9 @@
 namespace App\Features\Cart\Controllers;
 
 use App\Features\Cart\Services\CartService;
+use App\Exceptions\ProductNotAvailableException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Exception;
 
 class CartApiController extends Controller
 {
@@ -59,6 +59,8 @@ class CartApiController extends Controller
 
             $customerId = $this->getAuthenticatedCustomer()->id;
 
+            $this->cartService->ensureProductIsAvailable($validated['product_id']);
+
             $this->cartService->addToCart(
                 $customerId,
                 $validated['product_id'],
@@ -66,10 +68,17 @@ class CartApiController extends Controller
             );
 
             return response()->json([
+                'success' => true,
                 'message' => 'Product added to cart successfully.',
             ]);
-        } catch (Exception $e) {
+        } catch (ProductNotAvailableException $e) {
             return response()->json([
+                'success' => false,
+                    'message' => $e->getMessage(),
+                ], $e->getCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
                 'message' => 'Failed to add product to cart.',
                 'error' => $e->getMessage(),
             ], 500);
@@ -124,7 +133,7 @@ class CartApiController extends Controller
                 'total_price' => $cartData['total_price'],
                 'total_quantity' => $cartData['total_quantity'],
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve cart.',
                 'error' => $e->getMessage(),
@@ -182,7 +191,7 @@ class CartApiController extends Controller
                 'customerId' => $customerId,
                 'productId' => $validated['product_id'],
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to remove product from cart.',
                 'error' => $e->getMessage(),
@@ -245,7 +254,7 @@ class CartApiController extends Controller
                 'productId' => $validated['product_id'],
                 'quantity' => $validated['quantity'],
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to remove product quantity from cart.',
                 'error' => $e->getMessage(),

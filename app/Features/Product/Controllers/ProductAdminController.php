@@ -67,9 +67,12 @@ class ProductAdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0',
+            'is_out_of_stock' => 'sometimes|boolean',
             'media' => 'nullable|array',
             'media.*' => 'exists:media,id',
         ]);
+
+        $validation['is_out_of_stock'] = $request->boolean('is_out_of_stock');
 
         try {
             $product = Product::create($validation);
@@ -111,9 +114,12 @@ class ProductAdminController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
             'price' => 'sometimes|required|numeric|min:0',
+            'is_out_of_stock' => 'sometimes|boolean',
             'media' => 'nullable|array',
             'media.*' => 'exists:media,id',
         ]);
+
+        $validation['is_out_of_stock'] = $request->boolean('is_out_of_stock');
 
         try {
             $product->update($validation);

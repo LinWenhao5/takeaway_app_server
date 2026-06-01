@@ -4,6 +4,7 @@ namespace App\Features\Cart\Services;
 
 use Illuminate\Support\Facades\Redis;
 use App\Features\Product\Models\Product;
+use App\Exceptions\ProductNotAvailableException;
 
 class CartService
 {
@@ -12,6 +13,8 @@ class CartService
 
     public function addToCart($customerId, $productId, $quantity)
     {
+        $this->ensureProductIsAvailable($productId);
+
         $cartKey = $this->cartKeyPrefix . $customerId;
 
         Redis::connection('cache')->hincrby($cartKey, $productId, $quantity);
@@ -73,7 +76,8 @@ class CartService
             'id', 
             'name', 
             'description', 
-            'price'
+            'price',
+            'is_out_of_stock'
         )->with('media')->get();
 
         $totalPrice = 0;
@@ -92,6 +96,7 @@ class CartService
                 'image' => $product->media->first()->path ?? null,
                 'quantity' => (string) $quantity,
                 'subtotal' => number_format($subtotal, 2, '.', ''),
+                'is_out_of_stock' => $product->is_out_of_stock,
             ];
         });
 
@@ -100,5 +105,45 @@ class CartService
             'total_price' => number_format($totalPrice, 2, '.', ''),
             'total_quantity' => (string) $totalQuantity,
         ];
+    }
+
+    public function ensureProductIsAvailable($productId): void
+    {
+        $product = Product::select('id', 'name', 'is_out_of_stock')->find($productId);
+
+        if (!$product) {
+            throw new ProductNotAvailableException("Product with ID {$productId} not found", 404);
+        }
+
+        if ($product->is_out_of_stock) {
+            throw new ProductNotAvailableException("Product '{$product->name}' is not available", 409);
+        }
+    }
+
+    public function ensureCartProductsAreAvailable($customerId): void
+    {
+        $cart = $this->getCart($customerId);
+        if (empty($cart)) return;
+
+        $cartProductIds = array_keys($cart);
+        $products = Product::select('id', 'name', 'is_out_of_stock')
+            ->whereIn('id', $cartProductIds)
+            ->get();
+
+        $existingProductIds = $products->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        $missingProductIds = array_diff($cartProductIds, $existingProductIds);
+        
+        $outOfStockProductIds = $products->where('is_out_of_stock', true)->pluck('id')->map(fn($id) => (string)$id)->toArray();
+
+        $invalidIds = array_merge($missingProductIds, $outOfStockProductIds);
+
+        if (!empty($invalidIds)) {
+            $cartKey = $this->cartKeyPrefix . $customerId;
+            foreach ($invalidIds as $id) {
+                Redis::connection('cache')->hdel($cartKey, $id);
+            }
+            
+            throw new ProductNotAvailableException("Part of products is removed form cart", 409);
+        }
     }
 }

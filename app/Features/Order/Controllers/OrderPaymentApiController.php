@@ -7,6 +7,7 @@ use App\Features\Order\Services\OrderQueryService;
 use App\Features\Payment\Services\PaymentService;
 use Illuminate\Http\Request;
 use Exception;
+use App\Exceptions\ProductNotAvailableException;
 use App\Features\BusinessHour\Services\BusinessHourService;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
@@ -131,6 +132,12 @@ class OrderPaymentApiController extends Controller
                 'order_id' => $order->id,
                 'payment_url' => $paymentUrl,
             ]);
+        } 
+        catch (ProductNotAvailableException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getCode());
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
