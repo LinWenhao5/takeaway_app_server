@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+
+    'registration_enabled' => env('APP_REGISTRATION_ENABLED', true),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

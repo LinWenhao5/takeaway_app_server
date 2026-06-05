@@ -59,6 +59,11 @@ class CustomerAuthApiController extends Controller
     {
         $response = null;
         try {
+
+            if (!config('app.registration_enabled')) {
+                return response()->json(['message' => 'Registration is currently disabled.'], 403);
+            }
+            
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:customers,email',
@@ -70,9 +75,8 @@ class CustomerAuthApiController extends Controller
 
             if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
                 $response = response()->json([
-                    'code' => 'INVALID_CAPTCHA',
                     'message' => 'Invalid captcha.',
-                ], 400);
+                ], 401);
             } else {
                 $customer = Customer::create([
                     'name' => $request->name,
@@ -81,24 +85,15 @@ class CustomerAuthApiController extends Controller
                 ]);
                 Cache::forget('captcha_' . $request->email);
                 $response = response()->json([
-                    'code' => 'REGISTRATION_SUCCESS',
                     'message' => 'Customer registered successfully!',
                     'customer' => $customer,
                 ], 201);
             }
         } catch (ValidationException $e) {
-            $errors = $e->errors();
-            if (isset($errors['email'])) {
-                $response = response()->json([
-                    'code' => 'EMAIL_ALREADY_EXISTS',
-                    'message' => $errors['email'][0],
-                ], 400);
-            } else {
-                $response = response()->json([
-                    'code' => 'VALIDATION_FAILED',
-                    'message' => $errors,
-                ], 400);
-            }
+            $response = response()->json([
+                'message' => 'Validation failed.',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (Exception $e) {
             $response = response()->json([
                 'code' => 'REGISTRATION_FAILED',
