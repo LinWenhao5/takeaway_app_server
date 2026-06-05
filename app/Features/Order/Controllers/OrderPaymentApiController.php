@@ -142,7 +142,7 @@ class OrderPaymentApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], 400);
+            ], 500);
         }
     }
 
@@ -191,14 +191,14 @@ class OrderPaymentApiController extends Controller
             }
 
             if ($order->status !== OrderStatus::Unpaid) {
-                return response()->json(['success' => false, 'message' => 'Order already paid or cannot be repaid'], 400);
+                return response()->json(['success' => false, 'message' => 'Order already paid or cannot be repaid'], 409);
             }
 
             $reserveTime = Carbon::parse($order->reserve_time);
             $orderType = $order->order_type;
 
             if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
-                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 400);
+                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 422);
             }
 
             $platform = $request->input('platform');
@@ -210,12 +210,12 @@ class OrderPaymentApiController extends Controller
                 'success' => true,
                 'order_id' => $order->id,
                 'payment_url' => $paymentUrl,
-            ]);
+            ], 201);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], 400);
+            ], 500);
         }
     }
 }
