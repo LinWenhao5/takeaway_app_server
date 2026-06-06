@@ -904,6 +904,10 @@
                                         "username": {
                                             "type": "string",
                                             "example": "SushiLover"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "sushilover@example.com"
                                         }
                                     },
                                     "type": "object"
