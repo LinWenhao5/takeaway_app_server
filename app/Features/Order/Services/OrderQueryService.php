@@ -10,10 +10,6 @@ class OrderQueryService
     {
         $query = Order::query();
 
-        if ($detail) {
-            $query->with(['products']);
-        }
-
         $order = $query->find($orderId);
 
         if (!$order) {
@@ -29,8 +25,7 @@ class OrderQueryService
 
     public function getOrdersByCustomerId(int $customerId, int $perPage = 10)
     {
-        return Order::with(['products'])
-            ->where('customer_id', $customerId)
+        return Order::where('customer_id', $customerId)
             ->orderByDesc('created_at')
             ->paginate($perPage);
     }

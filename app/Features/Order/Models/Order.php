@@ -16,6 +16,7 @@ class Order extends Model
 
     protected $fillable = [
         'customer_id',
+        'products_snapshot',
         'status',
         'payment_id',
         'total_price',
@@ -34,6 +35,7 @@ class Order extends Model
         'vat_snapshot' => 'array',
         'status' => OrderStatus::class,
         'order_type' => OrderType::class,  
+        'products_snapshot' => 'array',
     ];
     
 
@@ -45,7 +47,7 @@ class Order extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_product')
-                    ->withPivot('quantity', 'price', 'vat_amount', 'vat_rate', 'vat_name')
+                    ->withPivot('quantity', 'price')
                     ->withTimestamps();
     }
 

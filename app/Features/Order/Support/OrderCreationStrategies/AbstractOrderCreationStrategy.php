@@ -76,16 +76,29 @@ abstract class AbstractOrderCreationStrategy
 
     protected function attachProductsToOrder(Order $order, array $cart, array $products): void
     {
+        $productsSnapshot = [];
         foreach ($cart as $productId => $quantity) {
             $product = $products[$productId];
             $order->products()->attach($productId, [
                 'quantity' => $quantity,
                 'price' => $product->price,
-                'vat_amount' => $product->vat_amount,
-                'vat_rate' => $product->vat_rate,
-                'vat_name' => $product->vat_name,
             ]);
+
+            $productsSnapshot[] = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'price' => $product->price,
+                'vat_rate' => $product->vat_rate,
+                'vat_amount' => $product->vat_amount,
+                'vat_name' => $product->vat_name,
+                'quantity' => $quantity,
+            ];
         }
+
+        $order->update([
+            'products_snapshot' => $productsSnapshot,
+        ]);
     }
 
     protected function calculateVatSummary(Order $order): array
