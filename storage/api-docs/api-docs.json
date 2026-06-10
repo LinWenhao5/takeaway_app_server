@@ -1916,48 +1916,19 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Reserve time updated successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "order_id": {
-                                            "type": "integer",
-                                            "example": 123
-                                        },
-                                        "reserve_time": {
-                                            "type": "string",
-                                            "example": "2025-08-05 18:30"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Reserve time updated successfully"
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Error message"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
+                    },
+                    "403": {
+                        "description": "Forbidden - Order status is invalid for this action"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - The reserved time is not available"
                     }
                 },
                 "security": [

@@ -9,6 +9,7 @@ use Exception;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\BusinessHour\Services\BusinessHourService;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class OrderReserveApiController extends Controller
 {
@@ -46,21 +47,24 @@ class OrderReserveApiController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Reserve time updated successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="order_id", type="integer", example=123),
-     *             @OA\Property(property="reserve_time", type="string", example="2025-08-05 18:30")
-     *         )
+     *         description="Reserve time updated successfully"
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad Request",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Error message")
-     *         )
-     *     )
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden - Order status is invalid for this action"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found"
+     *     ),
+     *    @OA\Response(
+     *        response=422,
+     *       description="Unprocessable Entity - The reserved time is not available"
+     *    ),
      * )
      */
     public function updateReserveTime(Request $request, $orderId)
@@ -74,7 +78,7 @@ class OrderReserveApiController extends Controller
             }
 
             if ($order->status != OrderStatus::Unpaid) {
-                return response()->json(['success' => false, 'message' => 'Only unpaid orders can update reserve time'], 400);
+                return response()->json(['success' => false, 'message' => 'Only unpaid orders can update reserve time'], 403);
             }
 
             $request->validate([
@@ -86,7 +90,7 @@ class OrderReserveApiController extends Controller
             $orderType = $order->order_type;
             
             if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
-                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 400);
+                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 422);
             }
 
             $order->reserve_time = $reserveTime->format('Y-m-d H:i');
@@ -97,11 +101,16 @@ class OrderReserveApiController extends Controller
                 'order_id' => $order->id,
                 'reserve_time' => $order->reserve_time,
             ]);
-        } catch (Exception $e) {
+        } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 }
