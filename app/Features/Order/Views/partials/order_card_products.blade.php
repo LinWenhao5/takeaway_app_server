@@ -6,8 +6,10 @@
         aria-controls="collapseDishes{{ $order->id }}">
         <i class="bi bi-list-ul me-1"></i> @lang('orders.view_dishes')
     </button>
+
     <div class="collapse mt-2" id="collapseDishes{{ $order->id }}">
         <strong>@lang('orders.dishes'):</strong>
+
         <x-table class="table-sm table-bordered mb-0">
             <x-slot:head>
                 <tr>
@@ -17,17 +19,23 @@
                     <th>@lang('orders.subtotal')</th>
                 </tr>
             </x-slot:head>
+
             <x-slot:body>
                 @php $subtotalSum = 0; @endphp
-                @foreach($order->products as $product)
+
+                @foreach($order->products_snapshot as $item)
                     @php
-                        $subtotal = $product->pivot->price * $product->pivot->quantity;
+                        $unitPrice = $item['final_price'] ?? $item['price'];
+                        $quantity = $item['quantity'];
+
+                        $subtotal = $unitPrice * $quantity;
                         $subtotalSum += $subtotal;
                     @endphp
+
                     <tr>
-                        <td>{{ $product->name }}</td>
-                        <td>€{{ number_format($product->pivot->price, 2) }}</td>
-                        <td>{{ $product->pivot->quantity }}</td>
+                        <td>{{ $item['name'] }}</td>
+                        <td>€{{ number_format($unitPrice, 2) }}</td>
+                        <td>{{ $quantity }}</td>
                         <td>€{{ number_format($subtotal, 2) }}</td>
                     </tr>
                 @endforeach

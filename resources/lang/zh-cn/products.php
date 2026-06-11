@@ -5,6 +5,7 @@ return [
     'name' => '名称',
     'description' => '简介',
     'price' => '价格',
+    'discount_price' => '折扣价',
     'image' => '图片',
     'actions' => '操作',
     'edit' => '编辑',
@@ -32,5 +33,6 @@ return [
     'save' => '保存',
     'enter_name' => '请输入商品名称',
     'enter_price' => '请输入价格',
+    'enter_discount_price' => '请输入折扣价',
     'back' => '返回',
 ];

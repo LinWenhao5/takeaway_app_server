@@ -85,7 +85,21 @@
                                     <div class="d-flex flex-column">
                                         <strong class="fw-bold">{{ $product->id }}. {{ $product->name }}</strong>
                                         <p class="mb-1 text-muted small">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</p>
-                                        <span class="fw-bold text-success">€ {{ number_format($product->price, 2) }}</span>
+                                        <span class="fw-bold">
+                                            @if($product->is_discounted)
+                                                <span class="text-muted text-decoration-line-through">
+                                                    € {{ number_format($product->price, 2) }}
+                                                </span>
+
+                                                <span class="text-success ms-2">
+                                                    € {{ number_format($product->final_price, 2) }}
+                                                </span>
+                                            @else
+                                                <span class="text-success">
+                                                    € {{ number_format($product->price, 2) }}
+                                                </span>
+                                            @endif
+                                        </span>
                                     </div>
                                     <div>
                                         <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-primary ms-2">@lang('product_categories.edit')</a>

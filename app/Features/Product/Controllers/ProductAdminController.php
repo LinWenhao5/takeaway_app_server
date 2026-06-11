@@ -70,6 +70,7 @@ class ProductAdminController extends Controller
             'is_out_of_stock' => 'sometimes|boolean',
             'media' => 'nullable|array',
             'media.*' => 'exists:media,id',
+            'discount_price' => 'nullable|numeric|min:0',
         ]);
 
         $validation['is_out_of_stock'] = $request->boolean('is_out_of_stock');
@@ -117,6 +118,7 @@ class ProductAdminController extends Controller
             'is_out_of_stock' => 'sometimes|boolean',
             'media' => 'nullable|array',
             'media.*' => 'exists:media,id',
+            'discount_price' => 'nullable|numeric|min:0',
         ]);
 
         $validation['is_out_of_stock'] = $request->boolean('is_out_of_stock');

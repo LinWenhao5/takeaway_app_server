@@ -21,6 +21,7 @@
                 <th>@lang('products.name')</th>
                 <th>@lang('products.description')</th>
                 <th>@lang('products.price')</th>
+                <th>@lang('products.discount_price')</th>
                 <th>@lang('products.stock')</th>
                 <th>@lang('products.vat_rate')</th>
                 <th>@lang('products.image')</th>
@@ -33,6 +34,14 @@
                 <td>{{ $product->name }}</td>
                 <td>{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</td>
                 <td>{{ $product->price }}</td>
+                <td>
+                    @if ($product->discount_price)
+                        <span class="text-decoration-line-through text-muted">{{ $product->price }}</span>
+                        <span class="text-danger">{{ $product->discount_price }}</span>
+                    @else
+                        <span class="text-muted">-</span>
+                    @endif
+                </td>
                 <td>
                     @if($product->is_out_of_stock)
                         <span class="badge bg-danger">@lang('products.out_of_stock')</span>

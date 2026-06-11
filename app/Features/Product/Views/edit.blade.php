@@ -28,6 +28,10 @@
             <label for="price" class="form-label">@lang('products.price')</label>
             <input type="number" name="price" id="price" class="form-control" value="{{ $product->price }}" required step="0.01">
         </div>
+        <div class="mb-3">
+            <label for="discount_price" class="form-label">@lang('products.discount_price')</label>
+            <input type="number" name="discount_price" id="discount_price" class="form-control" value="{{ old('discount_price', $product->discount_price) }}" step="0.01">
+        </div>
         <div class="mb-3 form-check">
             <input
                 type="checkbox"

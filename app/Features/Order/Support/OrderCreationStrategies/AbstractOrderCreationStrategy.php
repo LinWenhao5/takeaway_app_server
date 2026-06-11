@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Features\Order\Support\OrderCreationStrategies;
 
 use App\Features\Cart\Services\CartService;
@@ -8,34 +9,34 @@ use App\Features\Order\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-abstract class AbstractOrderCreationStrategy 
+abstract class AbstractOrderCreationStrategy
 {
-    public function __construct( 
+    public function __construct(
         protected CartService $cartService
-    )
-    {}
+    ) {}
 
     public function createOrder(CreateOrderDto $createOrderDto): Order
     {
         return DB::transaction(function () use ($createOrderDto) {
-            [$cart, $products, $totalPrice] = $this->prepareCartProductsAndTotal($createOrderDto->customerId);
-            
-            $this->validateOrder($createOrderDto, $totalPrice);
-            
-            $finalPrice = $this->calculateFinalPrice($totalPrice);
-            
-            $orderData = $this->buildOrderData($createOrderDto, $finalPrice);
-            
-            $order = Order::create($orderData);
+
+            [$cart, $products, $subtotal] =
+                $this->prepareCartProducts($createOrderDto->customerId);
+
+            $this->validateOrder($createOrderDto, $subtotal);
+
+            $finalPrice = $this->calculateFinalPrice($subtotal);
+
+            $order = Order::create(
+                $this->buildOrderData($createOrderDto, $finalPrice)
+            );
 
             $this->attachProductsToOrder($order, $cart, $products);
 
-            $vatSummary = $this->calculateVatSummary($order);
-            $totalVatAmount = $vatSummary['total_vat_amount'] ?? 0;
+            $vatSummary = $this->calculateVatSummary($cart, $products);
 
             $order->update([
                 'vat_snapshot' => $vatSummary,
-                'total_vat_amount' => $totalVatAmount,
+                'total_vat_amount' => $vatSummary['total_vat_amount'],
             ]);
 
             $this->cartService->clearCart($createOrderDto->customerId);
@@ -44,91 +45,122 @@ abstract class AbstractOrderCreationStrategy
         });
     }
 
-    protected function prepareCartProductsAndTotal(int $customerId): array
+    /**
+     * Step 1: Prepare cart + products + subtotal
+     */
+    protected function prepareCartProducts(int $customerId): array
     {
         $cart = $this->cartService->getCart($customerId);
+
         if (empty($cart)) {
             throw new Exception('Cart is empty');
         }
 
-        $totalPrice = 0;
+        $subtotal = 0;
         $products = [];
+
         foreach ($cart as $productId => $quantity) {
+
             $product = Product::find($productId);
+
             if (!$product) {
                 throw new Exception('Product not found: ' . $productId);
             }
 
-            $vatRate = $product->vatRate?->rate ?? 0;
-            $vatName = $product->vatRate?->name ?? 'No VAT';
-            $vatAmount = round($product->price * $vatRate / 100, 2);
+            $products[$productId] = [
+                'model' => $product,
+                'quantity' => $quantity,
+                'unit_price' => $product->final_price,
+            ];
 
-            $product->vat_rate = $vatRate;
-            $product->vat_amount = $vatAmount;
-            $product->vat_name = $vatName;
-
-            $totalPrice += $product->price * $quantity;
-            $products[$productId] = $product;
+            $subtotal += $product->final_price * $quantity;
         }
 
-        return [$cart, $products, $totalPrice];
+        return [$cart, $products, $subtotal];
     }
 
+    /**
+     * Step 2: Attach order items + snapshot
+     */
     protected function attachProductsToOrder(Order $order, array $cart, array $products): void
     {
-        $productsSnapshot = [];
+        $snapshot = [];
+
         foreach ($cart as $productId => $quantity) {
-            $product = $products[$productId];
+
+            $data = $products[$productId];
+            $product = $data['model'];
+
             $order->products()->attach($productId, [
                 'quantity' => $quantity,
                 'price' => $product->price,
+                'final_price' => $product->final_price,
             ]);
 
-            $productsSnapshot[] = [
+            $snapshot[] = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
+
                 'price' => $product->price,
-                'vat_rate' => $product->vat_rate,
-                'vat_amount' => $product->vat_amount,
-                'vat_name' => $product->vat_name,
+                'discount_price' => $product->discount_price,
+                'final_price' => $product->final_price,
+
+                'is_discounted' => $product->is_discounted,
+
+                'vat_rate' => $product->vatRate?->rate,
                 'quantity' => $quantity,
             ];
         }
 
         $order->update([
-            'products_snapshot' => $productsSnapshot,
+            'products_snapshot' => $snapshot,
         ]);
     }
 
-    protected function calculateVatSummary(Order $order): array
+    /**
+     * Step 3: VAT calculation (ONLY PLACE VAT IS CALCULATED)
+     */
+    protected function calculateVatSummary(array $cart, array $products): array
     {
-        $vatSummary = [];
-        $totalVatAmount = 0;
+        $summary = [];
+        $totalVat = 0;
 
-        foreach ($order->products as $product) {
-            $vatName = $product->pivot->vat_name ?? 'No VAT';
-            $vatAmount = $product->pivot->vat_amount * $product->pivot->quantity;
-            $productAmount = $product->pivot->price * $product->pivot->quantity;
+        foreach ($cart as $productId => $quantity) {
 
-            if (!isset($vatSummary[$vatName])) {
-                $vatSummary[$vatName] = [
+            $data = $products[$productId];
+            $product = $data['model'];
+
+            $vatRate = $product->vatRate?->rate ?? 0;
+            $vatName = $product->vatRate?->name ?? 'No VAT';
+
+            $subtotal = $product->final_price * $quantity;
+            $vatAmount = round($subtotal * ($vatRate / 100), 2);
+
+            if (!isset($summary[$vatName])) {
+                $summary[$vatName] = [
                     'vat_total' => 0,
                     'product_total' => 0,
                 ];
             }
-            $vatSummary[$vatName]['vat_total'] += $vatAmount;
-            $vatSummary[$vatName]['product_total'] += $productAmount;
-            $totalVatAmount += $vatAmount;
+
+            $summary[$vatName]['vat_total'] += $vatAmount;
+            $summary[$vatName]['product_total'] += $subtotal;
+
+            $totalVat += $vatAmount;
         }
 
-        $vatSummary['total_vat_amount'] = $totalVatAmount;
-        return $vatSummary;
+        $summary['total_vat_amount'] = round($totalVat, 2);
+
+        return $summary;
     }
 
-    abstract public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void;
-    
-    abstract protected function calculateFinalPrice(float $totalPrice): float;
-    
+    /**
+     * Abstract methods
+     */
+    abstract public function validateOrder(CreateOrderDto $createOrderDto, float $subtotal): void;
+
+    abstract protected function calculateFinalPrice(float $subtotal): float;
+
     abstract protected function buildOrderData(CreateOrderDto $createOrderDto, float $finalPrice): array;
 }

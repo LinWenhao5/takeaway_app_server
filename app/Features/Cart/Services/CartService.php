@@ -77,6 +77,7 @@ class CartService
             'name', 
             'description', 
             'price',
+            'discount_price',
             'is_out_of_stock'
         )->with('media')->get();
 
@@ -84,7 +85,7 @@ class CartService
         $totalQuantity = 0;
         $cartDetails = $products->map(function ($product) use ($cart, &$totalPrice, &$totalQuantity) {
             $quantity = $cart[$product->id];
-            $subtotal = $product->price * $quantity;
+            $subtotal = $product->final_price * $quantity;
             $totalPrice += $subtotal;
             $totalQuantity += $quantity;
 
@@ -93,6 +94,8 @@ class CartService
                 'name' => $product->name,
                 'description' => $product->description,
                 'price' => (string) $product->price,
+                'final_price' => (string) $product->final_price,
+                'is_discounted' => $product->is_discounted,
                 'image' => $product->media->first()->path ?? null,
                 'quantity' => (string) $quantity,
                 'subtotal' => number_format($subtotal, 2, '.', ''),

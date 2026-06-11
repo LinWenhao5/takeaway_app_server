@@ -103,6 +103,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">@lang('orders.dishes')</h5>
+
                 <x-table class="table-bordered align-middle">
                     <x-slot:head>
                         <tr>
@@ -112,24 +113,65 @@
                             <th>@lang('orders.subtotal')</th>
                         </tr>
                     </x-slot:head>
+
                     <x-slot:body>
+
                         @php $total = 0; @endphp
-                        @forelse ($order->products as $product)
+
+                        @forelse ($order->products_snapshot as $item)
+
                             @php
-                                $subtotal = ($product->pivot->price ?? 0) * ($product->pivot->quantity ?? 0);
+                                $price = $item['price'] ?? 0;
+                                $finalPrice = $item['final_price'] ?? $price;
+                                $quantity = $item['quantity'] ?? 0;
+
+                                $subtotal = $finalPrice * $quantity;
                                 $total += $subtotal;
+
+                                $hasDiscount = isset($item['discount_price']) &&
+                                            $item['discount_price'] !== null &&
+                                            $item['discount_price'] < $price;
                             @endphp
+
                             <tr>
-                                <td>{{ $product->name ?? '-' }}</td>
-                                <td>{{ $product->pivot->quantity ?? '-' }}</td>
-                                <td>€{{ number_format($product->pivot->price ?? 0, 2) }}</td>
-                                <td>€{{ number_format($subtotal, 2) }}</td>
+                                <td>
+                                    {{ $item['name'] ?? '-' }}
+
+                                    @if($hasDiscount)
+                                        <span class="badge bg-danger ms-1">-</span>
+                                    @endif
+                                </td>
+
+                                <td>{{ $quantity }}</td>
+
+                                <td>
+                                    @if($hasDiscount)
+                                        <div>
+                                            <span class="text-muted text-decoration-line-through">
+                                                €{{ number_format($price, 2) }}
+                                            </span>
+                                            <span class="ms-2 text-success">
+                                                €{{ number_format($finalPrice, 2) }}
+                                            </span>
+                                        </div>
+                                    @else
+                                        €{{ number_format($price, 2) }}
+                                    @endif
+                                </td>
+
+                                <td>
+                                    €{{ number_format($subtotal, 2) }}
+                                </td>
                             </tr>
+
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">@lang('orders.no_dishes')</td>
+                                <td colspan="4" class="text-center">
+                                    @lang('orders.no_dishes')
+                                </td>
                             </tr>
                         @endforelse
+
                     </x-slot:body>
                 </x-table>
             </div>

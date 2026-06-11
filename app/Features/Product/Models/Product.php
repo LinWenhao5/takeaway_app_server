@@ -16,14 +16,32 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'discount_price',
         'is_out_of_stock',
         'product_category_id',
         'vat_rate_id',
     ];
 
+     protected $appends = [
+        'final_price',
+        'is_discounted',
+    ];
+
     protected $casts = [
         'is_out_of_stock' => 'boolean',
+        'price' => 'decimal:2',
+        'discount_price' => 'decimal:2',
     ];
+
+    public function getFinalPriceAttribute()
+    {
+        return $this->discount_price ?? $this->price;
+    }
+
+    public function getIsDiscountedAttribute()
+    {
+        return $this->discount_price !== null && $this->discount_price < $this->price;
+    }
 
     public function category()
     {

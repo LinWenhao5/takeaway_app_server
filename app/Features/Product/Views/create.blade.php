@@ -27,6 +27,10 @@
             <label for="price" class="form-label">@lang('products.price')</label>
             <input type="number" name="price" id="price" class="form-control" placeholder="@lang('products.enter_price')" required step="0.01">
         </div>
+        <div class="mb-3">
+            <label for="discount_price" class="form-label">@lang('products.discount_price')</label>
+            <input type="number" name="discount_price" id="discount_price" class="form-control" placeholder="@lang('products.enter_discount_price')" step="0.01">
+        </div>
         <div class="mb-3 form-check">
             <input type="checkbox" name="is_out_of_stock" id="is_out_of_stock" class="form-check-input" value="1">
             <label class="form-check-label" for="is_out_of_stock">@lang('products.mark_as_out_of_stock')</label>

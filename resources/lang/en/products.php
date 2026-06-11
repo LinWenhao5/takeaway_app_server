@@ -5,6 +5,7 @@ return [
     'name' => 'Name',
     'description' => 'Description',
     'price' => 'Price',
+    'discount_price' => 'Discount Price',
     'image' => 'Image',
     'actions' => 'Actions',
     'edit' => 'Edit',
@@ -32,5 +33,6 @@ return [
     'save' => 'Save',
     'enter_name' => 'Enter product name',
     'enter_price' => 'Enter price',
+    'enter_discount_price' => 'Enter discount price',
     'back' => 'Back',
 ];
