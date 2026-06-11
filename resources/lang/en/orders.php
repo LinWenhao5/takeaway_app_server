@@ -39,6 +39,7 @@ return [
     'note' => 'Note',
     'customer_info' => 'Customer Info',
     'email' => 'Email',
+    'name' => 'Name',
     'street' => 'Street',
     'house_number' => 'House Number',
     'postcode' => 'Postcode',

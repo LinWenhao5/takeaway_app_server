@@ -23,6 +23,7 @@ return [
     'delete' => '删除',
     'delete_confirm' => '确定要删除此订单吗？',
     'customer' => '客户',
+    'name' => '姓名',
     'phone' => '电话',
     'address' => '地址',
     'total' => '总价',

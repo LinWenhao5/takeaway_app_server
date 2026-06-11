@@ -72,6 +72,7 @@
                 <div class="card-body">
                     <h5 class="card-title">@lang('orders.address')</h5>
                     <div>
+                        <strong>@lang('orders.name'):</strong> {{ $order->address_snapshot['name'] ?? '-' }}<br>
                         <strong>@lang('orders.street'):</strong> {{ $order->address_snapshot['street'] ?? '-' }}<br>
                         <strong>@lang('orders.house_number'):</strong> {{ $order->address_snapshot['house_number'] ?? '-' }}<br>
                         <strong>@lang('orders.postcode'):</strong> {{ $order->address_snapshot['postcode'] ?? '-' }}<br>
