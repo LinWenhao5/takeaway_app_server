@@ -15,286 +15,113 @@ class SushiSeeder extends Seeder
             ['rate' => 9.00]
         );
 
-        $drinkVatRate = VatRate::updateOrCreate(
-            ['name' => 'Drink VAT 21%'],
-            ['rate' => 21.00]
-        );
-
         $categories = [
-            'Sushi Boxes' => [
-                [
-                    'name' => 'Maki Mix (24 st)',
-                    'description' => 'Zalm maki, Tuna maki, Komkommer maki, Kani maki',
-                    'price' => 10.50,
-                ],
-                [
-                    'name' => 'Uramaki Mix (16 st)',
-                    'description' => 'California masago roll, Salmon sesam roll, Tempura ebi roll, Spicy chicken roll',
-                    'price' => 12.50,
-                ],
-                [
-                    'name' => 'Salmon Box (18 st)',
-                    'description' => 'Crunch salmon roll, Salmon maki, Salmon nigiri, Sashimi',
-                    'price' => 23.95,
-                ],
-                [
-                    'name' => 'Salmon Tuna Box (16 st)',
-                    'description' => 'Salmon sesam roll, Tuna spicy roll, Salmon nigiri, Tuna nigiri',
-                    'price' => 25.95,
-                ],
-                [
-                    'name' => 'Uramaki Mix Box (32 st)',
-                    'description' => 'California masago roll, Salmon sesam roll, Tempura ebi roll, Spicy chicken roll',
-                    'price' => 38.00,
-                ],
-                [
-                    'name' => 'Veggie Box (20 st)',
-                    'description' => 'Veggie roll, Komkommer maki, Avocado maki, Omelet nigiri, Avocado nigiri',
-                    'price' => 17.00,
-                ],
-                [
-                    'name' => 'Fried Crispy Box (18 st)',
-                    'description' => 'Kip futomaki, Zalm futomaki, Tuna futomaki',
-                    'price' => 21.50,
-                ],
-                [
-                    'name' => 'Salmon/Tuna Mix (16 st)',
-                    'description' => 'Zalm nigiri, Tuna nigiri, Sashimi zalm, Sashimi tuna',
-                    'price' => 18.95,
-                ],
-                [
-                    'name' => 'Kinder Box (20 st)',
-                    'description' => 'Tempura ebi roll, Crispy chicken roll, Komkommer maki, Avocado maki',
-                    'price' => 15.00,
-                ],
-                [
-                    'name' => 'Studenten Box (32 st)',
-                    'description' => 'Avocado dragon roll, Sake dragon roll',
-                    'price' => 18.00,
-                ],
-            ],
             'Sashimi' => [
-                [
-                    'name' => 'Zalm Sashimi (6 st)',
-                    'description' => 'Salmon sashimi',
-                    'price' => 9.00,
-                ],
-                [
-                    'name' => 'Tuna Sashimi (6 st)',
-                    'description' => 'Tuna sashimi',
-                    'price' => 12.00,
-                ],
-                [
-                    'name' => 'Tataki Zalm Sashimi',
-                    'description' => 'Zalm licht geschaafd met saus',
-                    'price' => 12.50,
-                ],
-                [
-                    'name' => 'Tataki Tuna Sashimi',
-                    'description' => 'Tuna licht geschaafd met saus',
-                    'price' => 12.50,
-                ],
-                [
-                    'name' => 'Hotategai Sashimi',
-                    'description' => 'Coquilles sashimi',
-                    'price' => 12.50,
-                ],
+                ['name' => 'Zalm Sashimi', 'description' => '6 stuks verse zalm', 'price' => 9.00],
+                ['name' => 'Tuna Sashimi', 'description' => '6 stuks verse tonijn', 'price' => 12.00],
+                ['name' => 'Zalm & Tuna Duo', 'description' => '3 Zalm Sashimi, 3 Tuna Sashimi', 'price' => 10.00],
+                ['name' => 'Tataki Zalm Sashimi', 'description' => 'Licht geschroeide verse zalm', 'price' => 10.00],
+                ['name' => 'Tataki Tuna Sashimi', 'description' => 'Licht geschroeide verse tonijn', 'price' => 13.00],
+                ['name' => 'Tataki hotategai Sashimi', 'description' => 'Licht geschroeide verse coquilles', 'price' => 13.00],
             ],
-            'Uramaki Roll (8 st)' => [
-                [
-                    'name' => 'California Roll',
-                    'description' => 'Krabstick, avocado, komkommer, mayo, masago',
-                    'price' => 10.50,
-                ],
-                [
-                    'name' => 'Crunch California Roll',
-                    'description' => 'Krabstick, avocado, komkommer, wagasauce, crunch',
-                    'price' => 12.25,
-                ],
-                [
-                    'name' => 'Salmon Sesam Roll',
-                    'description' => 'Zalm, avocado, mayo, sesam',
-                    'price' => 10.75,
-                ],
-                [
-                    'name' => 'Crunch Salmon Roll',
-                    'description' => 'Zalm, avocado, mayo, wagasauce, crunch',
-                    'price' => 11.35,
-                ],
-                [
-                    'name' => 'Spicy Tuna Roll',
-                    'description' => 'Tuna, spicy tonijn, avocado',
-                    'price' => 12.50,
-                ],
-                [
-                    'name' => 'Veggie Roll',
-                    'description' => 'Avocado, komkommer, tamago, mayo, sesam',
-                    'price' => 8.70,
-                ],
-                [
-                    'name' => 'Spicy Chicken Roll',
-                    'description' => 'Fried chicken, komkommer, spicy mayo',
-                    'price' => 10.80,
-                ],
-                [
-                    'name' => 'Tempura Ebi Roll',
-                    'description' => 'Garnaal, komkommer, mayo, sesam',
-                    'price' => 10.80,
-                ],
-                [
-                    'name' => 'Flaming Truffle Beef Roll',
-                    'description' => 'Garnaal roll, beef, truffle mayo',
-                    'price' => 11.75,
-                ],
-                [
-                    'name' => 'Creamy Salmon Roll',
-                    'description' => 'Zalm, avocado, creamy cheese',
-                    'price' => 11.00,
-                ],
-                [
-                    'name' => 'Avocado Dragon Roll',
-                    'description' => 'Fried shrimp, avocado, mayo',
-                    'price' => 13.30,
-                ],
-                [
-                    'name' => 'Flambe Hotategai Roll',
-                    'description' => 'Garnaal roll met geflambeerde coquilles, mayo, gebakken uien, masago',
-                    'price' => 11.75,
-                ],
+            'Sushi Boxes' => [
+                ['name' => 'Maki Mix (24st)', 'description' => '8 Zalm Maki, 8 Tuna Maki, 8 Komkommer Maki', 'price' => 10.50],
+                ['name' => 'Veggie Box (16st)', 'description' => '4 Veggie Roll, 8 Komkommer Maki, 2 Avocado Nigiri, 2 Omelet Nigiri', 'price' => 13.50],
+                ['name' => 'Crispy & Flamed Mix (12st)', 'description' => 'Spicy Chicken Roll, 4 Tempura Ebi Roll, 4 Flaming Zalm Nigiri', 'price' => 16.95],
+                ['name' => 'Zalm & Tuna Lover Mix (12st)', 'description' => '3 Zalm Nigiri, 3 Tuna Nigiri, 3 Zalm Sashimi, 3 Tuna Sashimi', 'price' => 18.95],
+                ['name' => 'Zalm Box (24st)', 'description' => '8 Crunch Zalm Roll, 8 Zalm Maki, 4 Zalm Nigiri, 4 Zalm Sashimi', 'price' => 27.50],
+                ['name' => 'Uramaki Box (32st)', 'description' => '8 California Roll, 8 Zalm Avocado Roll, 8 Tempura Ebi Roll, 8 Spicy Chicken Roll', 'price' => 38.00],
+                ['name' => 'Flaming Sushi Box (24st)', 'description' => '8 Softshell Zalm Roll, 8 Beef Roll, 8 Flaming Hotategai Roll', 'price' => 38.95],
+                ['name' => 'Party Sushi Box (40st)', 'description' => '8 Avocado Dragon Roll, 8 Flaming Truffle Beef, 8 Crunch Zalm Roll, 8 Spicy Tuna Roll, 8 California Roll', 'price' => 58.50],
+                ['name' => 'Family Box (64st)', 'description' => '4 Zalm, 4 Tuna, 4 Unagi, 4 Ebi Nigiri, mix van Maki, California, Zalm Avocado, Tempura Ebi en Spicy Chicken Roll', 'price' => 68.50],
+                ['name' => 'Family Box Deluxe (80st)', 'description' => '8 Soft Shell Zalm, 8 Crunch Zalm, 8 Flaming Truffle Beef, 8 Avocado Dragon, 6 Zalm & 6 Tuna Sashimi, 4 Spicy Tuna Taart, 16 Zalm & 16 Komkommer Maki', 'price' => 88.95],
             ],
-            'Temaki (1 stuk)' => [
-                [
-                    'name' => 'California Temaki',
-                    'description' => 'California hand roll',
-                    'price' => 3.95,
-                ],
-                [
-                    'name' => 'Zalm Temaki',
-                    'description' => 'Salmon hand roll',
-                    'price' => 4.10,
-                ],
-                [
-                    'name' => 'Tuna Temaki',
-                    'description' => 'Tuna hand roll',
-                    'price' => 4.70,
-                ],
-                [
-                    'name' => 'Spicy Tuna Temaki',
-                    'description' => 'Spicy tuna hand roll',
-                    'price' => 4.90,
-                ],
-                [
-                    'name' => 'Tempura Temaki',
-                    'description' => 'Tempura hand roll',
-                    'price' => 4.50,
-                ],
-                [
-                    'name' => 'Unagi Temaki',
-                    'description' => 'Eel hand roll',
-                    'price' => 4.70,
-                ],
-                [
-                    'name' => 'Chicken Temaki',
-                    'description' => 'Chicken hand roll',
-                    'price' => 4.50,
-                ],
-                [
-                    'name' => 'Veggi Temaki',
-                    'description' => 'Vegetarian hand roll',
-                    'price' => 3.75,
-                ],
+            'Uramaki Roll' => [
+                ['name' => 'California Roll', 'description' => 'Krab, Avocado, Komkommer, Tobiko, Mayo', 'price' => 10.50],
+                ['name' => 'Crunch California Roll', 'description' => 'Krab, Avocado, Komkommer, Unagisaus, Crunch, Mayo', 'price' => 10.75],
+                ['name' => 'Zalm Avocado Roll', 'description' => 'Avocado, Zalm, Sesam, Mayo', 'price' => 12.00],
+                ['name' => 'Crunch Zalm Roll', 'description' => 'Avocado, Zalm, Mayo, Unagisaus, Crunch', 'price' => 12.25],
+                ['name' => 'Tuna Roll', 'description' => 'Avocado, Tuna, Sesam, Mayo', 'price' => 12.00],
+                ['name' => 'Spicy Tuna Roll', 'description' => 'Avocado, Spicy Tuna', 'price' => 12.75],
+                ['name' => 'Spicy Chicken Roll', 'description' => 'Komkommer, Fried Chicken, Spicy Mayo', 'price' => 11.50],
+                ['name' => 'Tempura Ebi Roll', 'description' => 'Garnaal, Komkommer, Mayo, Sesam', 'price' => 11.50],
+                ['name' => 'Creamy Zalm Roll', 'description' => 'Avocado, Roomkaas, Zalm, Sesam', 'price' => 13.00],
+                ['name' => 'Zalm Salad Roll', 'description' => 'Gegaarde Zalm, Mayonaise', 'price' => 10.50],
+                ['name' => 'Veggie Roll', 'description' => 'Avocado, Komkommer, Omelet, Wakame, Mayo, Sesam', 'price' => 10.50],
             ],
-            'Salade' => [
-                [
-                    'name' => 'Mini Springroll (1 st)',
-                    'description' => 'Small spring roll',
-                    'price' => 3.25,
-                ],
-                [
-                    'name' => 'Yakitori Skewer (4 st)',
-                    'description' => 'Grilled chicken skewers',
-                    'price' => 6.00,
-                ],
-                [
-                    'name' => 'Tori Karaage (1 st)',
-                    'description' => 'Japanese fried chicken',
-                    'price' => 4.95,
-                ],
-                [
-                    'name' => 'Gyoza (1 st)',
-                    'description' => 'Japanese dumpling',
-                    'price' => 4.95,
-                ],
-                [
-                    'name' => 'Shrimp Tempura (4 st)',
-                    'description' => 'Crispy shrimp tempura',
-                    'price' => 6.00,
-                ],
-                [
-                    'name' => 'Edamame',
-                    'description' => 'Boiled green soybeans',
-                    'price' => 4.00,
-                ],
-                [
-                    'name' => 'Chuka Wakame',
-                    'description' => 'Seaweed salad',
-                    'price' => 3.50,
-                ],
+            'Special Roll (8st)' => [
+                ['name' => 'Flaming Truffle Beef', 'description' => 'Garnalen Roll Met Beef, Truffel, Yakitori Saus', 'price' => 15.75],
+                ['name' => 'Beef Roll', 'description' => 'Veggie Roll Met Beef, Yakitori Saus', 'price' => 14.00],
+                ['name' => 'Avocado Dragon Roll', 'description' => 'Garnalen Roll, Toppet Avocado, Mayo, Zalmforeleitjes', 'price' => 15.50],
+                ['name' => 'Flaming Hotategai Roll', 'description' => 'Garnalen Roll Met Geflambeerde Coquilles, Tobiko', 'price' => 15.75],
+                ['name' => 'Unagi Dragon Roll', 'description' => 'Garnalen Roll, Paling, Unagi Saus, Sesam', 'price' => 15.75],
+                ['name' => 'Softshell Zalm Roll', 'description' => 'Garnalen Roll, Flaming Zalm, Unagisaus', 'price' => 15.75],
+                ['name' => 'Rainbow Roll', 'description' => 'California Roll, Toppet Zalm, Tuna, Avocado', 'price' => 16.50],
+                ['name' => 'Zalm & Tuna Roll', 'description' => 'Zalm Avocado Roll, Toppet Tuna, Mayo, Unagisaus', 'price' => 16.50],
             ],
-            'Poke Bowls' => [
-                [
-                    'name' => 'Salmon Bowl',
-                    'description' => 'Salmon poke bowl',
-                    'price' => 13.00,
-                ],
-                [
-                    'name' => 'Tuna Bowl',
-                    'description' => 'Tuna poke bowl',
-                    'price' => 14.00,
-                ],
-                [
-                    'name' => 'Spicy Salmon Bowl',
-                    'description' => 'Spicy salmon poke bowl',
-                    'price' => 13.75,
-                ],
-                [
-                    'name' => 'Spicy Tuna Bowl',
-                    'description' => 'Spicy tuna poke bowl',
-                    'price' => 14.75,
-                ],
-                [
-                    'name' => 'Farmen Bowl',
-                    'description' => 'Farmen poke bowl',
-                    'price' => 13.00,
-                ],
-                [
-                    'name' => 'Korage Bowl',
-                    'description' => 'Korage poke bowl',
-                    'price' => 13.00,
-                ],
-                [
-                    'name' => 'Krab Bowl',
-                    'description' => 'Crab poke bowl',
-                    'price' => 13.00,
-                ],
-                [
-                    'name' => 'Paling Bowl',
-                    'description' => 'Eel poke bowl',
-                    'price' => 13.50,
-                ],
-                [
-                    'name' => 'Vega Bowl',
-                    'description' => 'Vegetarian poke bowl',
-                    'price' => 12.00,
-                ],
+            'Nigiri (2st)' => [
+                ['name' => 'Zalm Nigiri', 'description' => 'Verse zalm op rijst', 'price' => 4.20],
+                ['name' => 'Flaming Zalm Nigiri', 'description' => 'Geflambeerde zalm op rijst', 'price' => 4.50],
+                ['name' => 'Tuna Nigiri', 'description' => 'Verse tonijn op rijst', 'price' => 4.20],
+                ['name' => 'Flaming Tuna Nigiri', 'description' => 'Geflambeerde tonijn op rijst', 'price' => 4.50],
+                ['name' => 'Flaming Hotategai Nigiri', 'description' => 'Geflambeerde coquille op rijst', 'price' => 4.95],
+                ['name' => 'Kani Nigiri', 'description' => 'Krabstick op rijst', 'price' => 4.00],
+                ['name' => 'Ebi Nigiri', 'description' => 'Garnaal op rijst', 'price' => 4.00],
+                ['name' => 'Omelet Nigiri', 'description' => 'Japanse omelet op rijst', 'price' => 4.00],
+                ['name' => 'Inari Nigiri', 'description' => 'Tofu-zakje met rijst', 'price' => 4.00],
+                ['name' => 'Avocado Nigiri', 'description' => 'Avocado op rijst', 'price' => 3.75],
+                ['name' => 'Unagi Nigiri', 'description' => 'Gegrilde paling op rijst', 'price' => 4.50],
             ],
-            'Drinks' => [
-                [
-                    'name' => 'Coca Cola',
-                    'description' => 'Soft drink',
-                    'price' => 2.20,
-                ],
+            'Gunkan (2st)' => [
+                ['name' => 'Ikura', 'description' => 'Zalmforeleitjes', 'price' => 5.80],
+                ['name' => 'Spicy Tuna Inari', 'description' => 'Tofu-zakje met pittige tonijn', 'price' => 5.80],
+                ['name' => 'Tobiko', 'description' => 'Vliegende vis-eitjes', 'price' => 4.00],
+                ['name' => 'Wakame', 'description' => 'Zeewiersalade', 'price' => 4.00],
+                ['name' => 'Spicy Tuna Tartaar', 'description' => '4 stuks tartaar van pittige tonijn', 'price' => 11.50],
             ],
+            'Maki (8st)' => [
+                ['name' => 'Komkommer Maki', 'description' => 'Maki met komkommer', 'price' => 4.00],
+                ['name' => 'Avocado Maki', 'description' => 'Maki met avocado', 'price' => 4.00],
+                ['name' => 'Omelet Maki', 'description' => 'Maki met Japanse omelet', 'price' => 4.00],
+                ['name' => 'Kani Maki', 'description' => 'Maki met krab', 'price' => 4.00],
+                ['name' => 'Zalm Maki', 'description' => 'Maki met zalm', 'price' => 5.00],
+                ['name' => 'Tuna Maki', 'description' => 'Maki met tonijn', 'price' => 5.00],
+                ['name' => 'Zalm Avocado Maki', 'description' => 'Maki met zalm en avocado', 'price' => 5.00],
+            ],
+            'Temaki (1st)' => [
+                ['name' => 'Zalm Temaki', 'description' => 'Handroll met zalm', 'price' => 4.50],
+                ['name' => 'Tuna Temaki', 'description' => 'Handroll met tonijn', 'price' => 4.70],
+                ['name' => 'California Temaki', 'description' => 'Handroll met krab en avocado', 'price' => 4.00],
+                ['name' => 'Veggie Temaki', 'description' => 'Handroll met groenten', 'price' => 3.95],
+                ['name' => 'Unagi Temaki', 'description' => 'Handroll met paling', 'price' => 4.50],
+                ['name' => 'Tempura Temaki', 'description' => 'Handroll met gefrituurde garnaal', 'price' => 4.50],
+                ['name' => 'Chicken Temaki', 'description' => 'Handroll met kip', 'price' => 4.50],
+                ['name' => 'Spicy Tuna Temaki', 'description' => 'Handroll met pittige tonijn', 'price' => 4.90],
+            ],
+            'Futomaki (5st)' => [
+                ['name' => 'Veggie Futomaki', 'description' => 'Avocado, Komkommer, Wakame, Tofu, Tamago, Sesam', 'price' => 6.00],
+                ['name' => 'California Futomaki', 'description' => 'Krab, Avocado, Komkommer, Vistjes, Sesam', 'price' => 7.00],
+                ['name' => 'Zalm Futomaki', 'description' => 'Zalm, Avocado, Komkommer, Roomkaas, Sesam', 'price' => 7.00],
+                ['name' => 'Chicken Futomaki', 'description' => 'Chicken, Avocado, Komkommer, Sesam', 'price' => 7.00],
+            ],
+            'Poke Bowl' => [
+                ['name' => 'Zalm Poke Bowl', 'description' => 'Verse zalm, rijst, diverse groenten en saus', 'price' => 15.00],
+                ['name' => 'Tuna Poke Bowl', 'description' => 'Verse tonijn, rijst, diverse groenten en saus', 'price' => 15.00],
+                ['name' => 'Garnalen Poke Bowl', 'description' => 'Garnalen, rijst, diverse groenten en saus', 'price' => 14.00],
+                ['name' => 'Karaage Poke Bowl (Kip)', 'description' => 'Gefrituurde kip, rijst, diverse groenten en saus', 'price' => 14.00],
+                ['name' => 'Paling Poke Bowl', 'description' => 'Gegrilde paling, rijst, diverse groenten en saus', 'price' => 15.00],
+                ['name' => 'Vega Poke Bowl', 'description' => 'Vegetarische ingrediënten, rijst en saus', 'price' => 13.00],
+            ],
+            'Warm Gerecht' => [
+                ['name' => 'Mini Spring Roll', 'description' => '5 stuks mini loempia', 'price' => 3.25],
+                ['name' => 'Yakitori Skewer', 'description' => '4 stuks gegrilde kipsaté', 'price' => 6.00],
+                ['name' => 'Tori Karaage', 'description' => '5 stuks Japanse gefrituurde kip', 'price' => 5.25],
+                ['name' => 'Edamame', 'description' => 'Gekookte sojabonen', 'price' => 4.00],
+                ['name' => 'Chuka Wakame', 'description' => 'Zeewiersalade', 'price' => 3.50],
+                ['name' => 'Gyoza', 'description' => '5 stuks Japanse dumplings', 'price' => 5.25],
+                ['name' => 'Garnalen Tempura', 'description' => '4 stuks gefrituurde garnalen', 'price' => 6.00],
+                ['name' => 'Sesam Bal', 'description' => '5 stuks gefrituurde sesamballen', 'price' => 5.00],
+            ]
         ];
 
         foreach ($categories as $categoryName => $products) {
@@ -302,7 +129,6 @@ class SushiSeeder extends Seeder
                 ['name' => $categoryName]
             );
 
-            $vatRate = $categoryName === 'Drinks' ? $drinkVatRate : $foodVatRate;
 
             foreach ($products as $sushi) {
                 Product::updateOrCreate(
@@ -313,7 +139,7 @@ class SushiSeeder extends Seeder
                     [
                         'description' => $sushi['description'],
                         'price' => $sushi['price'],
-                        'vat_rate_id' => $vatRate->id,
+                        'vat_rate_id' => $foodVatRate->id,
                     ]
                 );
             }
