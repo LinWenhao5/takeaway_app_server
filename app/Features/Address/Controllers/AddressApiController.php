@@ -4,9 +4,7 @@ namespace App\Features\Address\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Features\Address\Models\AllowedPostcode;
-use Illuminate\Validation\ValidationException;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Exceptions\BusinessException;
 
 class AddressApiController extends Controller
 {
@@ -51,7 +49,7 @@ class AddressApiController extends Controller
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Validation failed",
+     *         description="Validation failed or business logic error",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Validation failed"),
@@ -75,67 +73,56 @@ class AddressApiController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $customer = $this->getAuthenticatedCustomer();
+        $customer = $this->getAuthenticatedCustomer();
 
-            $validated = $request->validate([
-                'name' => 'required|string|max:50',
-                'phone' => [
-                    'required',
-                    'regex:/^(?:\+31|0)[1-9][0-9]{8}$/'
-                ],
-                'street' => 'required|string|max:255',
-                'house_number' => 'required|string|max:20',
-                'postcode' => [
-                    'required',
-                    'string',
-                    function ($attribute, $value, $fail) {
-                        if (!AllowedPostcode::isAllowed($value)) {
-                            $fail('The postcode is not in the allowed range.');
-                        }
-                    }
-                ],
-                'city' => 'required|string|max:100',
-                'country' => 'required|string|max:100',
-            ]); 
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'phone' => [
+                'required',
+                'regex:/^(?:\+31|0)[1-9][0-9]{8}$/'
+            ],
+            'street' => 'required|string|max:255',
+            'house_number' => 'required|string|max:20',
+            'postcode' => [
+                'required',
+                'string',
+            ],
+            'city' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
+        ]);
 
-            // Check if the address already exists for the customer
-            $existingAddress = $customer->addresses()->where([
-                ['street', $validated['street']],
-                ['house_number', $validated['house_number']],
-                ['postcode', $validated['postcode']],
-                ['city', $validated['city']],
-                ['country', $validated['country']],
-            ])->first();
-
-            if ($existingAddress) {
-                return response()->json([
-                    'success' => false,
-                    'code' => 'ADDRESS_ALREADY_EXISTS',
-                    'message' => 'The address already exists.',
-                ], 409);
-            }
-
-            $address = $customer->addresses()->create($validated);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Address created successfully.',
-                'address' => $address,
-            ], 201);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed.',
-                'error' => $e->getMessage(),
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to add address.',
-                'error' => $e->getMessage(),
-            ], 500);
+        if (!AllowedPostcode::isAllowed($validated['postcode'])) {
+            throw new BusinessException(
+                'The postcode is not in the allowed range.',
+                'POSTCODE_NOT_ALLOWED',
+                422
+            );
         }
+
+        // Check if the address already exists for the customer
+        $existingAddress = $customer->addresses()->where([
+            ['street', $validated['street']],
+            ['house_number', $validated['house_number']],
+            ['postcode', $validated['postcode']],
+            ['city', $validated['city']],
+            ['country', $validated['country']],
+        ])->first();
+
+        if ($existingAddress) {
+            throw new BusinessException(
+                'This address already exists.',
+                'ADDRESS_ALREADY_EXISTS',
+                422
+            );
+        }
+
+        $address = $customer->addresses()->create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Address created successfully.',
+            'address' => $address,
+        ], 201);
     }
 
     /**
@@ -186,21 +173,13 @@ class AddressApiController extends Controller
      */
     public function getAddresses(Request $request)
     {
-        try {
-            $customer = $this->getAuthenticatedCustomer();
-            $addresses = $customer->addresses()->get();
+        $customer = $this->getAuthenticatedCustomer();
+        $addresses = $customer->addresses()->get();
 
-            return response()->json([
-                'success' => true,
-                'addresses' => $addresses,
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to get addresses',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'addresses' => $addresses,
+        ]);
     }
 
     /**
@@ -241,6 +220,10 @@ class AddressApiController extends Controller
      *         response=404,
      *         description="Address not found"
      *     ),
+     *    @OA\Response(
+     *      response=422,
+     *      description="Validation failed or business logic error",
+    *      ),
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
@@ -249,55 +232,48 @@ class AddressApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $customer = $this->getAuthenticatedCustomer();
-            $address = $customer->addresses()->findOrFail($id);
+        $customer = $this->getAuthenticatedCustomer();
 
-            $validated = $request->validate([
-                'name' => 'required|string|max:50',
-                'phone' => [
-                    'required',
-                    'regex:/^(?:\+31|0)[1-9][0-9]{8}$/'
-                ],
-                'street' => 'required|string|max:255',
-                'house_number' => 'required|string|max:20',
-                'postcode' => [
-                    'required',
-                    'string',
-                    function ($attribute, $value, $fail) {
-                        if (!AllowedPostcode::isAllowed($value)) {
-                            $fail('The postcode is not in the allowed range.');
-                        }
-                    }
-                ],
-                'city' => 'required|string|max:100',
-                'country' => 'required|string|max:100',
-            ]);
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'phone' => [
+                'required',
+                'regex:/^(?:\+31|0)[1-9][0-9]{8}$/'
+            ],
+            'street' => 'required|string|max:255',
+            'house_number' => 'required|string|max:20',
+            'postcode' => [
+                'required',
+                'string',
+            ],
+            'city' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
+        ]);
 
-            $address->update($validated);
+        $address = $customer->addresses()->find($id);
 
-            return response()->json([
-                'success' => true,
-                'address' => $address,
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Address not found',
-            ], 404);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'error' => $e->getMessage(),
-            ], 422);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update address',
-                'error' => $e->getMessage(),
-            ], 500);
+        if (!AllowedPostcode::isAllowed($validated['postcode'])) {
+            throw new BusinessException(
+                'The postcode is not in the allowed range.',
+                'POSTCODE_NOT_ALLOWED',
+                422
+            );
         }
+
+        if (!$address) {
+            throw new BusinessException(
+                'Address not found',
+                'ADDRESS_NOT_FOUND',
+                404
+            );
+        }
+
+        $address->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'address' => $address,
+        ]);
     }
 
     /**
@@ -332,26 +308,21 @@ class AddressApiController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        try {
-            $customer = $this->getAuthenticatedCustomer();
-            $address = $customer->addresses()->findOrFail($id);
+        $customer = $this->getAuthenticatedCustomer();
+        $address = $customer->addresses();
 
-            $address->delete();
-
-            return response()->json([
-                'success' => true,
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Address not found',
-            ], 404);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete address',
-                'error' => $e->getMessage(),
-            ], 500);
+        if (!$address->find($id)) {
+            throw new BusinessException(
+                'Address not found',
+                'ADDRESS_NOT_FOUND',
+                404
+            );
         }
+
+        $address->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

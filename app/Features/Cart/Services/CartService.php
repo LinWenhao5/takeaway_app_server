@@ -4,7 +4,7 @@ namespace App\Features\Cart\Services;
 
 use Illuminate\Support\Facades\Redis;
 use App\Features\Product\Models\Product;
-use App\Exceptions\ProductNotAvailableException;
+use App\Exceptions\BusinessException;
 
 class CartService
 {
@@ -115,11 +115,19 @@ class CartService
         $product = Product::select('id', 'name', 'is_out_of_stock')->find($productId);
 
         if (!$product) {
-            throw new ProductNotAvailableException("Product with ID {$productId} not found", 404);
+            throw new BusinessException(
+                "Product with ID '{$productId}' does not exist", 
+                "PRODUCT_NOT_FOUND", 
+                404
+            );
         }
 
         if ($product->is_out_of_stock) {
-            throw new ProductNotAvailableException("Product '{$product->name}' is not available", 409);
+            throw new BusinessException(
+                "Product '{$product->name}' is out of stock", 
+                "PRODUCT_OUT_OF_STOCK", 
+                409
+            );
         }
     }
 
@@ -146,7 +154,11 @@ class CartService
                 Redis::connection('cache')->hdel($cartKey, $id);
             }
             
-            throw new ProductNotAvailableException("Part of products is removed form cart", 409);
+            throw new BusinessException(
+                "Some products in the cart are no longer available and have been removed", 
+                "CART_PRODUCTS_UNAVAILABLE", 
+                409
+            );
         }
     }
 }

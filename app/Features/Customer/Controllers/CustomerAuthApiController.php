@@ -8,8 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CaptchaMail;
-use Exception;
-use Illuminate\Validation\ValidationException;
+use App\Exceptions\BusinessException;
 
 class CustomerAuthApiController extends Controller
 {
@@ -45,6 +44,22 @@ class CustomerAuthApiController extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden: Registration is disabled",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="string", example="REGISTRATION_DISABLED"),
+     *             @OA\Property(property="message", type="string", example="Registration is currently disabled.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized: Invalid captcha",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="string", example="INVALID_CAPTCHA"),
+     *             @OA\Property(property="message", type="string", example="Invalid captcha.")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Failed to register customer",
      *         @OA\JsonContent(
@@ -57,51 +72,42 @@ class CustomerAuthApiController extends Controller
      */
     public function register(Request $request)
     {
-        $response = null;
-        try {
 
-            if (!config('app.registration_enabled')) {
-                return response()->json(['message' => 'Registration is currently disabled.'], 403);
-            }
-            
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:customers,email',
-                'password' => 'required|string|min:8',
-                'captcha' => 'required|string',
-            ]);
-
-            $cachedCaptcha = Cache::get('captcha_' . $request->email);
-
-            if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
-                $response = response()->json([
-                    'message' => 'Invalid captcha.',
-                ], 401);
-            } else {
-                $customer = Customer::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => $request->password,
-                ]);
-                Cache::forget('captcha_' . $request->email);
-                $response = response()->json([
-                    'message' => 'Customer registered successfully!',
-                    'customer' => $customer,
-                ], 201);
-            }
-        } catch (ValidationException $e) {
-            $response = response()->json([
-                'message' => 'Validation failed.',
-                'errors' => $e->errors(),
-            ], 422);
-        } catch (Exception $e) {
-            $response = response()->json([
-                'code' => 'REGISTRATION_FAILED',
-                'message' => 'Failed to register customer.',
-                'error' => $e->getMessage(),
-            ], 500);
+        if (!config('app.registration_enabled')) {
+            throw new BusinessException(
+                'Registration is currently disabled.',
+                'REGISTRATION_DISABLED',
+                403
+            );
         }
-        return $response;
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:customers,email',
+            'password' => 'required|string|min:8',
+            'captcha' => 'required|string',
+        ]);
+
+        $cachedCaptcha = Cache::get('captcha_' . $request->email);
+
+        if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
+            throw new BusinessException(
+                'Invalid captcha.',
+                'INVALID_CAPTCHA',
+                401
+            );
+        } else {
+            $customer = Customer::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
+            Cache::forget('captcha_' . $request->email);
+            return response()->json([
+                'message' => 'Customer registered successfully!',
+                'customer' => $customer,
+            ], 201);
+        }
     }
 
     /**
@@ -146,39 +152,32 @@ class CustomerAuthApiController extends Controller
      */
     public function login(Request $request)
     {
-        try {
-            // Validate the request data
-            $request->validate([
-                'email' => 'required|email',
-                'password' => 'required|string',
-            ]);
+        // Validate the request data
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-            // Find the customer by email
-            $customer = Customer::where('email', $request->email)->first();
+        // Find the customer by email
+        $customer = Customer::where('email', $request->email)->first();
 
-            if (!$customer || !Hash::check($request->password, $customer->password)) {
-                return response()->json([
-                    'message' => 'Invalid credentials.',
-                    'code' => 'INVALID_CREDENTIALS',
-                ], 401);
-            }
-
-            // Generate a token for the customer
-            $token = $customer->createToken('auth_token')->plainTextToken;
-
-            // Return a success response with the token
-            return response()->json([
-                'message' => 'Login successful!',
-                'code' => 'LOGIN_SUCCESS',
-                'token' => $token,
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Failed to login.',
-                'code' => 'LOGIN_FAILED',
-                'error' => $e->getMessage(),
-            ], 500);
+        if (!$customer || !Hash::check($request->password, $customer->password)) {
+            throw new BusinessException(
+                'Invalid credentials.',
+                'INVALID_CREDENTIALS',
+                401
+            );
         }
+
+        // Generate a token for the customer
+        $token = $customer->createToken('auth_token')->plainTextToken;
+
+        // Return a success response with the token
+        return response()->json([
+            'message' => 'Login successful!',
+            'code' => 'LOGIN_SUCCESS',
+            'token' => $token,
+        ], 200);
     }
 
 
@@ -203,10 +202,11 @@ class CustomerAuthApiController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response=401,
      *         description="Invalid captcha",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Invalid captcha.")
+     *             @OA\Property(property="message", type="string", example="Invalid captcha."),
+     *             @OA\Property(property="code", type="string", example="INVALID_CAPTCHA")
      *         )
      *     ),
      *     @OA\Response(
@@ -214,6 +214,7 @@ class CustomerAuthApiController extends Controller
      *         description="Failed to reset password",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Failed to reset password."),
+     *             @OA\Property(property="code", type="string", example="PASSWORD_RESET_FAILED"),
      *             @OA\Property(property="error", type="string", example="Detailed error message")
      *         )
      *     )
@@ -221,36 +222,31 @@ class CustomerAuthApiController extends Controller
      */
     public function forgotPassword(Request $request)
     {
-        try {
-            $request->validate([
-                'email' => 'required|email|exists:customers,email',
-                'captcha' => 'required|string',
-                'password' => 'required|string|min:8',
-            ]);
+        $request->validate([
+            'email' => 'required|email|exists:customers,email',
+            'captcha' => 'required|string',
+            'password' => 'required|string|min:8',
+        ]);
 
-            $cachedCaptcha = Cache::get('captcha_' . $request->email);
+        $cachedCaptcha = Cache::get('captcha_' . $request->email);
 
-            if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
-                return response()->json([
-                    'message' => 'Invalid captcha.',
-                ], 400);
-            }
-
-            $customer = Customer::where('email', $request->email)->first();
-            $customer->password = $request->password;
-            $customer->save();
-
-            Cache::forget('captcha_' . $request->email);
-
-            return response()->json([
-                'message' => 'Password reset successfully!',
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Failed to reset password.',
-                'error' => $e->getMessage(),
-            ], 500);
+        if (!$cachedCaptcha || $cachedCaptcha !== $request->captcha) {
+            throw new BusinessException(
+                'Invalid captcha.',
+                'INVALID_CAPTCHA',
+                401
+            );
         }
+
+        $customer = Customer::where('email', $request->email)->first();
+        $customer->password = $request->password;
+        $customer->save();
+
+        Cache::forget('captcha_' . $request->email);
+
+        return response()->json([
+            'message' => 'Password reset successfully!',
+        ], 200);
     }
 
     /**
@@ -285,34 +281,26 @@ class CustomerAuthApiController extends Controller
      */
     public function generateCaptcha(Request $request)
     {
-        try {
-            $request->validate([
-                'email' => 'required|email',
-            ]);
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
-            if (Cache::has('captcha_' . $request->email)) {
-                return response()->json([
-                    'code' => 'CAPTCHA_ALREADY_SENT',
-                    'message' => 'Captcha has already been sent. Please do not request repeatedly.',
-                ], 200);
-            }
-
-            $captchaCode = rand(100000, 999999);
-
-            Cache::put('captcha_' . $request->email, $captchaCode, now()->addMinutes(5));
-
-            Mail::to($request->email)->queue(new CaptchaMail($captchaCode));
-
+        if (Cache::has('captcha_' . $request->email)) {
             return response()->json([
-                'code' => 'CAPTCHA_SENT_SUCCESS',
-                'message' => 'Captcha sent successfully!',
+                'code' => 'CAPTCHA_ALREADY_SENT',
+                'message' => 'Captcha has already been sent. Please do not request repeatedly.',
             ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'code' => 'CAPTCHA_GENERATE_FAILED',
-                'message' => 'Failed to generate captcha.',
-                'error' => $e->getMessage(),
-            ], 500);
         }
+
+        $captchaCode = rand(100000, 999999);
+
+        Cache::put('captcha_' . $request->email, $captchaCode, now()->addMinutes(5));
+
+        Mail::to($request->email)->queue(new CaptchaMail($captchaCode));
+
+        return response()->json([
+            'code' => 'CAPTCHA_SENT_SUCCESS',
+            'message' => 'Captcha sent successfully!',
+        ], 200);
     }
 }

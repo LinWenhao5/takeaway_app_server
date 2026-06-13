@@ -56,18 +56,14 @@ class ProductCategoryApiController extends Controller
      */
     public function categoriesWithProducts()
     {
-        try {
-            $cacheKey = 'categories_with_products';
+        $cacheKey = 'categories_with_products';
 
-            $categories = cache()->remember($cacheKey, 600, function () {
-                return ProductCategory::with('products.media')
-                    ->orderBy('sort_order')
-                    ->get();
-            });
+        $categories = cache()->remember($cacheKey, 600, function () {
+            return ProductCategory::with('products.media')
+                ->orderBy('sort_order')
+                ->get();
+        });
 
-            return response()->json(['categories' => $categories]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to retrieve categories: ' . $e->getMessage()], 500);
-        }
+        return response()->json(['categories' => $categories]);
     }
 }

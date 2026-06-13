@@ -2,22 +2,30 @@
 namespace App\Features\Order\Services;
 
 use App\Features\Order\Models\Order;
-use Exception;
+use App\Exceptions\BusinessException;
 
 class OrderQueryService
 {
-    public function getOrderById(int $orderId, int $customerId, bool $detail = false)
+    public function getOrderById(int $orderId, int $customerId)
     {
         $query = Order::query();
 
         $order = $query->find($orderId);
 
         if (!$order) {
-            throw new Exception('Order not found');
+            throw new BusinessException(
+                'Order not found',
+                'ORDER_NOT_FOUND',
+                404
+            );
         }
 
         if ($order->customer_id !== $customerId) {
-            throw new Exception('No permission to view this order');
+            throw new BusinessException(
+                'No permission to view this order',
+                'NO_PERMISSION',
+                403
+            );
         }
 
         return $order;

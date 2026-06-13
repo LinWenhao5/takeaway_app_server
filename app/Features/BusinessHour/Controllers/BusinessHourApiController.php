@@ -71,26 +71,18 @@ class BusinessHourApiController extends Controller
             'date' => 'nullable|date_format:Y-m-d',
         ]);
 
-        try {
-            $orderType = $validated['order_type'] ?? 'delivery';
-            $date = $validated['date'] ?? now()->format('Y-m-d');
+        $orderType = $validated['order_type'] ?? 'delivery';
+        $date = $validated['date'] ?? now()->format('Y-m-d');
 
-            $orderTypeEnum = OrderType::from($orderType);
+        $orderTypeEnum = OrderType::from($orderType);
 
-            $carbonDate = Carbon::parse($date);
-            $times = $this->service->getAvailableTimesForDate($orderTypeEnum, $carbonDate);
+        $carbonDate = Carbon::parse($date);
+        $times = $this->service->getAvailableTimesForDate($orderTypeEnum, $carbonDate);
 
-            return response()->json([
-                'success' => true,
-                'date' => $carbonDate->format('Y-m-d'),
-                'times' => $times,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to get available time slots.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'date' => $carbonDate->format('Y-m-d'),
+            'times' => $times,
+        ]);
     }
 }

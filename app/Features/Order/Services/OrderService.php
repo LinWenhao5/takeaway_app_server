@@ -7,7 +7,7 @@ use App\Features\BusinessHour\Services\BusinessHourService;
 use App\Features\Delivery\Services\DeliveryService;
 use App\Features\Order\Support\OrderCreationStrategies\OrderStrategyFactory;
 use Carbon\Carbon;
-use Exception;
+use App\Exceptions\BusinessException;
 
 
 
@@ -27,7 +27,11 @@ class OrderService
         $reserveDate = Carbon::parse($createOrderDto->reserveTime);
 
         if (!$this->businessHourService->isTimeAvailableForDate($createOrderDto->orderType, $reserveDate)) {
-            throw new Exception('Selected time is not available');
+            throw new BusinessException(
+                'Selected reserve time is outside of business hours',
+                'RESERVE_TIME_UNAVAILABLE',
+                422
+            );
         }
 
         $strategy = OrderStrategyFactory::create(

@@ -6,14 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Features\Order\Services\OrderQueryService;
 use App\Features\Payment\Services\PaymentService;
 use Illuminate\Http\Request;
-use Exception;
-use App\Exceptions\ProductNotAvailableException;
 use App\Features\BusinessHour\Services\BusinessHourService;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
 use App\Features\Order\DTOs\CreateOrderDto;
 use App\Features\Order\Services\OrderService;
 use Carbon\Carbon;
+use App\Exceptions\BusinessException;
 
 class OrderPaymentApiController extends Controller
 {
@@ -120,30 +119,17 @@ class OrderPaymentApiController extends Controller
             note: $note,
         );
 
-        try {
-            $order = $this->orderService->createOrder($createOrderDto);
+        $order = $this->orderService->createOrder($createOrderDto);
 
-            $platform = $request->input('platform');
-            $host = $request->input('host');
-            $paymentUrl = $this->paymentService->createPayment($order, $platform, $host);
+        $platform = $request->input('platform');
+        $host = $request->input('host');
+        $paymentUrl = $this->paymentService->createPayment($order, $platform, $host);
 
-            return response()->json([
-                'success' => true,
-                'order_id' => $order->id,
-                'payment_url' => $paymentUrl,
-            ]);
-        } 
-        catch (ProductNotAvailableException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getCode());
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id,
+            'payment_url' => $paymentUrl,
+        ]);
     }
 
     /**
@@ -182,40 +168,45 @@ class OrderPaymentApiController extends Controller
      */
     public function repayOrder(Request $request, int $orderId)
     {
-        try {
-            $customerId = $this->getAuthenticatedCustomer()->id;
-            $order = $this->orderQueryService->getOrderById($orderId, $customerId, detail: true);
+        $customerId = $this->getAuthenticatedCustomer()->id;
+        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
 
-            if (!$order) {
-                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
-            }
-
-            if ($order->status !== OrderStatus::Unpaid) {
-                return response()->json(['success' => false, 'message' => 'Order already paid or cannot be repaid'], 409);
-            }
-
-            $reserveTime = Carbon::parse($order->reserve_time);
-            $orderType = $order->order_type;
-
-            if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
-                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 422);
-            }
-
-            $platform = $request->input('platform');
-            $host = $request->input('host');
-
-            $paymentUrl = $this->paymentService->createPayment($order, $platform, $host);
-
-            return response()->json([
-                'success' => true,
-                'order_id' => $order->id,
-                'payment_url' => $paymentUrl,
-            ], 201);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
+        if (!$order) {
+            throw new BusinessException(
+                'Order not found',
+                'ORDER_NOT_FOUND',
+                404
+            );
         }
+
+        if ($order->status !== OrderStatus::Unpaid) {
+            throw new BusinessException(
+                'Order already paid or not in unpaid status',
+                'ORDER_ALREADY_PAID',
+                409
+            );
+        }
+
+        $reserveTime = Carbon::parse($order->reserve_time);
+        $orderType = $order->order_type;
+
+        if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
+            throw new BusinessException(
+                'Selected reserve time is outside of business hours',
+                'RESERVE_TIME_UNAVAILABLE',
+                422
+            );
+        }
+
+        $platform = $request->input('platform');
+        $host = $request->input('host');
+
+        $paymentUrl = $this->paymentService->createPayment($order, $platform, $host);
+
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id,
+            'payment_url' => $paymentUrl,
+        ], 201);
     }
 }

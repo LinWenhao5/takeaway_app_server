@@ -3,18 +3,13 @@
 namespace App\Features\Cart\Controllers;
 
 use App\Features\Cart\Services\CartService;
-use App\Exceptions\ProductNotAvailableException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CartApiController extends Controller
 {
-    protected $cartService;
 
-    public function __construct(CartService $cartService)
-    {
-        $this->cartService = $cartService;
-    }
+    public function __construct(protected CartService $cartService){}
 
     /**
      * @OA\Post(
@@ -40,6 +35,20 @@ class CartApiController extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=404,
+     *         description="Product not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product not found.")
+     *         )
+     *     ),
+     *    @OA\Response(
+     *        response=409,
+     *       description="Product not available",
+     *       @OA\JsonContent(
+     *            @OA\Property(property="message", type="string", example="Product is not available.")
+     *       )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Failed to add product to cart",
      *         @OA\JsonContent(
@@ -51,38 +60,25 @@ class CartApiController extends Controller
      */
     public function addToCart(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'product_id' => 'required|integer',
-                'quantity' => 'required|integer|min:1',
-            ]);
+        $validated = $request->validate([
+            'product_id' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-            $customerId = $this->getAuthenticatedCustomer()->id;
+        $customerId = $this->getAuthenticatedCustomer()->id;
 
-            $this->cartService->ensureProductIsAvailable($validated['product_id']);
+        $this->cartService->ensureProductIsAvailable($validated['product_id']);
 
-            $this->cartService->addToCart(
-                $customerId,
-                $validated['product_id'],
-                $validated['quantity']
-            );
+        $this->cartService->addToCart(
+            $customerId,
+            $validated['product_id'],
+            $validated['quantity']
+        );
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Product added to cart successfully.',
-            ]);
-        } catch (ProductNotAvailableException $e) {
-            return response()->json([
-                'success' => false,
-                    'message' => $e->getMessage(),
-                ], $e->getCode());
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to add product to cart.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Product added to cart successfully.',
+        ]);
     }
 
     /**
@@ -122,23 +118,16 @@ class CartApiController extends Controller
      */
     public function getCart()
     {
-        try {
-            $customerId = $this->getAuthenticatedCustomer()->id;
+        $customerId = $this->getAuthenticatedCustomer()->id;
 
-            $cartData = $this->cartService->getCartDetails($customerId);
+        $cartData = $this->cartService->getCartDetails($customerId);
 
-            return response()->json([
-                'message' => 'Cart retrieved successfully.',
-                'cart' => $cartData['cart'],
-                'total_price' => $cartData['total_price'],
-                'total_quantity' => $cartData['total_quantity'],
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to retrieve cart.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Cart retrieved successfully.',
+            'cart' => $cartData['cart'],
+            'total_price' => $cartData['total_price'],
+            'total_quantity' => $cartData['total_quantity'],
+        ]);
     }
 
     /**
@@ -174,29 +163,22 @@ class CartApiController extends Controller
      */
     public function removeFromCart(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'product_id' => 'required|integer',
-            ]);
+        $validated = $request->validate([
+            'product_id' => 'required|integer',
+        ]);
 
-            $customerId = $this->getAuthenticatedCustomer()->id;
+        $customerId = $this->getAuthenticatedCustomer()->id;
 
-            $this->cartService->removeFromCart(
-                $customerId,
-                $validated['product_id']
-            );
+        $this->cartService->removeFromCart(
+            $customerId,
+            $validated['product_id']
+        );
 
-            return response()->json([
-                'message' => 'Product removed from cart successfully.',
-                'customerId' => $customerId,
-                'productId' => $validated['product_id'],
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to remove product from cart.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Product removed from cart successfully.',
+            'customerId' => $customerId,
+            'productId' => $validated['product_id'],
+        ]);
     }
 
     /**
@@ -234,31 +216,24 @@ class CartApiController extends Controller
      */
     public function removeQuantityFromCart(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'product_id' => 'required|integer',
-                'quantity' => 'required|integer|min:1',
-            ]);
+        $validated = $request->validate([
+            'product_id' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-            $customerId = $this->getAuthenticatedCustomer()->id;
+        $customerId = $this->getAuthenticatedCustomer()->id;
 
-            $this->cartService->removeQuantityFromCart(
-                $customerId,
-                $validated['product_id'],
-                $validated['quantity']
-            );
+        $this->cartService->removeQuantityFromCart(
+            $customerId,
+            $validated['product_id'],
+            $validated['quantity']
+        );
 
-            return response()->json([
-                'message' => 'Product quantity removed from cart successfully.',
-                'customerId' => $customerId,
-                'productId' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to remove product quantity from cart.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Product quantity removed from cart successfully.',
+            'customerId' => $customerId,
+            'productId' => $validated['product_id'],
+            'quantity' => $validated['quantity'],
+        ]);
     }
 }

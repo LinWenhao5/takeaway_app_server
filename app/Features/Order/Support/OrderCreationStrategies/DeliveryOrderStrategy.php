@@ -7,7 +7,8 @@ use App\Features\Delivery\Services\DeliveryService;
 use App\Features\Address\Models\Address;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
-use Exception;
+use App\Features\Address\Models\AllowedPostcode;
+use App\Exceptions\BusinessException;
 
 class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
 {
@@ -20,12 +21,29 @@ class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
     public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void
     {
         if (!$createOrderDto->addressId) {
-            throw new Exception('Address is required for delivery orders');
+            throw new BusinessException(
+                'Address is required for delivery orders',
+                'ADDRESS_REQUIRED',
+                422
+            );
+        }
+
+        $address = Address::find($createOrderDto->addressId);
+        if (!AllowedPostcode::isAllowed($address->postcode)) {
+            throw new BusinessException(
+                'Delivery is not available to the provided postcode',
+                'DELIVERY_UNAVAILABLE',
+                422
+            );
         }
 
         $minimumAmount = $this->deliveryService->getMinimumAmount();
         if ($totalPrice < $minimumAmount) {
-            throw new Exception('Order amount does not meet the minimum delivery amount: ' . $minimumAmount);
+            throw new BusinessException(
+                'Order amount does not meet the minimum delivery amount',
+                'ORDER_AMOUNT_BELOW_MINIMUM',
+                422
+            );
         }
     }
 

@@ -4,7 +4,6 @@ namespace App\Features\Order\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Features\Order\Services\OrderQueryService;
-use Exception;
 
 class OrderQueryApiController extends Controller
 {
@@ -48,21 +47,14 @@ class OrderQueryApiController extends Controller
      */
     public function getOrderStatus(int $orderId)
     {
-        try {
-            $customerId = $this->getAuthenticatedCustomer()->id;
-            $order = $this->orderQueryService->getOrderById($orderId, $customerId);
-            if (!$order) {
-                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
-            }
+        $customerId = $this->getAuthenticatedCustomer()->id;
+        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
 
-            return response()->json([
-                'success' => true,
-                'order_id' => $order->id,
-                'status' => $order->status,
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
-        }
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id,
+            'status' => $order->status,
+        ]);
     }
 
 
@@ -160,19 +152,12 @@ class OrderQueryApiController extends Controller
      */
     public function getOrderDetail(int $orderId)
     {
-        try {
-            $customerId = $this->getAuthenticatedCustomer()->id;
-            $order = $this->orderQueryService->getOrderById($orderId, $customerId, detail: true);
-            if (!$order) {
-                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
-            }
+        $customerId = $this->getAuthenticatedCustomer()->id;
+        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
 
-            return response()->json([
-                'success' => true,
-                'order' => $order,
-            ]);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
-        }
+        return response()->json([
+            'success' => true,
+            'order' => $order,
+        ]);
     }
 }

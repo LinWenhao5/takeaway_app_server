@@ -3,7 +3,6 @@ namespace App\Features\Customer\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Exception;
 
 class CustomerAccountApiController extends Controller
 {
@@ -40,18 +39,11 @@ class CustomerAccountApiController extends Controller
      */
     public function getUserName(Request $request)
     {
-        try {
-            $customer = $this->getAuthenticatedCustomer();
-            return response()->json([
-                'username' => $customer->name,
-                'email' => $customer->email,
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Failed to get username.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        $customer = $this->getAuthenticatedCustomer();
+        return response()->json([
+            'username' => $customer->name,
+            'email' => $customer->email,
+        ]);
     }
 
     /**
@@ -92,23 +84,16 @@ class CustomerAccountApiController extends Controller
      */
     public function resetPassword(Request $request)
     {
-        try {
-            $request->validate([
-                'password' => 'required|string|min:8',
-            ]);
+        $request->validate([
+            'password' => 'required|string|min:8',
+        ]);
 
-            $customer = $this->getAuthenticatedCustomer();
-            $customer->password = $request->password;
-            $customer->save();
+        $customer = $this->getAuthenticatedCustomer();
+        $customer->password = $request->password;
+        $customer->save();
 
-            return response()->json([
-                'message' => 'Password reset successfully!',
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Failed to reset password.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Password reset successfully!',
+        ], 200);
     }
 }

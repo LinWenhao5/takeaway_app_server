@@ -7,12 +7,7 @@ use App\Features\Delivery\Services\DeliveryService;
 
 class DeliveryApiController extends Controller
 {
-    protected $deliveryService;
-
-    public function __construct(DeliveryService $deliveryService)
-    {
-        $this->deliveryService = $deliveryService;
-    }
+    public function __construct(protected DeliveryService $deliveryService){}
 
     /**
      * @OA\Get(

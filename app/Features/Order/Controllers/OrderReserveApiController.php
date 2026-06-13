@@ -5,11 +5,10 @@ namespace App\Features\Order\Controllers;
 use App\Http\Controllers\Controller;
 use App\Features\Order\Services\OrderQueryService;
 use Illuminate\Http\Request;
-use Exception;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\BusinessHour\Services\BusinessHourService;
 use Carbon\Carbon;
-use Illuminate\Validation\ValidationException;
+use App\Exceptions\BusinessException;
 
 class OrderReserveApiController extends Controller
 {
@@ -69,48 +68,36 @@ class OrderReserveApiController extends Controller
      */
     public function updateReserveTime(Request $request, $orderId)
     {
-        try {
-            $customerId = $this->getAuthenticatedCustomer()->id;
-            $order = $this->orderQueryService->getOrderById($orderId, $customerId);
+        $customerId = $this->getAuthenticatedCustomer()->id;
+        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
 
-            if (!$order) {
-                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
-            }
-
-            if ($order->status != OrderStatus::Unpaid) {
-                return response()->json(['success' => false, 'message' => 'Only unpaid orders can update reserve time'], 403);
-            }
-
-            $request->validate([
-                'reserve_time' => 'required|date_format:Y-m-d H:i',
-            ]);
-
-            $reserveTime = Carbon::parse($request->input('reserve_time'));
-
-            $orderType = $order->order_type;
-            
-            if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
-                return response()->json(['success' => false, 'message' => 'The reserved time is not available.'], 422);
-            }
-
-            $order->reserve_time = $reserveTime->format('Y-m-d H:i');
-            $order->save();
-
-            return response()->json([
-                'success' => true,
-                'order_id' => $order->id,
-                'reserve_time' => $order->reserve_time,
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 400);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
+        if (!$order) {
+            throw new BusinessException('Order not found', 'ORDER_NOT_FOUND', 404);
         }
+
+        if ($order->status != OrderStatus::Unpaid) {
+            throw new BusinessException('Only unpaid orders can update reserve time', 'INVALID_ORDER_STATUS', 403);
+        }
+
+        $request->validate([
+            'reserve_time' => 'required|date_format:Y-m-d H:i',
+        ]);
+
+        $reserveTime = Carbon::parse($request->input('reserve_time'));
+
+        $orderType = $order->order_type;
+        
+        if (!$this->businessHourService->isTimeAvailableForDate($orderType, $reserveTime)) {
+            throw new BusinessException('The reserved time is not available.', 'RESERVE_TIME_UNAVAILABLE', 422);
+        }
+
+        $order->reserve_time = $reserveTime->format('Y-m-d H:i');
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id,
+            'reserve_time' => $order->reserve_time,
+        ]);
     }
 }
