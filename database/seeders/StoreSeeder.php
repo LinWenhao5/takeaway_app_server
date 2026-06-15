@@ -11,12 +11,12 @@ class StoreSeeder extends Seeder
     {
         if (Store::count() === 0) {
             Store::create([
-                'name'         => 'Zen Sushi Purmerend',
-                'phone'        => '029-12345678',
-                'street'       => 'Koemarkt',
-                'house_number' => '1',
-                'postcode'     => '1441 DB',
-                'city'         => 'Purmerend',
+                'name'         => 'Zen Sushi',
+                'phone'        => '0647428956',
+                'street'       => 'Binnenweg',
+                'house_number' => '31',
+                'postcode'     => '2101 JB',
+                'city'         => 'Heemstede',
                 'country'      => 'Netherlands',
             ]);
         }

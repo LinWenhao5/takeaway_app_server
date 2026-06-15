@@ -28,6 +28,7 @@ class Order extends Model
         'reserve_time',
         'total_vat_amount',
         'note',
+        'printed'
     ];
 
     protected $casts = [
@@ -36,6 +37,7 @@ class Order extends Model
         'status' => OrderStatus::class,
         'order_type' => OrderType::class,  
         'products_snapshot' => 'array',
+        'printed' => 'boolean'
     ];
     
 

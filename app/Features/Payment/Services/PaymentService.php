@@ -5,6 +5,8 @@ use Mollie\Laravel\Facades\Mollie;
 use App\Features\Order\Models\Order;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Events\OrderCreated;
+use App\Features\Printer\Jobs\PrintReceiptJob;
+use App\Features\Printer\Models\Printer;
 use InvalidArgumentException;
 
 class PaymentService
@@ -29,7 +31,7 @@ class PaymentService
             "description" => "Order #{$order->id}",
             "redirectUrl" => $redirectUrl,
             "webhookUrl" => route('api.payment.webhook'),
-            // "webhookUrl" => "https://ff6d-86-94-222-170.ngrok-free.app/api/payments/webhook",
+            // "webhookUrl" => "https://4a64-86-94-222-170.ngrok-free.app/api/payments/webhook",
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
                 "order_id" => $order->id,
@@ -56,7 +58,13 @@ class PaymentService
             if ($order && $payment->isPaid() && $order->status !== OrderStatus::Paid) {
                 $order->status = OrderStatus::Paid;
                 $order->save();
+
                 event(new OrderCreated($order->toArray()));
+
+                $printers = Printer::where('is_online', true)->get();
+                foreach ($printers as $printer) {
+                    PrintReceiptJob::dispatch($order->toArray(), $printer->toArray());
+                }
             }
         }
     }

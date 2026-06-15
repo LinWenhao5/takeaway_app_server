@@ -1383,7 +1383,7 @@
                             }
                         }
                     },
-                    "400": {
+                    "401": {
                         "description": "Invalid captcha",
                         "content": {
                             "application/json": {
@@ -1392,6 +1392,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Invalid captcha."
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "INVALID_CAPTCHA"
                                         }
                                     },
                                     "type": "object"
@@ -1408,6 +1412,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Failed to reset password."
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "PASSWORD_RESET_FAILED"
                                         },
                                         "error": {
                                             "type": "string",
@@ -2013,6 +2021,110 @@
                 ]
             }
         },
+        "/api/cloudprnt": {
+            "get": {
+                "tags": [
+                    "Printer"
+                ],
+                "summary": "Fetch the raw printing instruction text stream",
+                "operationId": "0337fed7f9e1b17b585e82f826690c72",
+                "parameters": [
+                    {
+                        "name": "mac",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "00:11:62:1a:2b:3c"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/vnd.star.markup": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Printer"
+                ],
+                "summary": "Printer status polling and print confirmation",
+                "operationId": "5024c8b7e3a7f03b7b436ef5cc75eba4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "printerMAC"
+                                ],
+                                "properties": {
+                                    "printerMAC": {
+                                        "type": "string",
+                                        "example": "00:11:62:1a:2b:3c"
+                                    },
+                                    "statusCode": {
+                                        "type": "string",
+                                        "example": "20"
+                                    },
+                                    "clientAction": {
+                                        "type": "string",
+                                        "example": "applied"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "hasPrinting": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mediaTypes": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "text/vnd.star.markup"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -2340,6 +2452,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Printer",
+            "description": "CloudPRNT printer communication endpoints"
+        },
         {
             "name": "Addresses",
             "description": "Addresses"
