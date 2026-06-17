@@ -1,23 +1,29 @@
-window.unlockAudioAndHideTip = function () {
-    const audio = document.getElementById('confirm-audio');
-    if (audio) {
-        audio.muted = false;
-        audio.currentTime = 0;
-        audio.play();
-    }
-    const btn = document.getElementById('audio-btn');
-    if (btn) btn.style.display = 'none';
-};
-
 window.addEventListener('DOMContentLoaded', () => {
     const audio = document.getElementById('confirm-audio');
-    const btn = document.getElementById('audio-btn');
-    if (audio && btn) {
+    if (!audio) return;
+    audio.preload = "auto"; 
+
+    function tryUnlock() {
         audio.play().then(() => {
-            audio.pause();
-            audio.currentTime = 0;
+            console.log("静默解锁成功");
         }).catch(() => {
-            btn.style.display = '';
+            document.addEventListener('click', quietUnlock, { once: true });
         });
+    }
+
+    function quietUnlock() {
+        audio.play().then(() => {
+            console.log("通过点击静默解锁成功");
+        }).catch(err => {
+            document.addEventListener('click', quietUnlock, { once: true });
+        });
+    }
+
+    if (audio.readyState >= 4) {
+        tryUnlock();
+    } else {
+        audio.addEventListener('canplaythrough', () => {
+            tryUnlock();
+        }, { once: true });
     }
 });

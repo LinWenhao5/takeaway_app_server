@@ -67,9 +67,6 @@
             </a>
         </div>
         <div class="col d-flex justify-content-end">
-            <button id="audio-btn" class="btn btn-warning" style="display:none;" onclick="unlockAudioAndHideTip()">
-                🔊 @lang('orders.enable_new_order_audio')
-            </button>
             <button id="ws-status"
                 type="button"
                 class="btn border d-flex align-items-center gap-2 px-3 py-2 ms-2"
