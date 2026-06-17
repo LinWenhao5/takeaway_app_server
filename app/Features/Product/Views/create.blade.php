@@ -20,8 +20,7 @@
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">@lang('products.description')</label>
-            <input id="description" type="hidden" name="description" value="{{ old('description') }}">
-            <trix-editor input="description"></trix-editor>
+            <textarea id="description" name="description" class="form-control" placeholder="@lang('products.enter_description')">{{ old('description') }}</textarea>
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">@lang('products.price')</label>
