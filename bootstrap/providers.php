@@ -14,4 +14,5 @@ return [
     App\Features\BusinessHour\Providers\BusinessHourServiceProvider::class,
     App\Features\Delivery\Providers\DeliveryServiceProviders::class,
     App\Features\Vat\Providers\VatServiceProvider::class,
+    App\Features\Printer\Providers\PrinterServiceProvider::class,
 ];

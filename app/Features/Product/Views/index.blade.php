@@ -71,9 +71,8 @@
                             :action="route('admin.products.destroy', $product)"
                             :title="__('products.delete_title')"
                             :text="__('products.delete_text', ['name' => $product->name])"
-                            :confirm-button-text="__('products.confirm_delete')"
-                            :success-message="__('products.success_delete')"
-                            :error-message="__('products.error_delete')"
+                            :success-message="__('products.deleted_success')"
+                            :error-message="__('products.deleted_error')"
                             button-class="btn btn-outline-danger btn-sm"
                         >
                             <button type="button" class="btn btn-outline-danger btn-sm">@lang('products.delete')</button>

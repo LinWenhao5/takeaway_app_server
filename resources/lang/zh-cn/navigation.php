@@ -21,5 +21,6 @@ return [
     'order_history' => '订单历史',
     'system_management' => '系统管理',
     'settings' => '设置',
+    'printer' => '打印机配置',
     'logout' => '退出登录',
 ];

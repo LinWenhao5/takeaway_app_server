@@ -32,6 +32,7 @@ return [
     'category' => '分类',
     'save' => '保存',
     'enter_name' => '请输入商品名称',
+    'enter_description' => '请输入商品简介',
     'enter_price' => '请输入价格',
     'enter_discount_price' => '请输入折扣价',
     'back' => '返回',

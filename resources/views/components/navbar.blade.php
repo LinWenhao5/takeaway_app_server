@@ -1,6 +1,6 @@
 <div id="navbar" class="navbar navbar-expand-lg bg-primary navbar-dark d-none d-lg-flex fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="{{ route('admin.products.index') }}">@lang('navigation.admin_panel')</a>
+        <a class="navbar-brand text-white" href="{{ route('admin.product-categories.index') }}">@lang('navigation.admin_panel')</a>
 
         <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -18,6 +18,11 @@
                     <ul class="dropdown-menu" aria-labelledby="productDropdown">
                         @can('manage_products')
                             <li>
+                                <a href="{{ route('admin.product-categories.index') }}" class="dropdown-item {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
+                                    @lang('navigation.product_categories')
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('admin.products.index') }}" class="dropdown-item {{ request()->routeIs('admin.products.index') ? 'active' : '' }}">
                                     @lang('navigation.products')
                                 </a>
@@ -25,11 +30,6 @@
                             <li>
                                 <a href="{{ route('admin.products.create') }}" class="dropdown-item {{ request()->routeIs('admin.products.create') ? 'active' : '' }}">
                                     @lang('navigation.create_product')
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.product-categories.index') }}" class="dropdown-item {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
-                                    @lang('navigation.product_categories')
                                 </a>
                             </li>
                             <li>
@@ -128,6 +128,11 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="systemDropdown">
                         @can('manage_settings')
+                        <li>
+                            <a href="{{ route('admin.printers.index') }}" class="dropdown-item {{ request()->routeIs('admin.printer.*') ? 'active' : '' }}">
+                                @lang('navigation.printer')
+                            </a>
+                        </li>
                         <li>
                             <a href="{{ route('admin.settings.index') }}" class="dropdown-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                                 @lang('navigation.settings')

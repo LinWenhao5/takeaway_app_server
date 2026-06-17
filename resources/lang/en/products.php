@@ -32,6 +32,7 @@ return [
     'category' => 'Category',
     'save' => 'Save',
     'enter_name' => 'Enter product name',
+    'enter_description' => 'Enter product description',
     'enter_price' => 'Enter price',
     'enter_discount_price' => 'Enter discount price',
     'back' => 'Back',

@@ -23,13 +23,13 @@
                     <div class="accordion-body p-0">
                         <ul class="nav flex-column">
                             <li>
-                                <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                                    @lang('navigation.products')
+                                <a href="{{ route('admin.product-categories.index') }}" class="nav-link {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
+                                    @lang('navigation.product_categories')
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('admin.product-categories.index') }}" class="nav-link {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
-                                    @lang('navigation.product_categories')
+                                <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                                    @lang('navigation.products')
                                 </a>
                             </li>
                             <li>
@@ -127,6 +127,11 @@
                     <div class="accordion-body p-0">
                         <ul class="nav flex-column">
                             @can('manage_settings')
+                            <li>
+                                <a href="{{ route('admin.printers.index') }}" class="nav-link {{ request()->routeIs('admin.printer.*') ? 'active' : '' }}">
+                                    @lang('navigation.printer')
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                                     @lang('navigation.settings')

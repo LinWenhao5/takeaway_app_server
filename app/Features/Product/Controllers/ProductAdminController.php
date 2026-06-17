@@ -130,7 +130,7 @@ class ProductAdminController extends Controller
                 $product->media()->sync($request->media);
             }
 
-            return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
+            return redirect()->route('admin.product-categories.index')->with('success', 'Product updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update product: ' . $e->getMessage()]);
         }

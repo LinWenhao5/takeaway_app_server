@@ -83,7 +83,14 @@
                              @foreach($category->products as $product)
                                 <li class="d-flex justify-content-between align-items-center">
                                     <div class="d-flex flex-column">
-                                        <strong class="fw-bold">{{ $product->id }}. {{ $product->name }}</strong>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <strong class="fw-bold">{{ $product->id }}. {{ $product->name }}</strong>
+                                            @if($product->is_out_of_stock)
+                                                <span class="badge bg-danger">@lang('products.out_of_stock')</span>
+                                            @else
+                                                <span class="badge bg-success">@lang('products.in_stock')</span>
+                                            @endif
+                                        </div>
                                         <p class="mb-1 text-muted small">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</p>
                                         <span class="fw-bold">
                                             @if($product->is_discounted)

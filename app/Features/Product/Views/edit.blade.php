@@ -3,7 +3,7 @@
 @section('breadcrumb')
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-3">
-        <li class="breadcrumb-item"><a href="{{ route('admin.products.index') }}">@lang('products.product_management')</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.product-categories.index') }}">@lang('products.product_management')</a></li>
         <li class="breadcrumb-item active" aria-current="page">@lang('products.edit')</li>
     </ol>
 </nav>
@@ -45,7 +45,7 @@
         <div class="mb-3">
             <x-media-selector :media="$media" :selected="$selectedMedia" :label="__('products.select_media')" name="media" :multiple="true"/>
         </div>
-        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary ms-2">@lang('products.back')</a>
+        <a href="{{ route('admin.product-categories.index') }}" class="btn btn-secondary ms-2">@lang('products.back')</a>
         <button type="submit" class="btn btn-primary">@lang('products.update')</button>
     </form>
 </div>
