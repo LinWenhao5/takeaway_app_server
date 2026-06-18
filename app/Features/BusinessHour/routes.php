@@ -13,10 +13,14 @@ Route::middleware(['web', 'auth:web', 'role:admin|owner', 'throttle:custom_limit
         Route::put('{id}/delivery-closed', [BusinessHourAdminController::class, 'updateDeliveryClosed'])->name('update-delivery-closed');
     });
 
-Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])
+Route::middleware(['api', 'throttle:custom_limit'])
     ->prefix('api/business-hours')
     ->name('api.business-hours.')
     ->group(function () {
-        Route::get('/available-times', [BusinessHourApiController::class, 'availableTimes'])->name('available-times');
+        
         Route::get('/', [BusinessHourApiController::class, 'businessHours'])->name('business-hours');
+
+        Route::middleware('auth:api')->group(function () {
+            Route::get('/available-times', [BusinessHourApiController::class, 'availableTimes'])->name('available-times');
+        });
 });

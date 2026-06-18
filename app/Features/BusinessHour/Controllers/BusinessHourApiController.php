@@ -125,9 +125,9 @@ class BusinessHourApiController extends Controller
      *     )
      * )
      */
-    public function businessHours()
+    public function businessHours(Request $request)
     {
-        $locale = App::getLocale();
+        $locale = $request->header('Accept-Language');
 
         $businessHours = BusinessHour::orderBy('weekday', 'asc')->get();
 
