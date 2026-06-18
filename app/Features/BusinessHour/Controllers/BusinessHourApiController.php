@@ -6,6 +6,8 @@ use App\Features\BusinessHour\Services\BusinessHourService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Features\Order\Enums\OrderType;
+use App\Features\BusinessHour\Models\BusinessHour;
+use Illuminate\Support\Facades\App;
 
 class BusinessHourApiController extends Controller
 {
@@ -84,5 +86,61 @@ class BusinessHourApiController extends Controller
             'date' => $carbonDate->format('Y-m-d'),
             'times' => $times,
         ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/business-hours",
+     *     summary="Get business hours for each weekday",
+     *     tags={"BusinessHour"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response with business hours",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="success", type="boolean", example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="business_hours",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="weekday", type="integer", example=1),
+     *                     @OA\Property(property="open_time", type="string", example="09:00"),
+     *                     @OA\Property(property="close_time", type="string", example="18:00")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to get business hours",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Failed to get business hours."),
+     *             @OA\Property(property="error", type="string", example="Some error message")
+     *         )
+     *     )
+     * )
+     */
+    public function businessHours()
+    {
+        $locale = App::getLocale();
+
+        $businessHours = BusinessHour::orderBy('weekday', 'asc')->get();
+
+        $formattedData = $businessHours->map(function ($item) use ($locale) {
+            $date = Carbon::now()->startOfWeek()->addDays($item->weekday);
+            $item->weekday_name = $date->locale($locale)->dayName;
+
+            return $item;
+        });
+
+        return response()->json([
+            'success' => true,
+            'business_hours' => $formattedData
+        ], 200);
     }
 }

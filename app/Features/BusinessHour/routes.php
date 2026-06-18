@@ -18,4 +18,5 @@ Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])
     ->name('api.business-hours.')
     ->group(function () {
         Route::get('/available-times', [BusinessHourApiController::class, 'availableTimes'])->name('available-times');
+        Route::get('/', [BusinessHourApiController::class, 'businessHours'])->name('business-hours');
 });

@@ -538,6 +538,82 @@
                 ]
             }
         },
+        "/api/business-hours": {
+            "get": {
+                "tags": [
+                    "BusinessHour"
+                ],
+                "summary": "Get business hours for each weekday",
+                "operationId": "08d9acfe1689d5cb8516d6a0afb88fe2",
+                "responses": {
+                    "200": {
+                        "description": "Successful response with business hours",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "business_hours": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "weekday": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "open_time": {
+                                                        "type": "string",
+                                                        "example": "09:00"
+                                                    },
+                                                    "close_time": {
+                                                        "type": "string",
+                                                        "example": "18:00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get business hours",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to get business hours."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Some error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/cart": {
             "get": {
                 "tags": [
