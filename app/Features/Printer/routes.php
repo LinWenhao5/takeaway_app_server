@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Features\Printer\Controllers\CloudPrntApiController;
 use App\Features\Printer\Controllers\PrinterAdminController;
 
-Route::match(['get', 'post'], 'api/cloudprnt', [CloudPrntApiController::class, 'index'])
+Route::match(['get', 'post', 'delete'], 'api/cloudprnt', [CloudPrntApiController::class, 'index'])
     ->name('api.printer.webhook')
     ->withoutMiddleware('auth:api')
     ->middleware(['api', 'throttle:custom_limit']);

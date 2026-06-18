@@ -5,6 +5,7 @@ namespace App\Features\Printer\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class PrintReceiptJob implements ShouldQueue
@@ -34,11 +35,16 @@ class PrintReceiptJob implements ShouldQueue
 
         $markup = $this->generateMarkup($this->order);
 
-        $queueKey = "printer:raw_queue:{$mac}";
+        $jobToken = 'order_' . $this->order['id'] . '_' . Str::uuid();
+
+        $queueKey = "printer:queue:{$mac}";
         
         Redis::rpush($queueKey, json_encode([
+            'job_token' => $jobToken,
             'order_id' => $this->order['id'],
-            'markup'   => $markup
+            'printer_mac' => $mac,
+            'created_at' => time(),
+            'markup'   => $markup,
         ]));
     }
 

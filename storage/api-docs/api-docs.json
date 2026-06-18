@@ -2024,10 +2024,11 @@
         "/api/cloudprnt": {
             "get": {
                 "tags": [
-                    "Printer"
+                    "CloudPRNT"
                 ],
-                "summary": "Fetch the raw printing instruction text stream",
-                "operationId": "0337fed7f9e1b17b585e82f826690c72",
+                "summary": "Download print job",
+                "description": "Printer downloads the print data for a specific job token.",
+                "operationId": "d194ba3b3265fa0db0463e932c8b6806",
                 "parameters": [
                     {
                         "name": "mac",
@@ -2037,32 +2038,44 @@
                             "type": "string"
                         },
                         "example": "00:11:62:1a:2b:3c"
+                    },
+                    {
+                        "name": "jobToken",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "order_123_550e8400-e29b-41d4-a716-446655440000"
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "text/vnd.star.markup"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Print job content",
                         "content": {
-                            "text/vnd.star.markup": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
+                            "text/vnd.star.markup": {}
                         }
                     },
-                    "204": {
-                        "description": "No content"
-                    },
-                    "400": {
-                        "description": "Bad Request"
+                    "404": {
+                        "description": "Job not found"
                     }
                 }
             },
             "post": {
                 "tags": [
-                    "Printer"
+                    "CloudPRNT"
                 ],
-                "summary": "Printer status polling and print confirmation",
+                "summary": "CloudPRNT printer polling",
+                "description": "Printer polls server to check if a print job is available.",
                 "operationId": "5024c8b7e3a7f03b7b436ef5cc75eba4",
                 "requestBody": {
                     "required": true,
@@ -2077,13 +2090,17 @@
                                         "type": "string",
                                         "example": "00:11:62:1a:2b:3c"
                                     },
-                                    "statusCode": {
+                                    "clientType": {
                                         "type": "string",
-                                        "example": "20"
+                                        "example": "Star mC-Print3"
                                     },
-                                    "clientAction": {
+                                    "statusCode": {
+                                        "type": "integer",
+                                        "example": 200
+                                    },
+                                    "status": {
                                         "type": "string",
-                                        "example": "applied"
+                                        "example": "23 86 00 00 00 00 00 00"
                                     }
                                 },
                                 "type": "object"
@@ -2093,34 +2110,69 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Operation successful",
+                        "description": "Job available",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "hasPrinting": {
+                                        "jobReady": {
                                             "type": "boolean",
                                             "example": true
+                                        },
+                                        "jobToken": {
+                                            "type": "string",
+                                            "example": "order_123_550e8400-e29b-41d4-a716-446655440000"
                                         },
                                         "mediaTypes": {
                                             "type": "array",
                                             "items": {
-                                                "type": "string",
-                                                "example": "text/vnd.star.markup"
-                                            }
-                                        },
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "text/vnd.star.markup"
+                                            ]
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "CloudPRNT"
+                ],
+                "summary": "Complete print job",
+                "description": "Printer confirms that the print job has been successfully printed.",
+                "operationId": "3f6e035a38e93b77a8f08c9e4932a697",
+                "parameters": [
+                    {
+                        "name": "mac",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "00:11:62:1a:2b:3c"
                     },
-                    "429": {
-                        "description": "Too Many Requests"
+                    {
+                        "name": "jobToken",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "order_123_550e8400-e29b-41d4-a716-446655440000"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Print job completed"
+                    },
+                    "204": {
+                        "description": "Job already removed"
                     }
                 }
             }
@@ -2453,10 +2505,6 @@
     },
     "tags": [
         {
-            "name": "Printer",
-            "description": "CloudPRNT printer communication endpoints"
-        },
-        {
             "name": "Addresses",
             "description": "Addresses"
         },
@@ -2483,6 +2531,10 @@
         {
             "name": "Orders",
             "description": "Orders"
+        },
+        {
+            "name": "CloudPRNT",
+            "description": "CloudPRNT"
         },
         {
             "name": "Products",
