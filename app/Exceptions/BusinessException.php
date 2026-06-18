@@ -15,10 +15,9 @@ class BusinessException extends Exception
         ?string $errorCode = null,
         ?int $statusCode = null
     ) {
-        parent::__construct($message ?? $this->defaultMessage);
-
         $this->errorCode = $errorCode ?? $this->errorCode;
         $this->statusCode = $statusCode ?? $this->statusCode;
+        parent::__construct($message ?? $this->defaultMessage);
     }
 
     public function getStatusCode(): int
