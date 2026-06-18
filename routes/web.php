@@ -4,5 +4,5 @@ use App\Http\Controllers\WelcomeController;
 
 
 // Public Routes
-Route::get('/', [WelcomeController::class, 'index'])->middleware('throttle:custom_limit');
+Route::get('/', [WelcomeController::class, 'index'])->middleware('throttle:custom_limit')->name('admin.welcome');
 

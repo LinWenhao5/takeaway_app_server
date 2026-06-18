@@ -23,7 +23,7 @@
             <div class="mb-4"></div> 
             <h1 class="display-4 text-primary">@lang('welcome.title')</h1>
             <p class="lead text">@lang('welcome.manage')</p>
-            <a href="{{ route('admin.products.index') }}" class="btn btn-primary btn-lg mt-3">
+            <a href="{{ route('admin.product-categories.index') }}" class="btn btn-primary btn-lg mt-3">
                 <i class="bi bi-box-seam me-2"></i> @lang('welcome.dashboard')
             </a>
 
