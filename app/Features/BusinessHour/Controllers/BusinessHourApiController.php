@@ -128,11 +128,13 @@ class BusinessHourApiController extends Controller
     public function businessHours(Request $request)
     {
         $locale = $request->header('Accept-Language');
+        $locale = $locale ? explode(',', $locale)[0] : 'nl';
 
         $businessHours = BusinessHour::orderBy('weekday', 'asc')->get();
 
         $formattedData = $businessHours->map(function ($item) use ($locale) {
-            $date = Carbon::now()->startOfWeek()->addDays($item->weekday);
+            $date = Carbon::now()->startOfWeek(Carbon::SUNDAY)->addDays($item->weekday);
+            
             $item->weekday_name = $date->locale($locale)->dayName;
 
             return $item;
