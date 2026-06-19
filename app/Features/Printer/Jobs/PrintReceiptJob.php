@@ -30,7 +30,7 @@ class PrintReceiptJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $mac = $this->printer['mac_address'];
+        $mac = strtolower($this->printer['mac_address']);
         if (!$mac) return;
 
         $markup = $this->generateMarkup($this->order);

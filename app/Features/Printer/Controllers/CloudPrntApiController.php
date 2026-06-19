@@ -72,10 +72,14 @@ class CloudPrntApiController extends Controller
      */
     public function index(Request $request)
     {
-        Log::info('CloudPRNT', [
-            'method' => $request->method(),
-            'query'  => $request->query(),
-            'body'   => $request->all(),
+        $method = $request->method();
+        $mac = $request->input('printerMAC') ?? $request->query('mac', 'UNKNOWN');
+
+        Log::info("[CloudPRNT] {$method} Request Received", [
+            'printer_mac' => $mac,
+            'status_code' => $request->input('statusCode', 'N/A'),
+            'query_params' => $request->query(),
+            'is_printing' => $request->input('printingInProgress') ?? false,
         ]);
 
         return match ($request->method()) {
@@ -133,7 +137,7 @@ class CloudPrntApiController extends Controller
      */
     private function poll(Request $request)
     {
-        $mac = $request->input('printerMAC');
+        $mac = strtolower($request->input('printerMAC'));
 
         if (!$mac) {
             return response()->json(['jobReady' => false]);
@@ -194,7 +198,7 @@ class CloudPrntApiController extends Controller
      */
     private function renderJob(Request $request)
     {
-        $mac = $request->query('mac');
+        $mac = strtolower($request->query('mac'));
         $jobToken = $request->query('jobToken');
         $type = $request->query('type', 'text/vnd.star.markup');
 
@@ -236,7 +240,7 @@ class CloudPrntApiController extends Controller
 
     private function complete(Request $request)
     {
-        $mac = $request->query('mac');
+        $mac = strtolower($request->query('mac'));
         $jobToken = $request->query('jobToken');
 
         if (!$mac || !$jobToken) {
