@@ -144,5 +144,5 @@ class BusinessHourApiController extends Controller
             'success' => true,
             'business_hours' => $formattedData
         ], 200);
-    }
+    } 
 }

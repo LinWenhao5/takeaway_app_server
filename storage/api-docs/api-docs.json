@@ -448,6 +448,67 @@
                 ]
             }
         },
+        "/api/addresses/allowed-postcode": {
+            "get": {
+                "tags": [
+                    "Addresses"
+                ],
+                "summary": "Check if a postcode is in the allowed range",
+                "operationId": "c2fba3fa89b5aeb015a82f442901e485",
+                "parameters": [
+                    {
+                        "name": "postcode",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "1442CE"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postcode check result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "allowed": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/business-hours/available-times": {
             "get": {
                 "tags": [

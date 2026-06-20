@@ -14,3 +14,7 @@ Route::middleware(['api', 'auth:api', 'throttle:custom_limit'])->prefix('api/add
     Route::put('/{id}', [AddressApiController::class, 'update']);
     Route::delete('/{id}', [AddressApiController::class, 'destroy']);
 });
+
+Route::middleware(['api', 'throttle:custom_limit'])->prefix('api/addresses')->group(function () {
+    Route::get('/allowed-postcode', [AddressApiController::class, 'isAllowedPostcode']);
+});

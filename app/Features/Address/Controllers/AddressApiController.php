@@ -325,4 +325,44 @@ class AddressApiController extends Controller
             'success' => true,
         ]);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/addresses/allowed-postcode",
+     *     summary="Check if a postcode is in the allowed range",
+     *     tags={"Addresses"},
+     *     @OA\Parameter(
+     *         name="postcode",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         example="1442CE"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Postcode check result",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="allowed", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Validation failed"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function isAllowedPostcode(Request $request)
+    {
+        $validated = $request->validate([
+            'postcode' => 'required|string',
+        ]);
+        return response()->json([
+            'allowed' => AllowedPostcode::isAllowed($validated['postcode'])
+        ]);
+    }
 }
