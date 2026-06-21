@@ -152,13 +152,11 @@ class CustomerAuthApiController extends Controller
      */
     public function login(Request $request)
     {
-        // Validate the request data
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        // Find the customer by email
         $customer = Customer::where('email', $request->email)->first();
 
         if (!$customer || !Hash::check($request->password, $customer->password)) {
@@ -169,10 +167,13 @@ class CustomerAuthApiController extends Controller
             );
         }
 
-        // Generate a token for the customer
-        $token = $customer->createToken('auth_token')->plainTextToken;
+        $maxDevices = 3;
+        if ($customer->tokens()->count() >= $maxDevices) {
+            $customer->tokens()->orderBy('created_at', 'asc')->first()->delete();
+        }
 
-        // Return a success response with the token
+        $token = $customer->createToken('email_login')->plainTextToken;
+
         return response()->json([
             'message' => 'Login successful!',
             'code' => 'LOGIN_SUCCESS',

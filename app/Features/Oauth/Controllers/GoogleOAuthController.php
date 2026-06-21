@@ -16,28 +16,35 @@ class GoogleOAuthController extends Controller
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
 
-        $customer = Customer::where('google_id', $googleUser->id)
-            ->orWhere('email', $googleUser->email)
-            ->first();
+        return \DB::transaction(function () use ($googleUser) {
+            
+            $customer = Customer::where('google_id', $googleUser->id)->first();
 
-        if (!$customer) {
-            $customer = Customer::create([
-                'name' => $googleUser->name,
-                'email' => $googleUser->email,
-                'google_id' => $googleUser->id,
-                'password' => str()->random(16),
-            ]);
-        }
+            if (!$customer) {
+                $customer = Customer::where('email', $googleUser->email)->first();
+            }
 
-        if (!$customer->google_id) {
-            $customer->google_id = $googleUser->id;
-            $customer->save();
-        }
+            if (!$customer) {
+                $customer = Customer::create([
+                    'name' => $googleUser->name,
+                    'email' => $googleUser->email,
+                    'google_id' => $googleUser->id,
+                    'password' => str()->random(32),
+                ]);
+            } else {
+                if (!$customer->google_id) {
+                    $customer->update(['google_id' => $googleUser->id]);
+                }
+            }
 
-        $token = $customer->createToken('google-login')->plainTextToken;
+            if ($customer->tokens()->count() >= 3) {
+                $customer->tokens()->orderBy('created_at', 'asc')->first()->delete();
+            }
 
-        $url = config('app.frontend_url');
+            $token = $customer->createToken('google-login')->plainTextToken;
 
-        return redirect($url . "/auth/callback?token=" . $token);
+            $url = config('app.frontend_url');
+            return redirect($url . "/auth/callback?token=" . $token);
+        });
     }
 }
