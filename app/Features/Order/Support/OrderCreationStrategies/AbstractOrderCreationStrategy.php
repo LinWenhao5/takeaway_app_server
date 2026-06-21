@@ -84,15 +84,23 @@ abstract class AbstractOrderCreationStrategy
      */
     protected function attachProductsToOrder(Order $order, array $cart, array $products): void
     {
+        $items = collect($cart)->map(function ($quantity, $productId) use ($products) {
+            $product = $products[$productId]['model'];
+            return [
+                'id' => $productId,
+                'quantity' => $quantity,
+                'model' => $product,
+                'category_sort' => $product->category?->sort_order ?? 9999,
+            ];
+        })->sortBy('category_sort');
+
         $snapshot = [];
 
-        foreach ($cart as $productId => $quantity) {
-
-            $data = $products[$productId];
-            $product = $data['model'];
-
-            $order->products()->attach($productId, [
-                'quantity' => $quantity,
+        foreach ($items as $item) {
+            $product = $item['model'];
+            
+            $order->products()->attach($item['id'], [
+                'quantity' => $item['quantity'],
                 'price' => $product->price,
                 'final_price' => $product->final_price,
             ]);
@@ -101,21 +109,17 @@ abstract class AbstractOrderCreationStrategy
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
-
                 'price' => $product->price,
                 'discount_price' => $product->discount_price,
                 'final_price' => $product->final_price,
-
                 'is_discounted' => $product->is_discounted,
-
                 'vat_rate' => $product->vatRate?->rate,
-                'quantity' => $quantity,
+                'quantity' => $item['quantity'],
+                'category_name' => $product->category?->name,
             ];
         }
 
-        $order->update([
-            'products_snapshot' => $snapshot,
-        ]);
+        $order->update(['products_snapshot' => $snapshot]);
     }
 
     /**
