@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
+use App\Features\Printer\Services\ReceiptImageGenerator;
 
 class PrintReceiptJob implements ShouldQueue
 {
@@ -33,6 +34,12 @@ class PrintReceiptJob implements ShouldQueue
         if (!$mac) return;
 
         $jobToken = 'order_' . $this->order['id'] . '_' . Str::uuid();
+
+        $generator = new ReceiptImageGenerator();
+        $binary = $generator->generate($this->order);
+
+        $cacheKey = "printer:binary:{$mac}:{$jobToken}";
+        Redis::setex($cacheKey, 3600, $binary);
 
         $queueKey = "printer:queue:{$mac}";
 

@@ -62,14 +62,6 @@ class PaymentService
                 $orderArray = $order->toArray();
 
                 event(new OrderCreated($orderArray));
-
-                $printers = Printer::where('is_online', true)
-                   ->whereNotNull('mac_address')
-                   ->where('mac_address', '<>', '')
-                   ->get();
-                foreach ($printers as $printer) {
-                    PrintReceiptJob::dispatch($orderArray, $printer->toArray());
-                }
             }
         }
     }

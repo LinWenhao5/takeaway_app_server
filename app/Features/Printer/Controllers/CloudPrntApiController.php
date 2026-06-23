@@ -101,7 +101,6 @@ class CloudPrntApiController extends Controller
 
         $queueKey = "printer:queue:$mac";
 
-        // 取第一个任务（不删除）
         $jobJson = Redis::lindex($queueKey, 0);
 
         if (!$jobJson) {
@@ -198,10 +197,13 @@ class CloudPrntApiController extends Controller
             return response('', 500);
         }
 
-        $generator = new ReceiptImageGenerator();
-        $binary = $generator->generate($job['order_data']);
+        $binary = Redis::get("printer:binary:{$mac}:{$jobToken}");
 
-        file_put_contents(public_path('debug_mc3_print.png'), $binary);
+        if (!$binary) {
+            $generator = new ReceiptImageGenerator();
+            $binary = $generator->generate($job['order_data']);
+            Redis::setex("printer:binary:{$mac}:{$jobToken}", 600, $binary);
+        }
 
         return response($binary)
             ->header('Content-Type', 'image/png')
@@ -262,7 +264,13 @@ class CloudPrntApiController extends Controller
 
         $job = json_decode($jobJson, true);
 
-        // 从队列移除（只在成功打印后）
+        if (!empty($job['order_id'])) {
+            Order::where('id', $job['order_id'])
+                ->update(['printed' => true]);
+        }
+        
+        Redis::del("printer:binary:{$mac}:{$job['job_token']}");
+
         $list = Redis::lrange($queueKey, 0, -1);
 
         foreach ($list as $item) {
@@ -272,11 +280,6 @@ class CloudPrntApiController extends Controller
                 Redis::lrem($queueKey, 1, $item);
                 break;
             }
-        }
-
-        if (!empty($job['order_id'])) {
-            Order::where('id', $job['order_id'])
-                ->update(['printed' => true]);
         }
 
         return response('', 200);
