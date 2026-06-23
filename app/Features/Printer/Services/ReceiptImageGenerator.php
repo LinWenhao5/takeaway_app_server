@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class ReceiptImageGenerator
 {
     private const WIDTH = 576;
-    private const FONT_PATH = 'fonts/Arial.ttf'; 
+    private const FONT_PATH = 'fonts/arial.ttf'; 
 
     public function generate(array $orderData): string
     {
