@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f86fc01f77bd4a6d98b4dd2ca087b56d",
+    "content-hash": "c717355f97ed6b5b5144dbc8e2460430",
     "packages": [
         {
             "name": "brick/math",
@@ -635,6 +635,7 @@
                 "issues": "https://github.com/doctrine/annotations/issues",
                 "source": "https://github.com/doctrine/annotations/tree/2.0.2"
             },
+            "abandoned": true,
             "time": "2024-09-05T10:17:24+00:00"
         },
         {
@@ -10052,7 +10053,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-redis": "*"
     },
     "platform-dev": [],

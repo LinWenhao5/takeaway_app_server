@@ -268,7 +268,7 @@ class ReceiptImageGenerator
 
         $this->addText($img, 'Zen Sushi Heemstede', 20, 'center', $y);
         $y += 35;
-        $this->addText($img, 'Binnenweg 31, 2101 MB Heemstede', 20, 'center', $y);
+        $this->addText($img, 'Binnenweg 31, 2101JB Heemstede', 20, 'center', $y);
         $y += 50;
 
         $this->addText($img, 'Eet smakelijk!', 24, 'center', $y);
