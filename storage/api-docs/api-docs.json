@@ -2163,47 +2163,59 @@
                 "tags": [
                     "CloudPRNT"
                 ],
-                "summary": "Download print job",
-                "description": "Printer downloads the print data for a specific job token.",
-                "operationId": "d194ba3b3265fa0db0463e932c8b6806",
+                "summary": "Render print job to PNG",
+                "description": "Fetches order data from Redis and renders it into a PNG image stream for the Star printer.",
+                "operationId": "b066d80045be311d837681429bd58d31",
                 "parameters": [
                     {
                         "name": "mac",
                         "in": "query",
+                        "description": "The MAC address of the printer (case-insensitive)",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        },
-                        "example": "00:11:62:1a:2b:3c"
+                            "type": "string",
+                            "example": "00:11:62:aa:bb:cc"
+                        }
                     },
                     {
                         "name": "jobToken",
                         "in": "query",
+                        "description": "The unique token for the print job (also accepts 'token')",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        },
-                        "example": "order_123_550e8400-e29b-41d4-a716-446655440000"
-                    },
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "text/vnd.star.markup"
+                            "type": "string",
+                            "example": "tok_abc123xyz"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Print job content",
-                        "content": {
-                            "text/vnd.star.markup": {}
+                        "description": "Success - Returns raw PNG binary stream",
+                        "headers": {
+                            "Content-Type": {
+                                "description": "MIME type of the response",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "image/png"
+                                }
+                            },
+                            "X-Star-Cut": {
+                                "description": "Star CloudPRNT hardware cut command",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "feed"
+                                }
+                            }
                         }
                     },
+                    "400": {
+                        "description": "Bad Request - Missing mac or jobToken parameters"
+                    },
                     "404": {
-                        "description": "Job not found"
+                        "description": "Not Found - Job not found in Redis or already expired"
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Invalid JSON structure or missing order_data"
                     }
                 }
             },
@@ -2213,7 +2225,7 @@
                 ],
                 "summary": "CloudPRNT printer polling",
                 "description": "Printer polls server to check if a print job is available.",
-                "operationId": "5024c8b7e3a7f03b7b436ef5cc75eba4",
+                "operationId": "ccb445df296d6c92e296a1caaaf71416",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2283,7 +2295,7 @@
                 ],
                 "summary": "Complete print job",
                 "description": "Printer confirms that the print job has been successfully printed.",
-                "operationId": "3f6e035a38e93b77a8f08c9e4932a697",
+                "operationId": "77f2c3cd2827a111b4308c6017e5dc0e",
                 "parameters": [
                     {
                         "name": "mac",

@@ -6,13 +6,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Features\Order\Models\Order;
 use Illuminate\Support\Facades\Log;
+use App\Features\Printer\Services\ReceiptImageGenerator;
 
 /**
  * @OA\Tag(name="Printer", description="CloudPRNT printer communication endpoints")
  */
 class CloudPrntApiController extends Controller
 {
-    /**
+    public function index(Request $request)
+    {
+        $method = $request->method();
+        $mac = $request->input('printerMAC') ?? $request->query('mac', 'UNKNOWN');
+
+        Log::info("[CloudPRNT] {$method} Request Received", [
+            'printer_mac' => $mac,
+            'status_code' => $request->input('statusCode', 'N/A'),
+            'query_params' => $request->query(),
+            'is_printing' => $request->input('printingInProgress') ?? false,
+        ]);
+
+        return match ($request->method()) {
+            'POST'   => $this->poll($request),
+            'GET'    => $this->renderJob($request),
+            'DELETE' => $this->complete($request),
+            default  => response('', 405),
+        };
+    }
+
+   /**
      * @OA\Post(
      *     path="/api/cloudprnt",
      *     summary="CloudPRNT printer polling",
@@ -70,71 +91,6 @@ class CloudPrntApiController extends Controller
      *     )
      * )
      */
-    public function index(Request $request)
-    {
-        $method = $request->method();
-        $mac = $request->input('printerMAC') ?? $request->query('mac', 'UNKNOWN');
-
-        Log::info("[CloudPRNT] {$method} Request Received", [
-            'printer_mac' => $mac,
-            'status_code' => $request->input('statusCode', 'N/A'),
-            'query_params' => $request->query(),
-            'is_printing' => $request->input('printingInProgress') ?? false,
-        ]);
-
-        return match ($request->method()) {
-            'POST'   => $this->poll($request),
-            'GET'    => $this->renderJob($request),
-            'DELETE' => $this->complete($request),
-            default  => response('', 405),
-        };
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/cloudprnt",
-     *     summary="Download print job",
-     *     description="Printer downloads the print data for a specific job token.",
-     *     tags={"CloudPRNT"},
-     *
-     *     @OA\Parameter(
-     *         name="mac",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(type="string"),
-     *         example="00:11:62:1a:2b:3c"
-     *     ),
-     *
-     *     @OA\Parameter(
-     *         name="jobToken",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(type="string"),
-     *         example="order_123_550e8400-e29b-41d4-a716-446655440000"
-     *     ),
-     *
-     *     @OA\Parameter(
-     *         name="type",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="string"),
-     *         example="text/vnd.star.markup"
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Print job content",
-     *         @OA\MediaType(
-     *             mediaType="text/vnd.star.markup"
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=404,
-     *         description="Job not found"
-     *     )
-     * )
-     */
     private function poll(Request $request)
     {
         $mac = strtolower($request->input('printerMAC'));
@@ -145,6 +101,7 @@ class CloudPrntApiController extends Controller
 
         $queueKey = "printer:queue:$mac";
 
+        // 取第一个任务（不删除）
         $jobJson = Redis::lindex($queueKey, 0);
 
         if (!$jobJson) {
@@ -152,14 +109,103 @@ class CloudPrntApiController extends Controller
         }
 
         $job = json_decode($jobJson, true);
+        $token = $job['job_token'];
+
+        $processingKey = "printer:processing:$mac:$token";
+
+        if (!Redis::exists($processingKey)) {
+            Redis::setex($processingKey, 120, $jobJson);
+        }
 
         return response()->json([
             'jobReady' => true,
+            'jobToken' => $token,
             'mediaTypes' => [
-                'text/vnd.star.markup'
+                'image/png'
             ],
-            'jobToken' => $job['job_token']
         ]);
+    }
+
+    
+    /**
+     * @OA\Get(
+     * path="/api/cloudprnt",
+     * summary="Render print job to PNG",
+     * description="Fetches order data from Redis and renders it into a PNG image stream for the Star printer.",
+     * tags={"CloudPRNT"},
+     * @OA\Parameter(
+     * name="mac",
+     * in="query",
+     * required=true,
+     * description="The MAC address of the printer (case-insensitive)",
+     * @OA\Schema(type="string", example="00:11:62:aa:bb:cc")
+     * ),
+     * @OA\Parameter(
+     * name="jobToken",
+     * in="query",
+     * required=true,
+     * description="The unique token for the print job (also accepts 'token')",
+     * @OA\Schema(type="string", example="tok_abc123xyz")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Success - Returns raw PNG binary stream",
+     * @OA\Header(
+     * header="Content-Type",
+     * description="MIME type of the response",
+     * @OA\Schema(type="string", example="image/png")
+     * ),
+     * @OA\Header(
+     * header="X-Star-Cut",
+     * description="Star CloudPRNT hardware cut command",
+     * @OA\Schema(type="string", example="feed")
+     * )
+     * ),
+     * @OA\Response(
+     * response=400,
+     * description="Bad Request - Missing mac or jobToken parameters"
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Not Found - Job not found in Redis or already expired"
+     * ),
+     * @OA\Response(
+     * response=500,
+     * description="Internal Server Error - Invalid JSON structure or missing order_data"
+     * )
+     * )
+     */
+    private function renderJob(Request $request)
+    {
+        $mac = strtolower($request->query('mac'));
+        $jobToken = $request->query('jobToken') ?? $request->query('token');
+
+        if (!$mac || !$jobToken) {
+            return response('', 400);
+        }
+
+        $processingKey = "printer:processing:$mac:$jobToken";
+
+        $jobJson = Redis::get($processingKey);
+
+        if (!$jobJson) {
+            return response('', 404);
+        }
+
+        $job = json_decode($jobJson, true);
+
+        if (!is_array($job) || !isset($job['order_data'])) {
+            return response('', 500);
+        }
+
+        $generator = new ReceiptImageGenerator();
+        $binary = $generator->generate($job['order_data']);
+
+        file_put_contents(public_path('debug_mc3_print.png'), $binary);
+
+        return response($binary)
+            ->header('Content-Type', 'image/png')
+            ->header('X-Star-Cut', 'feed');
     }
 
     /**
@@ -196,59 +242,17 @@ class CloudPrntApiController extends Controller
      *     )
      * )
      */
-    private function renderJob(Request $request)
-    {
-        $mac = strtolower($request->query('mac'));
-        $jobToken = $request->query('jobToken');
-        $type = $request->query('type', 'text/vnd.star.markup');
-
-        if (!$mac || !$jobToken) {
-            return response('', 400);
-        }
-
-        $processingKey = "printer:processing:$mac:$jobToken";
-
-        $jobJson = Redis::get($processingKey);
-
-        if (!$jobJson) {
-            $queueKey = "printer:queue:$mac";
-
-            $list = Redis::lrange($queueKey, 0, -1);
-
-            foreach ($list as $item) {
-                $job = json_decode($item, true);
-
-                if ($job['job_token'] === $jobToken) {
-                    $jobJson = $item;
-
-                    Redis::setex($processingKey, 300, $item);
-                    break;
-                }
-            }
-        }
-
-        if (!$jobJson) {
-            return response('', 404);
-        }
-
-        $job = json_decode($jobJson, true);
-
-        return response($job['markup'])
-            ->header('Content-Type', $type)
-            ->header('Content-Length', strlen($job['markup']));
-    }
-
     private function complete(Request $request)
     {
         $mac = strtolower($request->query('mac'));
-        $jobToken = $request->query('jobToken');
+        $jobToken = $request->query('jobToken') ?? $request->query('token');
 
         if (!$mac || !$jobToken) {
             return response('', 400);
         }
 
-        $processingKey = "printer:processing:$mac:$jobToken";
         $queueKey = "printer:queue:$mac";
+        $processingKey = "printer:processing:$mac:$jobToken";
 
         $jobJson = Redis::getdel($processingKey);
 
@@ -258,12 +262,13 @@ class CloudPrntApiController extends Controller
 
         $job = json_decode($jobJson, true);
 
+        // 从队列移除（只在成功打印后）
         $list = Redis::lrange($queueKey, 0, -1);
 
         foreach ($list as $item) {
             $data = json_decode($item, true);
 
-            if (isset($data['job_token']) && $data['job_token'] === $jobToken) {
+            if (($data['job_token'] ?? null) === $jobToken) {
                 Redis::lrem($queueKey, 1, $item);
                 break;
             }
