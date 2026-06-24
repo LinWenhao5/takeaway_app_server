@@ -94,7 +94,7 @@ class ReceiptImageGenerator
         }
 
         // 大单号与点单类型紧随其后
-        $orderId   = $orderData['id'];
+        $orderId   = $orderData['daily_sequence'] ?? 'UNKNOWN';
         $orderType = strtoupper($orderData['order_type'] ?? 'PICKUP'); 
         $typeLabelDutch = ($orderType === 'DELIVERY') ? 'BEZORG' : 'AFHAAL';
 

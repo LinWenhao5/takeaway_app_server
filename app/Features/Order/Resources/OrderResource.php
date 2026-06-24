@@ -11,6 +11,7 @@ class OrderResource extends JsonResource
     {
         return [
             'public_id' => $this->public_id,
+            'daily_sequence' => $this->daily_sequence,
 
             'products_snapshot' => $this->products_snapshot,
             'status' => $this->status,
@@ -20,7 +21,7 @@ class OrderResource extends JsonResource
             'address_snapshot' => $this->address_snapshot,
             'vat_snapshot' => $this->vat_snapshot,
             'order_type' => $this->order_type,
-            'reserve_time' => $this->reserve_time,
+            'reserve_time' => optional($this->reserve_time)->format('Y-m-d H:i'),
             'total_vat_amount' => $this->total_vat_amount,
             'note' => $this->note,
             'printed' => $this->printed,

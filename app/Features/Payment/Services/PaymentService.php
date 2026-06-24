@@ -6,6 +6,7 @@ use App\Features\Order\Models\Order;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Events\OrderCreated;
 use InvalidArgumentException;
+use Illuminate\Support\Facades\DB;
 
 class PaymentService
 {
@@ -51,16 +52,40 @@ class PaymentService
         $payment = Mollie::api()->payments->get($paymentId);
 
         $publicOrderId = $payment->metadata->public_order_id ?? null;
-        if ($publicOrderId) {
-            $order = Order::where('public_id', $publicOrderId)->first();
-            if ($order && $payment->isPaid() && $order->status !== OrderStatus::Paid) {
-                $order->status = OrderStatus::Paid;
-                $order->save();
 
-                $orderArray = $order->toArray();
-
-                event(new OrderCreated($orderArray));
-            }
+        if (!$publicOrderId) {
+            return;
         }
+
+        $order = Order::where('public_id', $publicOrderId)->first();
+
+        if (!$order) {
+            return;
+        }
+
+        if (!$payment->isPaid()) {
+            return;
+        }
+
+        if ($order->status === OrderStatus::Paid) {
+            return;
+        }
+
+        DB::transaction(function () use ($order) {
+            $order->status = OrderStatus::Paid;
+
+            $orderDate = $order->reserve_time->toDateString();
+            $order->order_date = $orderDate;
+
+            $last = Order::where('order_date', $orderDate)
+                ->lockForUpdate()
+                ->max('daily_sequence');
+
+            $order->daily_sequence = ($last ?? 0) + 1;
+
+            $order->save();
+        });
+
+        event(new OrderCreated($order->toArray()));
     }
 }

@@ -29,10 +29,13 @@ class Order extends Model
         'reserve_time',
         'total_vat_amount',
         'note',
-        'printed'
+        'printed',
+        'order_date',
+        'daily_sequence'
     ];
 
     protected $casts = [
+        'reserve_time' => 'datetime',
         'address_snapshot' => 'array',
         'vat_snapshot' => 'array',
         'status' => OrderStatus::class,
