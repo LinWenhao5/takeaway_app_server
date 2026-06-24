@@ -56,4 +56,5 @@ return [
     'refresh_order_list' => '刷新订单列表',
     'order_number' => '订单号',
     'enable_new_order_audio' => '启用新订单提示音',
+    'daily_sequence' => '每日序号',
 ];

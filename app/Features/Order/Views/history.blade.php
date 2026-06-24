@@ -21,6 +21,7 @@
         <x-slot:head>
             <tr>
                 <th>#</th>
+                <th>@lang('orders.daily_sequence')</th>
                 <th>@lang('orders.customer')</th>
                 <th>@lang('orders.phone')</th>
                 <th>@lang('orders.address')</th>
@@ -41,6 +42,7 @@
                 @endphp
                 <tr>
                     <td>{{ $order->id }}</td>
+                    <td>{{ $order->daily_sequence ?? '-' }}</td>
                     <td>{{ $order->customer->name ?? '-' }}</td>
                     <td>{{ $order->address_snapshot['phone'] ?? '-' }}</td>
                     <td>
@@ -70,7 +72,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" class="text-center text-muted">@lang('orders.no_order_history')</td>
+                    <td colspan="10" class="text-center text-muted">@lang('orders.no_order_history')</td>
                 </tr>
             @endforelse
         </x-slot:body>

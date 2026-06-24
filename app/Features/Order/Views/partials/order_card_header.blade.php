@@ -12,7 +12,7 @@
             @lang('orders.' . strtolower($type))
         </span>
         <span>
-            @lang('orders.order') #{{ $order->id }}
+            #{{ $order->daily_sequence ?? '—' }}
         </span>
     </span>
     <span class="badge {{ $bgClass }} {{ $textClass }} ms-2">

@@ -6,7 +6,7 @@
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.orders.index') }}">@lang('orders.orders')</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@lang('orders.order') #{{ $order->id }}</li>
+            <li class="breadcrumb-item active" aria-current="page">@lang('orders.order') #{{ $order->daily_sequence ?? '—' }}</li>
         </ol>
     </nav>
 @endsection
@@ -25,7 +25,7 @@
             <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between">
                 <div>
                     <h3 class="mb-2">
-                        @lang('orders.order') #{{ $order->id }}
+                        @lang('orders.order') #{{ $order->daily_sequence ?? '—' }} ({{ $order->id }})
                     </h3>
                     <div class="mb-2">
                         <span class="badge bg-{{ $typeBadge['bg'] }} text-{{ $typeBadge['text'] }} me-2">

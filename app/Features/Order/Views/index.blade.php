@@ -126,7 +126,7 @@
                         <div class="bg-body-tertiary p-3 rounded">
                             <div class="row g-3" style="max-height: 80vh; overflow-y: auto;">
                                 @forelse($allTodayOrders->where('status', $status) as $order)
-                                    <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="card mb-0 h-100">
                                             @include('order::partials.order_card', [
                                                 'order' => $order,

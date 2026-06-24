@@ -57,4 +57,5 @@ return [
     'refresh_order_list' => 'Refresh Order List',
     'order_number' => 'Order #',
     'enable_new_order_audio' => 'Enable new order notification sound',
+    'daily_sequence' => 'Daily Sequence',
 ];
