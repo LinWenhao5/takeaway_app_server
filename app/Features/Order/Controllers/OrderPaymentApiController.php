@@ -127,7 +127,7 @@ class OrderPaymentApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'order_id' => $order->id,
+            'public_id' => $order->public_id,
             'payment_url' => $paymentUrl,
         ]);
     }
@@ -136,23 +136,23 @@ class OrderPaymentApiController extends Controller
      * Repay an unpaid order and get a new payment URL.
      *
      * @OA\Post(
-     *     path="/api/orders/{orderId}/repay",
+     *     path="/api/orders/{publicId}/repay",
      *     summary="Repay an unpaid order and get a new payment URL",
      *     tags={"Orders"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="orderId",
+     *         name="publicId",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="ID of the order"
+     *         @OA\Schema(type="string"),
+     *         description="Public ID of the order"
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Payment URL generated successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="order_id", type="integer", example=123),
+     *             @OA\Property(property="public_id", type="string", example="ORDER123"),
      *             @OA\Property(property="payment_url", type="string", example="https://www.mollie.com/paymentscreen/example")
      *         )
      *     ),
@@ -166,10 +166,10 @@ class OrderPaymentApiController extends Controller
      *     )
      * )
      */
-    public function repayOrder(Request $request, int $orderId)
+    public function repayOrder(Request $request, string $publicId)
     {
         $customerId = $this->getAuthenticatedCustomer()->id;
-        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
+        $order = $this->orderQueryService->getOrderById($publicId, $customerId);
 
         if (!$order) {
             throw new BusinessException(
@@ -205,7 +205,7 @@ class OrderPaymentApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'order_id' => $order->id,
+            'public_id' => $order->public_id,
             'payment_url' => $paymentUrl,
         ], 201);
     }

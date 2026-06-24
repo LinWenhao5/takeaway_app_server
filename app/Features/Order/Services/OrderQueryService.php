@@ -6,25 +6,17 @@ use App\Exceptions\BusinessException;
 
 class OrderQueryService
 {
-    public function getOrderById(int $orderId, int $customerId)
+    public function getOrderById(string $publicId, int $customerId)
     {
-        $query = Order::query();
-
-        $order = $query->find($orderId);
+        $order = Order::where('public_id', $publicId)
+        ->where('customer_id', $customerId)
+        ->first();
 
         if (!$order) {
             throw new BusinessException(
                 'Order not found',
                 'ORDER_NOT_FOUND',
                 404
-            );
-        }
-
-        if ($order->customer_id !== $customerId) {
-            throw new BusinessException(
-                'No permission to view this order',
-                'NO_PERMISSION',
-                403
             );
         }
 

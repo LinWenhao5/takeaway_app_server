@@ -21,16 +21,16 @@ class OrderReserveApiController extends Controller
      * Update reserve time for an unpaid order.
      *
      * @OA\Put(
-     *     path="/api/orders/{orderId}/reserve-time",
+     *     path="/api/orders/{publicId}/reserve-time",
      *     summary="Update reserve time for an unpaid order",
      *     tags={"Orders"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="orderId",
+     *         name="publicId",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="ID of the order"
+     *         @OA\Schema(type="string"),
+     *         description="Public ID of the order"
      *     ),
      *     @OA\RequestBody(
      *         required=true,
@@ -66,10 +66,10 @@ class OrderReserveApiController extends Controller
      *    ),
      * )
      */
-    public function updateReserveTime(Request $request, $orderId)
+    public function updateReserveTime(Request $request, string $publicId)
     {
         $customerId = $this->getAuthenticatedCustomer()->id;
-        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
+        $order = $this->orderQueryService->getOrderById($publicId, $customerId);
 
         if (!$order) {
             throw new BusinessException('Order not found', 'ORDER_NOT_FOUND', 404);
@@ -96,7 +96,7 @@ class OrderReserveApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'order_id' => $order->id,
+            'public_id' => $order->public_id,
             'reserve_time' => $order->reserve_time,
         ]);
     }

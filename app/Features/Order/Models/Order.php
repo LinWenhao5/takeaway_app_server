@@ -9,6 +9,7 @@ use App\Features\Order\Enums\OrderType;
 use App\Features\Customer\Models\Customer;
 use App\Features\Product\Models\Product;
 use App\Features\Address\Models\Address;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -39,7 +40,14 @@ class Order extends Model
         'products_snapshot' => 'array',
         'printed' => 'boolean'
     ];
-    
+
+    protected static function booted()
+    {
+        static::creating(function ($order) {
+            $order->public_id = (string) Str::ulid();
+        });
+    }
+        
 
     public function customer()
     {

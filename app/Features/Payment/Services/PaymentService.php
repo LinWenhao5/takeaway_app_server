@@ -5,8 +5,6 @@ use Mollie\Laravel\Facades\Mollie;
 use App\Features\Order\Models\Order;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Events\OrderCreated;
-use App\Features\Printer\Jobs\PrintReceiptJob;
-use App\Features\Printer\Models\Printer;
 use InvalidArgumentException;
 
 class PaymentService
@@ -18,9 +16,9 @@ class PaymentService
     )
     {
         if ($platform === 'web') {
-            $redirectUrl = "{$host}/order/{$order->id}";
+            $redirectUrl = "{$host}/order/{$order->public_id}";
         } else {
-            $redirectUrl = "takeawayapp://payment-callback?order_id={$order->id}";
+            $redirectUrl = "takeawayapp://payment-callback?order_id={$order->public_id}";
         }
 
         $payment = Mollie::api()->payments->create([
@@ -28,13 +26,13 @@ class PaymentService
                 "currency" => "EUR",
                 "value" => number_format($order->total_price, 2, '.', ''),
             ],
-            "description" => "Order #{$order->id}",
+            "description" => "Order #{$order->public_id}",
             "redirectUrl" => $redirectUrl,
             "webhookUrl" => route('api.payment.webhook'),
-            // "webhookUrl" => "https://2864-86-94-222-170.ngrok-free.app/api/payments/webhook",
+            // "webhookUrl" => "https://a89a-86-94-222-170.ngrok-free.app/api/payments/webhook",
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "metadata" => [
-                "order_id" => $order->id,
+                "public_order_id" => $order->public_id,
             ],
         ]);
 
@@ -52,9 +50,9 @@ class PaymentService
 
         $payment = Mollie::api()->payments->get($paymentId);
 
-        $orderId = $payment->metadata->order_id ?? null;
-        if ($orderId) {
-            $order = Order::find($orderId);
+        $publicOrderId = $payment->metadata->public_order_id ?? null;
+        if ($publicOrderId) {
+            $order = Order::where('public_id', $publicOrderId)->first();
             if ($order && $payment->isPaid() && $order->status !== OrderStatus::Paid) {
                 $order->status = OrderStatus::Paid;
                 $order->save();

@@ -4,6 +4,7 @@ namespace App\Features\Order\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Features\Order\Services\OrderQueryService;
+use App\Features\Order\Resources\OrderResource;
 
 class OrderQueryApiController extends Controller
 {
@@ -12,19 +13,19 @@ class OrderQueryApiController extends Controller
     ) {}
 
     /**
-     * Get order status by ID.
+     * Get order status by Public ID.
      *
      * @OA\Get(
-     *     path="/api/orders/{orderId}/status",
-     *     summary="Get order status by ID",
+     *     path="/api/orders/{publicId}/status",
+     *     summary="Get order status by Public ID",
      *     tags={"Orders"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="orderId",
+     *         name="publicId",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="ID of the order"
+     *         @OA\Schema(type="string"),
+     *         description="Public ID of the order"
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -45,14 +46,14 @@ class OrderQueryApiController extends Controller
      *     ),
      * )
      */
-    public function getOrderStatus(int $orderId)
+    public function getOrderStatus(string $publicId)
     {
         $customerId = $this->getAuthenticatedCustomer()->id;
-        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
+        $order = $this->orderQueryService->getOrderById($publicId, $customerId);
 
         return response()->json([
             'success' => true,
-            'order_id' => $order->id,
+            'public_id' => $order->public_id,
             'status' => $order->status,
         ]);
     }
@@ -110,27 +111,24 @@ class OrderQueryApiController extends Controller
         $perPage = request()->input('per_page', 10);
         $orders = $this->orderQueryService->getOrdersByCustomerId($customerId, $perPage);
 
-        return response()->json([
-            'success' => true,
-            'orders' => $orders,
-        ]);
+        return OrderResource::collection($orders);
     }
 
 
     /**
-     * Get order details by ID.
+     * Get order details by Public ID.
      *
      * @OA\Get(
-     *     path="/api/orders/{orderId}",
-     *     summary="Get order details by ID",
+     *     path="/api/orders/{publicId}",
+     *     summary="Get order details by Public ID",
      *     tags={"Orders"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="orderId",
+     *         name="publicId",
      *         in="path",
      *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="ID of the order"
+     *         @OA\Schema(type="string"),
+     *         description="Public ID of the order"
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -150,14 +148,11 @@ class OrderQueryApiController extends Controller
      *     )
      * )
      */
-    public function getOrderDetail(int $orderId)
+    public function getOrderDetail(string $publicId)
     {
         $customerId = $this->getAuthenticatedCustomer()->id;
-        $order = $this->orderQueryService->getOrderById($orderId, $customerId);
+        $order = $this->orderQueryService->getOrderById($publicId, $customerId);
 
-        return response()->json([
-            'success' => true,
-            'order' => $order,
-        ]);
+        return new OrderResource($order);
     }
 }
