@@ -19,10 +19,10 @@ class PickupOrderStrategy extends AbstractOrderCreationStrategy
         parent::__construct($cartService, $couponService, $vatCalculationService);
     }
 
-        public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void
-        {
-            // No specific validation for pickup orders
-        }
+    public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void
+    {
+        // No specific validation for pickup orders
+    }
 
     protected function calculateFinalPrice(float $totalPrice): float
     {

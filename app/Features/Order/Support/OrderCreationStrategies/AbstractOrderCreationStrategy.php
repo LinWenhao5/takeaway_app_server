@@ -23,7 +23,7 @@ abstract class AbstractOrderCreationStrategy
     {
         return DB::transaction(function () use ($createOrderDto) {
 
-            [$products, $subtotal] =
+            [$cart, $products, $subtotal] =
                 $this->prepareCartProducts($createOrderDto->customerId);
 
             $this->validateOrder($createOrderDto, $subtotal);
