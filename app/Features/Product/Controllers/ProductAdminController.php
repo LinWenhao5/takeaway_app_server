@@ -29,7 +29,7 @@ class ProductAdminController extends Controller
     public function adminCreate()
     {
         try {
-            $media = Media::all();
+            $media = Media::latest()->get();
             return view('product::create', compact('media'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load create form: ' . $e->getMessage()]);
@@ -42,7 +42,7 @@ class ProductAdminController extends Controller
     public function adminEdit(Product $product)
     {
         try {
-            $media = Media::all();
+            $media = Media::latest()->get();
             $categories = ProductCategory::all();
             $vats = VatRate::all();
             $selectedMedia = $product->media->pluck('id')->toArray();
