@@ -21,7 +21,7 @@ class MediaController extends Controller
 
     public function showMediaLibrary()
     {
-        $media = Media::all();
+        $media = Media::latest()->get();
         return view('media::index', compact('media'));
     }
 
