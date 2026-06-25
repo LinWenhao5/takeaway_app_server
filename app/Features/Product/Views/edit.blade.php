@@ -43,10 +43,13 @@
             <label class="form-check-label" for="is_out_of_stock">@lang('products.mark_as_out_of_stock')</label>
         </div>
         <div class="mb-3">
+            <button type="submit" class="btn btn-primary">@lang('products.update')</button>
+            <a href="{{ route('admin.product-categories.index') }}" class="btn btn-secondary ms-2">@lang('products.back')</a>
+        </div>
+
+        <div class="mb-3">
             <x-media-selector :media="$media" :selected="$selectedMedia" :label="__('products.select_media')" name="media" :multiple="true"/>
         </div>
-        <a href="{{ route('admin.product-categories.index') }}" class="btn btn-secondary ms-2">@lang('products.back')</a>
-        <button type="submit" class="btn btn-primary">@lang('products.update')</button>
     </form>
 </div>
 @endsection
