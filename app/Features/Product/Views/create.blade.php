@@ -34,11 +34,15 @@
             <input type="checkbox" name="is_out_of_stock" id="is_out_of_stock" class="form-check-input" value="1">
             <label class="form-check-label" for="is_out_of_stock">@lang('products.mark_as_out_of_stock')</label>
         </div>
+        
+        <div class="mb-3">
+            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary me-2">@lang('products.back')</a>
+            <button type="submit" class="btn btn-primary">@lang('products.save')</button>
+        </div>
+
         <div class="mb-3">
             <x-media-selector :media="$media" :label="__('products.select_media')" name="media" />
         </div>
-        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary ms-2">@lang('products.back')</a>
-        <button type="submit" class="btn btn-primary">@lang('products.save')</button>
     </form>
 </div>
 @endsection
