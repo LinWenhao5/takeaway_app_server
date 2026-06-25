@@ -1,16 +1,23 @@
 <?php
 namespace App\Features\Order\Support\OrderCreationStrategies;
 
-use App\Features\Cart\Services\CartService;
 use App\Features\Order\DTOs\CreateOrderDto;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
 
+use App\Features\Cart\Services\CartService;
+use App\Features\Coupon\Services\CouponService;
+use App\Features\Vat\Services\VatCalculationService;
+
 class PickupOrderStrategy extends AbstractOrderCreationStrategy
 {
     public function __construct (
-        protected CartService $cartService
-    ) {}
+        CartService $cartService,
+        CouponService $couponService,
+        VatCalculationService $vatCalculationService
+    ) {
+        parent::__construct($cartService, $couponService, $vatCalculationService);
+    }
 
         public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void
         {

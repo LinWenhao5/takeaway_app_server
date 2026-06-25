@@ -16,7 +16,8 @@ class OrderService
     public function __construct(
         protected CartService $cartService, 
         protected BusinessHourService $businessHourService,
-        protected DeliveryService $deliveryService
+        protected DeliveryService $deliveryService,
+        protected OrderStrategyFactory $orderStrategyFactory
     ) {
     }
 
@@ -34,10 +35,8 @@ class OrderService
             );
         }
 
-        $strategy = OrderStrategyFactory::create(
-            $createOrderDto->orderType,
-            $this->cartService, 
-            $this->deliveryService
+        $strategy = $this->orderStrategyFactory->create(
+            $createOrderDto->orderType
         );
 
         return $strategy->createOrder($createOrderDto);

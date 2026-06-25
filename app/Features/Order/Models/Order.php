@@ -9,6 +9,7 @@ use App\Features\Order\Enums\OrderType;
 use App\Features\Customer\Models\Customer;
 use App\Features\Product\Models\Product;
 use App\Features\Address\Models\Address;
+use App\Features\Coupon\Models\Coupon;
 use Illuminate\Support\Str;
 
 class Order extends Model
@@ -31,7 +32,10 @@ class Order extends Model
         'note',
         'printed',
         'order_date',
-        'daily_sequence'
+        'daily_sequence',
+        'coupon_id',
+        'coupon_discount_amount',
+        'coupon_snapshot'
     ];
 
     protected $casts = [
@@ -41,7 +45,8 @@ class Order extends Model
         'status' => OrderStatus::class,
         'order_type' => OrderType::class,  
         'products_snapshot' => 'array',
-        'printed' => 'boolean'
+        'printed' => 'boolean',
+        'coupon_snapshot' => 'array',
     ];
 
     protected static function booted()
@@ -68,4 +73,9 @@ class Order extends Model
     {
         return $this->belongsTo(Address::class);
     }
+
+    public function coupon()
+{
+    return $this->belongsTo(Coupon::class);
+}
 }

@@ -3,46 +3,91 @@
 namespace App\Features\Order\Support\OrderCreationStrategies;
 
 use App\Features\Cart\Services\CartService;
+use App\Features\Coupon\Services\CouponService;
+use App\Features\Vat\Services\VatCalculationService;
 use App\Features\Order\DTOs\CreateOrderDto;
 use App\Features\Product\Models\Product;
 use App\Features\Order\Models\Order;
+use App\Exceptions\BusinessException;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 abstract class AbstractOrderCreationStrategy
 {
     public function __construct(
-        protected CartService $cartService
+        protected CartService $cartService,
+        protected CouponService $couponService,
+        protected VatCalculationService $vatCalculationService
     ) {}
 
     public function createOrder(CreateOrderDto $createOrderDto): Order
     {
         return DB::transaction(function () use ($createOrderDto) {
 
-            [$cart, $products, $subtotal] =
+            [$products, $subtotal] =
                 $this->prepareCartProducts($createOrderDto->customerId);
 
             $this->validateOrder($createOrderDto, $subtotal);
 
-            $finalPrice = $this->calculateFinalPrice($subtotal);
+            [$userCoupon, $couponDiscount] = $this->processCoupon($createOrderDto, $subtotal);
 
-            $order = Order::create(
-                $this->buildOrderData($createOrderDto, $finalPrice)
+            $baseFinalPrice = $this->calculateFinalPrice($subtotal);
+            $finalPriceWithCoupon = max(0.00, $baseFinalPrice - $couponDiscount);
+
+            $sortedProducts = collect($products)->sortBy(function ($item) {
+                return $item['model']->category?->sort_order ?? 9999;
+            })->all();
+
+            $pricingBreakdown = $this->vatCalculationService->calculateSplitVat($sortedProducts, $subtotal, $couponDiscount);
+
+            $orderData = array_merge(
+                $this->buildOrderData($createOrderDto, $finalPriceWithCoupon),
+                [
+                    'coupon_id' => $userCoupon ? $userCoupon->coupon_id : null,
+                    'coupon_discount_amount' => $couponDiscount,
+                    'coupon_snapshot' => $userCoupon ? [
+                        'user_coupon_id' => $userCoupon->id,
+                        'name' => $userCoupon->name,
+                        'code' => $userCoupon->code,
+                        'discount_value' => $userCoupon->value
+                    ] : null,
+                    'products_snapshot' => $pricingBreakdown['products_snapshot'],
+                    'vat_snapshot' => $pricingBreakdown['vat_snapshot'],
+                    'total_vat_amount' => $pricingBreakdown['total_vat_amount'],
+                ]
             );
 
-            $this->attachProductsToOrder($order, $cart, $products);
+            $order = Order::create($orderData);
 
-            $vatSummary = $this->calculateVatSummary($cart, $products);
+            $this->attachProductsToPivot($order, $products);
 
-            $order->update([
-                'vat_snapshot' => $vatSummary,
-                'total_vat_amount' => $vatSummary['total_vat_amount'],
-            ]);
+            if ($userCoupon) {
+                DB::table('coupon_customer')
+                    ->where('id', $userCoupon->id)
+                    ->update([
+                        'is_used' => true,
+                        'used_at' => now(),
+                        'order_id' => $order->id
+                    ]);
+            }
 
             $this->cartService->clearCart($createOrderDto->customerId);
 
             return $order;
         });
+    }
+
+    protected function processCoupon(CreateOrderDto $dto, float $subtotal): array
+    {
+        if (!$dto->couponCustomerId) {
+            return [null, 0.00];
+        }
+
+        return $this->couponService->verifyAndCalculateDiscount(
+            $dto->couponCustomerId,
+            $dto->customerId,
+            $subtotal,
+            true
+        );
     }
 
     /**
@@ -53,18 +98,17 @@ abstract class AbstractOrderCreationStrategy
         $cart = $this->cartService->getCart($customerId);
 
         if (empty($cart)) {
-            throw new Exception('Cart is empty');
+            throw new BusinessException('Cart is empty.', 'CART_EMPTY');
         }
 
         $subtotal = 0;
         $products = [];
 
         foreach ($cart as $productId => $quantity) {
-
             $product = Product::find($productId);
 
             if (!$product) {
-                throw new Exception('Product not found: ' . $productId);
+                throw new BusinessException("Product not found: {$productId}", 'PRODUCT_NOT_FOUND', 404);
             }
 
             $products[$productId] = [
@@ -79,84 +123,17 @@ abstract class AbstractOrderCreationStrategy
         return [$cart, $products, $subtotal];
     }
 
-    /**
-     * Step 2: Attach order items + snapshot
-     */
-    protected function attachProductsToOrder(Order $order, array $cart, array $products): void
+
+    protected function attachProductsToPivot(Order $order, array $products): void
     {
-        $items = collect($cart)->map(function ($quantity, $productId) use ($products) {
-            $product = $products[$productId]['model'];
-            return [
-                'id' => $productId,
-                'quantity' => $quantity,
-                'model' => $product,
-                'category_sort' => $product->category?->sort_order ?? 9999,
-            ];
-        })->sortBy('category_sort');
-
-        $snapshot = [];
-
-        foreach ($items as $item) {
+        foreach ($products as $productId => $item) {
             $product = $item['model'];
-            
-            $order->products()->attach($item['id'], [
+            $order->products()->attach($productId, [
                 'quantity' => $item['quantity'],
                 'price' => $product->price,
                 'final_price' => $product->final_price,
             ]);
-
-            $snapshot[] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'description' => $product->description,
-                'price' => $product->price,
-                'discount_price' => $product->discount_price,
-                'final_price' => $product->final_price,
-                'is_discounted' => $product->is_discounted,
-                'vat_rate' => $product->vatRate?->rate,
-                'quantity' => $item['quantity'],
-                'category_name' => $product->category?->name,
-            ];
         }
-
-        $order->update(['products_snapshot' => $snapshot]);
-    }
-
-    /**
-     * Step 3: VAT calculation (ONLY PLACE VAT IS CALCULATED)
-     */
-    protected function calculateVatSummary(array $cart, array $products): array
-    {
-        $summary = [];
-        $totalVat = 0;
-
-        foreach ($cart as $productId => $quantity) {
-
-            $data = $products[$productId];
-            $product = $data['model'];
-
-            $vatRate = $product->vatRate?->rate ?? 0;
-            $vatName = $product->vatRate?->name ?? 'No VAT';
-
-            $subtotal = $product->final_price * $quantity;
-            $vatAmount = round($subtotal * ($vatRate / 100), 2);
-
-            if (!isset($summary[$vatName])) {
-                $summary[$vatName] = [
-                    'vat_total' => 0,
-                    'product_total' => 0,
-                ];
-            }
-
-            $summary[$vatName]['vat_total'] += $vatAmount;
-            $summary[$vatName]['product_total'] += $subtotal;
-
-            $totalVat += $vatAmount;
-        }
-
-        $summary['total_vat_amount'] = round($totalVat, 2);
-
-        return $summary;
     }
 
     /**

@@ -2,23 +2,25 @@
 namespace App\Features\Order\Support\OrderCreationStrategies;
 
 use App\Features\Order\Enums\OrderType;
-use App\Features\Cart\Services\CartService;
-use App\Features\Delivery\Services\DeliveryService;
+use Illuminate\Contracts\Container\Container;
 
 class OrderStrategyFactory
 {
-    public static function create(
-        OrderType $orderType, 
-        CartService $cartService, 
-        DeliveryService $deliveryService
-    ): AbstractOrderCreationStrategy {
+    public function __construct(
+        protected Container $container
+    ) {}
+
+    public function create(OrderType $orderType): AbstractOrderCreationStrategy
+    {
         switch ($orderType) {
             case OrderType::DELIVERY:
-                return new DeliveryOrderStrategy($cartService, $deliveryService);
+                return $this->container->make(DeliveryOrderStrategy::class);
+                
             case OrderType::PICKUP:
-                return new PickupOrderStrategy($cartService);
+                return $this->container->make(PickupOrderStrategy::class);
+                
             default:
                 throw new \Exception('Unsupported order type');
         }
     }
-}   
+}

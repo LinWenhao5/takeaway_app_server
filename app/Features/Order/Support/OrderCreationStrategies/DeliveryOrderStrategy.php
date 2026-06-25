@@ -3,20 +3,27 @@ namespace App\Features\Order\Support\OrderCreationStrategies;
 
 use App\Features\Cart\Services\CartService;
 use App\Features\Order\DTOs\CreateOrderDto;
-use App\Features\Delivery\Services\DeliveryService;
 use App\Features\Address\Models\Address;
 use App\Features\Order\Enums\OrderStatus;
 use App\Features\Order\Enums\OrderType;
 use App\Features\Address\Models\AllowedPostcode;
 use App\Exceptions\BusinessException;
 
+use App\Features\Coupon\Services\CouponService;
+use App\Features\Vat\Services\VatCalculationService;
+use App\Features\Delivery\Services\DeliveryService;
+
 class DeliveryOrderStrategy extends AbstractOrderCreationStrategy
 {
 
     public function __construct(
-        protected CartService $cartService, 
+        CartService $cartService,
+        CouponService $couponService,
+        VatCalculationService $vatCalculationService,
         protected DeliveryService $deliveryService
-    ) {}
+    ) {
+        parent::__construct($cartService, $couponService, $vatCalculationService);
+    }
 
     public function validateOrder(CreateOrderDto $createOrderDto, float $totalPrice): void
     {

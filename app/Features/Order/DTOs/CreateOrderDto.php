@@ -12,6 +12,7 @@ class CreateOrderDto
         public readonly OrderType $orderType,
         public readonly string $reserveTime,
         public readonly ?string $note = null,
+        public readonly ?int $couponCustomerId = null,
     ) {
     }
 }
