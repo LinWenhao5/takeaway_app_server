@@ -12,7 +12,7 @@ class MediaController extends Controller
     public function index()
     {
         try {
-            $media = Media::all();
+            $media = Media::latest()->get();
             return response()->json($media, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to load media: ' . $e->getMessage()], 500);
