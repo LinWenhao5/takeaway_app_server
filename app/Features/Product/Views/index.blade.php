@@ -14,15 +14,32 @@
         <h1 class="mb-0">@lang('products.product_management')</h1>
         <a href="{{ route('admin.products.create') }}" class="btn btn-primary">@lang('products.add_new')</a>
     </div>
-
-    <x-table class="mt-4">
+    <x-table>
+        <x-slot:filters>
+            <form method="GET" action="{{ route('admin.products.index') }}" class="row g-2 align-items-center">
+                <div class="col-auto">
+                    <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="@lang('products.search_placeholder')" value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> @lang('common.search')
+                        </button>
+                        @if(request()->has('search') && request('search') != '')
+                            <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </form>
+        </x-slot:filters>
+    
         <x-slot:head>
             <tr>
-                <th>@lang('products.name')</th>
+                <x-table-sort-th field="name" :label="__('products.name')" />
                 <th>@lang('products.description')</th>
-                <th>@lang('products.price')</th>
-                <th>@lang('products.discount_price')</th>
-                <th>@lang('products.stock')</th>
+                <x-table-sort-th field="price" :label="__('products.price')" />
+                <x-table-sort-th field="discount_price" :label="__('products.discount_price')" />
+                <x-table-sort-th field="is_out_of_stock" :label="__('products.stock')" />
                 <th>@lang('products.vat_rate')</th>
                 <th>@lang('products.image')</th>
                 <th>@lang('products.actions')</th>
@@ -83,7 +100,7 @@
             @endforeach
         </x-slot:body>
         <x-slot:pagination>
-            {{ $products->links() }}
+            {{ $products->withQueryString()->links() }}
         </x-slot:pagination>
     </x-table>
 </div>

@@ -44,7 +44,7 @@
         </div>
         <div class="mb-3">
             <button type="submit" class="btn btn-primary">@lang('products.update')</button>
-            <a href="{{ route('admin.product-categories.index') }}" class="btn btn-secondary ms-2">@lang('products.back')</a>
+            <a href="javascript:history.back()" class="btn btn-secondary ms-2">@lang('products.back')</a>
         </div>
 
         <div class="mb-3">

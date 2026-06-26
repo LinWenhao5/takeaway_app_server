@@ -13,11 +13,33 @@ class ProductAdminController extends Controller
     /**
      * Display a listing of the resource for admin.
      */
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
         try {
-            $products = Product::with('media')->paginate(10);
-            return view('product::index', compact('products'));
+        $query = Product::with(['media', 'vatRate']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        $allowedSorts = ['name', 'price', 'discount_price', 'is_out_of_stock'];
+        $sortBy = $request->input('sort_by');
+        $sortOrder = $request->input('sort_order') === 'desc' ? 'desc' : 'asc';
+
+        if (in_array($sortBy, $allowedSorts)) {
+            $query->orderBy($sortBy, $sortOrder);
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+
+        $products = $query->paginate(10);
+
+        return view('product::index', compact('products'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to load products: ' . $e->getMessage()]);
         }
@@ -42,6 +64,10 @@ class ProductAdminController extends Controller
     public function adminEdit(Product $product)
     {
         try {
+            if (url()->previous() !== url()->current() && str_contains(url()->previous(), route('admin.products.index'))) {
+                session(['products_index_url' => url()->previous()]);
+            }
+
             $media = Media::latest()->get();
             $categories = ProductCategory::all();
             $vats = VatRate::all();
@@ -130,7 +156,11 @@ class ProductAdminController extends Controller
                 $product->media()->sync($request->media);
             }
 
-            return redirect()->route('admin.product-categories.index')->with('success', 'Product updated successfully!');
+            $targetUrl = session('products_index_url', route('admin.products.index'));
+
+            session()->forget('products_index_url');
+
+            return redirect($targetUrl)->with('success', 'Product updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update product: ' . $e->getMessage()]);
         }

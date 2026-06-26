@@ -1,4 +1,10 @@
 <div class="card border border-light-subtle shadow-sm rounded-3 {{ $class ?? '' }}">
+    @if (isset($filters) && trim($filters))
+        <div class="card-header bg-white border-bottom border-light-subtle py-3 px-4">
+            {{ $filters }}
+        </div>
+    @endif
+
     <div class="table-responsive">
         <table class="table table-hover table-borderless align-middle mb-0">
             <thead class="table-light border-bottom border-light-subtle text-secondary">

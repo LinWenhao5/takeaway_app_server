@@ -2,6 +2,7 @@
 return [
     'product_management' => 'Product Management',
     'add_new' => 'Add New Product',
+    'search_placeholder' => 'Search products...',
     'name' => 'Name',
     'description' => 'Description',
     'price' => 'Price',

@@ -36,7 +36,7 @@
         </div>
         
         <div class="mb-3">
-            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary me-2">@lang('products.back')</a>
+            <a href="javascript:history.back()" class="btn btn-secondary me-2">@lang('products.back')</a>
             <button type="submit" class="btn btn-primary">@lang('products.save')</button>
         </div>
 

@@ -2,6 +2,7 @@
 return [
     'product_management' => '商品管理',
     'add_new' => '新增商品',
+    'search_placeholder' => '搜索商品...',
     'name' => '名称',
     'description' => '简介',
     'price' => '价格',
