@@ -56,6 +56,25 @@ class CouponService
         });
     }
 
+    public function getAvailableCoupons()
+    {
+        $now = now();
+
+        return Coupon::query()
+            ->where('is_active', true)
+            ->where(function ($query) use ($now) {
+                $query->whereNull('pickup_start_at')->orWhere('pickup_start_at', '<=', $now);
+            })
+            ->where(function ($query) use ($now) {
+                $query->whereNull('pickup_end_at')->orWhere('pickup_end_at', '>=', $now);
+            })
+            ->where(function ($query) {
+                $query->whereNull('total_quantity')
+                      ->orWhereRaw('received_quantity < total_quantity');
+            })
+            ->get();
+    }
+
     public function verifyAndCalculateDiscount(int $couponCustomerId, int $customerId, float $subtotal, bool $lock = false): array
     {
         $query = DB::table('coupon_customer')

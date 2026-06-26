@@ -1059,6 +1059,134 @@
                 ]
             }
         },
+        "/api/coupons": {
+            "get": {
+                "tags": [
+                    "Coupons"
+                ],
+                "summary": "Get list of available coupons",
+                "operationId": "9c68ff0b2e07728da9ed48fd0bb08f1a",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/coupons/pickup": {
+            "post": {
+                "tags": [
+                    "Coupons"
+                ],
+                "summary": "Claim a coupon (User Pickup)",
+                "description": "Allows an authenticated customer to claim a specific coupon by its ID. It validates coupon status, stock, and customer limits.",
+                "operationId": "23519fd2a4168b1e33e3012eae4f13c9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "coupon_id"
+                                ],
+                                "properties": {
+                                    "coupon_id": {
+                                        "description": "The database ID of the coupon",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Coupon claimed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Coupon picked up successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "expires_at": {
+                                                    "description": "Calculated precise expiration date based on coupon logic",
+                                                    "type": "string",
+                                                    "example": "2026-07-10 23:59:59"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated / Invalid Bearer Token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Business Logic Error (e.g., Sold out, Limit reached, Inactive)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This coupon has already been sold out."
+                                        },
+                                        "error_code": {
+                                            "type": "string",
+                                            "example": "COUPON_SOLD_OUT"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/customer/username": {
             "get": {
                 "tags": [
@@ -2664,6 +2792,10 @@
         {
             "name": "Cart",
             "description": "Cart"
+        },
+        {
+            "name": "Coupons",
+            "description": "Coupons"
         },
         {
             "name": "Customer Account",
