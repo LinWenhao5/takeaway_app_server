@@ -16,6 +16,7 @@ return [
     'allowed_postcodes' => '配送范围管理',
     'vat' => '税率管理',
     'delivery' => '配送管理',
+    'coupons' => '优惠券管理',
     'order_management' => '订单管理',
     'orders' => '订单列表',
     'order_history' => '订单历史',

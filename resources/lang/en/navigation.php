@@ -16,6 +16,7 @@ return [
     'business_hours' => 'Business Hours',
     'delivery' => 'Delivery',
     'vat' => 'VAT',
+    'coupons' => 'Coupons',
     'order_management' => 'Order Management',
     'orders' => 'Orders',
     'order_history' => 'Order History',

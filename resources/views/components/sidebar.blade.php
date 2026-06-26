@@ -89,6 +89,11 @@
                                     @lang('navigation.delivery')
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('admin.coupons.index') }}" class="nav-link {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                                    @lang('navigation.coupons')
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

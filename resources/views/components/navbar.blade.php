@@ -93,6 +93,10 @@
                                     @lang('navigation.vat')
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('admin.coupons.index') }}" class="dropdown-item {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                                    @lang('navigation.coupons')
+                                </a>
                         @endcan
                     </ul>
                 </li>
