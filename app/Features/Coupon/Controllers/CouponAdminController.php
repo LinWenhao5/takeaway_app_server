@@ -66,6 +66,9 @@ class CouponAdminController extends Controller
             'is_active' => ['required', 'boolean'],
         ]);
 
+        $validated['per_customer_limit'] = $validated['per_customer_limit'] ?? 1;
+        $validated['min_order_amount'] = $validated['min_order_amount'] ?? 0.00;
+
         Coupon::create($validated);
 
         return redirect()

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Features\Order\Models\Order;
 use App\Features\Address\Models\Address;
+use App\Features\Coupon\Models\Coupon;
 
 class Customer extends Authenticatable
 {
@@ -39,5 +40,12 @@ class Customer extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class, 'coupon_customer', 'customer_id', 'coupon_id')
+                ->withPivot(['is_used', 'expires_at', 'received_at'])
+                ->withTimestamps();
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Features\Coupon\Services\CouponService;
 use Illuminate\Http\Request;
 use App\Features\Coupon\Resources\CouponResource;
+use App\Features\Coupon\Resources\UserCouponResource;
+use App\Features\Coupon\Models\Coupon;
 
 class CouponApiController extends Controller
 {
@@ -96,5 +98,36 @@ class CouponApiController extends Controller
             'status' => 'success',
             'message' => 'Coupon claimed successfully.'
         ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/coupons/my-coupons",
+     *     summary="Get list of coupons owned by the authenticated customer",
+     *     tags={"Coupons"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
+     */
+    public function getCouponByCustomer(Request $request)
+    {
+        $customer = $this->getAuthenticatedCustomer();
+
+        $coupons = $customer->coupons()
+        ->orderByPivot('received_at', 'desc')
+        ->get();
+
+        return UserCouponResource::collection($coupons);
     }
 }

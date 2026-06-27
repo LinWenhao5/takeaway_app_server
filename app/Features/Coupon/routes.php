@@ -8,6 +8,7 @@ Route::middleware(['api', 'throttle:custom_limit'])->prefix('api/coupons')->grou
     Route::get('/', [CouponApiController::class, 'index']);
     Route::middleware(['auth:api'])->group(function () {
         Route::post('/pickup', [CouponApiController::class, 'pickup']);
+        Route::get('/my-coupons', [CouponApiController::class, 'getCouponByCustomer']);
     });
 });
 
