@@ -43,6 +43,8 @@ class CouponService
             if ($coupon->valid_days) {
                 $expiresAt = now()->addDays($coupon->valid_days);
             }
+            
+            $expiresAt = $expiresAt ?? now()->addYears(100);
 
             $coupon->customers()->attach($customerId, [
                 'received_at' => now(),
