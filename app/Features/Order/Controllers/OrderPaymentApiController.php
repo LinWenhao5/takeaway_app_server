@@ -73,8 +73,14 @@ class OrderPaymentApiController extends Controller
     *                 type="string",
     *                 example="Please add extra wasabi",
     *                 description="Additional note for the order (optional)"
-    *             )
-    *         )
+    *             ),
+     *             @OA\Property(
+     *                 property="coupon_customer_id",
+     *                 type="integer",
+     *                 example=1,
+     *                 description="Coupon customer ID (optional)"
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -104,19 +110,21 @@ class OrderPaymentApiController extends Controller
             'address_id' => 'required_if:order_type,delivery|nullable|integer|exists:addresses,id',
             'reserve_time' => 'required|date_format:Y-m-d H:i',
             'note' => 'nullable|string|max:255',
+            'coupon_customer_id' => 'nullable|integer|exists:coupon_customer,id'
         ]);
 
         $orderType = OrderType::from($validated['order_type']);
         $addressId = $orderType === OrderType::DELIVERY ? $validated['address_id'] : null;
         $reserveTime = $validated['reserve_time'];
         $note = $validated['note'] ?? null;
-
+        $couponCustomerId = $validated['coupon_customer_id'] ?? null;
         $createOrderDto = new CreateOrderDto(
             customerId: $customerId,
             addressId: $addressId,
             orderType: $orderType,
             reserveTime: $reserveTime,
             note: $note,
+            couponCustomerId: $couponCustomerId
         );
 
         $order = $this->orderService->createOrder($createOrderDto);

@@ -1984,6 +1984,11 @@
                                         "description": "Additional note for the order (optional)",
                                         "type": "string",
                                         "example": "Please add extra wasabi"
+                                    },
+                                    "coupon_customer_id": {
+                                        "description": "Coupon customer ID (optional)",
+                                        "type": "integer",
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"

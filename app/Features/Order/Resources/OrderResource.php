@@ -25,6 +25,8 @@ class OrderResource extends JsonResource
             'total_vat_amount' => $this->total_vat_amount,
             'note' => $this->note,
             'printed' => $this->printed,
+            'coupon_snapshot' => $this->coupon_snapshot,
+            'coupon_discount_amount' => $this->coupon_discount_amount,
 
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -9,6 +9,7 @@ class UserCouponResource extends JsonResource
 {
     public function toArray($request)
     {
+        $pivotId = $this->pivot ? $this->pivot->id : null;
         $isUsed = $this->pivot ? (bool)$this->pivot->is_used : false;
         $expiresAtString = $this->pivot ? $this->pivot->expires_at : null;
         $receivedAtString = $this->pivot ? $this->pivot->received_at : null;
@@ -21,7 +22,8 @@ class UserCouponResource extends JsonResource
         }
 
         return [
-            'id' => $this->id,
+            'id' => $pivotId,
+            'coupon_id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
             
