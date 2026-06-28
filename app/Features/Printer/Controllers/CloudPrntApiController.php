@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Features\Order\Models\Order;
 use Illuminate\Support\Facades\Log;
-use App\Features\Printer\Services\ReceiptImageGenerator;
+use App\Features\Printer\Support\PrinterFactory;
 
 /**
  * @OA\Tag(name="Printer", description="CloudPRNT printer communication endpoints")
@@ -200,9 +200,14 @@ class CloudPrntApiController extends Controller
         $binary = Redis::get("printer:binary:{$mac}:{$jobToken}");
 
         if (!$binary) {
-            $generator = new ReceiptImageGenerator();
+            $type = $job['type'] ?? 'receipt';
+
+            $generator = PrinterFactory::make($type);
+
             $binary = $generator->generate($job['order_data']);
             Redis::setex("printer:binary:{$mac}:{$jobToken}", 600, $binary);
+            
+            Log::info("[CloudPRNT] Regenerated binary on-the-fly for type: {$type}, token: {$jobToken}");
         }
 
         return response($binary)

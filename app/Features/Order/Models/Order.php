@@ -19,6 +19,7 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'products_snapshot',
+        'customer_snapshot',
         'status',
         'payment_id',
         'total_price',
@@ -40,6 +41,7 @@ class Order extends Model
 
     protected $casts = [
         'reserve_time' => 'datetime',
+        'customer_snapshot' => 'array',
         'address_snapshot' => 'array',
         'vat_snapshot' => 'array',
         'status' => OrderStatus::class,

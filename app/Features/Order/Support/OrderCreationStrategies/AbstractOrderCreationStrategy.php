@@ -8,6 +8,7 @@ use App\Features\Vat\Services\VatCalculationService;
 use App\Features\Order\DTOs\CreateOrderDto;
 use App\Features\Product\Models\Product;
 use App\Features\Order\Models\Order;
+use App\Features\Customer\Models\Customer;
 use App\Exceptions\BusinessException;
 use Illuminate\Support\Facades\DB;
 
@@ -39,9 +40,15 @@ abstract class AbstractOrderCreationStrategy
 
             $pricingBreakdown = $this->vatCalculationService->calculateSplitVat($sortedProducts, $subtotal, $couponDiscount);
 
+            $customer = Customer::findOrFail($createOrderDto->customerId);
+
             $orderData = array_merge(
                 $this->buildOrderData($createOrderDto, $finalPriceWithCoupon),
                 [
+                    'customer_snapshot' => $customer ? [
+                        'name' => $customer->name,
+                        'email' => $customer->email,
+                    ] : null,
                     'coupon_id' => $userCoupon ? $userCoupon->coupon_id : null,
                     'coupon_discount_amount' => $couponDiscount,
                     'coupon_snapshot' => $userCoupon ? [
