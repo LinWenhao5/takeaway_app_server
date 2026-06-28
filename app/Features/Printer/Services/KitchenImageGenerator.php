@@ -16,7 +16,7 @@ class KitchenImageGenerator extends BaseReceiptImageGenerator
         // 2. 核心大单号与点单类型
         $orderId   = $orderData['daily_sequence'] ?? 'UNKNOWN';
         $orderType = strtoupper($orderData['order_type'] ?? 'PICKUP'); 
-        $typeLabelDutch = ($orderType === 'DELIVERY') ? 'BEZORG' : 'AFHAAL';
+        $typeLabelDutch = ($orderType === 'DELIVERY') ? 'Bezorg' : 'Afhaal';
 
         $this->addText($img, "#{$orderId} - {$typeLabelDutch}", 48, 'center', $y);
         $y += 75;
@@ -34,7 +34,7 @@ class KitchenImageGenerator extends BaseReceiptImageGenerator
 
         if (!empty($orderData['reserve_time'])) {
             $reserveTime = Carbon::parse($orderData['reserve_time'])->setTimezone('Europe/Amsterdam')->format('d-m-Y H:i');
-            $timeLabel   = ($orderType === 'DELIVERY') ? "BEZORGEN OM" : "AFHALEN OM";
+            $timeLabel   = ($orderType === 'DELIVERY') ? "Bezorgen om" : "Afhalen om";
             $this->addText($img, "{$timeLabel}: {$reserveTime}", 30, 'left', $y);
             $y += 55;
         } else {

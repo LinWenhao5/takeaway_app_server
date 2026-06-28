@@ -11,7 +11,7 @@ class ReceiptImageGenerator extends BaseReceiptImageGenerator
     {
         // 1. 标题、大单号与点单类型 (Logo 与文字并排居中)
         $logoPath = public_path('assets/logo.png');
-        $titleText = 'Zen Sushi';
+        $titleText = 'ZEN SUSHI';
         $titleFontSize = 46;
 
         if (file_exists($logoPath)) {
@@ -62,7 +62,7 @@ class ReceiptImageGenerator extends BaseReceiptImageGenerator
 
         $orderId   = $orderData['daily_sequence'] ?? 'UNKNOWN';
         $orderType = strtoupper($orderData['order_type'] ?? 'PICKUP'); 
-        $typeLabelDutch = ($orderType === 'DELIVERY') ? 'BEZORG' : 'AFHAAL';
+        $typeLabelDutch = ($orderType === 'DELIVERY') ? 'Bezorg' : 'Afhaal';
 
         $this->addText($img, "#{$orderId} - {$typeLabelDutch}", 42, 'center', $y);
         $y += 70;
@@ -80,7 +80,7 @@ class ReceiptImageGenerator extends BaseReceiptImageGenerator
 
         if (!empty($orderData['reserve_time'])) {
             $reserveTime = Carbon::parse($orderData['reserve_time'])->setTimezone('Europe/Amsterdam')->format('d-m-Y H:i');
-            $timeLabel   = ($orderType === 'DELIVERY') ? "BEZORG TIJD" : "AFHAAL TIJD";
+            $timeLabel   = ($orderType === 'DELIVERY') ? "Bezorg Tijd" : "Afhaal Tijd";
             $this->addText($img, "{$timeLabel}: {$reserveTime}", 26, 'left', $y);
             $y += 55;
         } else {
