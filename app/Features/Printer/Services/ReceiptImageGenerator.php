@@ -115,20 +115,6 @@ class ReceiptImageGenerator extends BaseReceiptImageGenerator
                         $hasDetail = true;
                     }
                 }
-                
-                if (!empty($product['allocated_coupon_discount']) && (float)$product['allocated_coupon_discount'] > 0) {
-                    $couponShare = (float)$product['allocated_coupon_discount'];
-                    $this->addText($img, "  - Coupon Verdeling:", 20, 'left', $y);
-                    $this->addText($img, "-EUR " . number_format($couponShare, 2, ',', '.'), 20, 'right', $y);
-                    $y += 28;
-                    $hasDetail = true;
-                }
-
-                if ($hasDetail && isset($product['actual_paid_total'])) {
-                    $this->addText($img, "  Netto Resultaat:", 20, 'left', $y);
-                    $this->addText($img, "EUR " . number_format((float)$product['actual_paid_total'], 2, ',', '.'), 20, 'right', $y);
-                    $y += 32;
-                }
 
                 if (!$hasDetail) {
                     $y += 15;
