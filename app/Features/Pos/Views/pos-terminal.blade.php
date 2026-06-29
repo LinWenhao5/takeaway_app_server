@@ -1,9 +1,9 @@
-<div class="container-fluid vh-100 overflow-hidden bg-light text-dark shadow-sm">
+<div class="container-fluid vh-100 overflow-hidden bg-body text-body shadow-sm">
     <div class="row h-100 g-0">
         
-        <div class="col-md-8 h-100 d-flex flex-column bg-white border-end">
-            <div class="p-2 border-bottom d-flex justify-content-between align-items-center">
-                <a href="/" class="btn btn-sm btn-icon btn-light rounded-circle shadow-sm" title="@lang('common.exit')">
+        <div class="col-md-8 h-100 d-flex flex-column bg-body border-end border-subtle">
+            <div class="p-2 border-bottom border-subtle d-flex justify-content-between align-items-center">
+                <a href="/" class="btn btn-sm btn-icon btn-outline-secondary rounded-circle shadow-sm" title="@lang('common.exit')">
                     <i class="bi bi-x-lg"></i>
                 </a>
                 <h1 class="h5 mb-0 fw-bold">@lang('pos.terminal_title')</h1>
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 h-100 d-flex flex-column bg-light">
+        <div class="col-md-4 h-100 d-flex flex-column bg-body-tertiary border-start border-subtle">
             @include('pos::_cart')
         </div>
 
@@ -26,8 +26,9 @@
 </div>
 
 <style>
-    .btn-outline-dark:hover .text-muted {
-        color: #ffffff !important;
+    [data-bs-theme="dark"] .btn-outline-dark:hover .text-muted,
+    .btn-outline-secondary:hover .text-muted {
+        color: var(--bs-white) !important;
     }
     
     .text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; }

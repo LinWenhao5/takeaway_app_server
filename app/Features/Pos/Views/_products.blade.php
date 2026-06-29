@@ -1,14 +1,17 @@
-<div class="flex-grow-1 overflow-auto p-3 h-100 bg-white" style="width: 75%;">
+
+<div class="flex-grow-1 overflow-auto p-3 h-100 bg-body" style="width: 75%;">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-1">
         @forelse($products as $product)
             <div class="col d-flex">
                 <button 
                     wire:click="addToCart({{ $product->id }})"
-                    class="btn w-100 h-100 p-2 text-start d-flex flex-column justify-content-between border-light-subtle rounded-3 shadow-sm position-relative {{ $product->is_out_of_stock ? 'bg-light text-muted opacity-50 border-0' : 'btn-outline-dark' }}"
-                    style="min-height: 105px;"
+                    class="btn w-100 h-100 p-3 text-start d-flex flex-column justify-content-between 
+                        border border-subtle rounded-3 position-relative shadow-none 
+                        {{ $product->is_out_of_stock ? 'bg-body-secondary text-muted opacity-50 border-0' : 'btn-outline-secondary' }}"
+                    style="min-height: 105px; transition: all 0.25s ease;"
                     @if($product->is_out_of_stock) disabled @endif
                 >
-                    <span class="fw-bold small text-truncate-2 w-100">
+                    <span class="fw-bold small text-truncate-2 w-100 text-body">
                         {{ $product->name }}
                     </span>
                     

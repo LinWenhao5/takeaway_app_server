@@ -16,9 +16,9 @@
 
     <div class="container py-5">
         <div class="d-flex justify-content-end mb-5">
-            <div class="btn-group shadow-sm">
-                <a href="{{ route('set.locale', ['locale' => 'en']) }}" class="btn btn-light {{ app()->getLocale() === 'en' ? 'active' : '' }}">EN</a>
-                <a href="{{ route('set.locale', ['locale' => 'zh-cn']) }}" class="btn btn-light {{ app()->getLocale() === 'zh-cn' ? 'active' : '' }}">ZH</a>
+            <div class="btn-group shadow-sm border border-secondary-subtle rounded">
+                <a href="{{ route('set.locale', ['locale' => 'en']) }}" class="btn {{ app()->getLocale() === 'en' ? 'btn-primary' : 'btn-body bg-body-tertiary' }}">EN</a>
+                <a href="{{ route('set.locale', ['locale' => 'zh-cn']) }}" class="btn {{ app()->getLocale() === 'zh-cn' ? 'btn-primary' : 'btn-body bg-body-tertiary' }}">ZH</a>
             </div>
         </div>
         <div class="text-center mb-5">
