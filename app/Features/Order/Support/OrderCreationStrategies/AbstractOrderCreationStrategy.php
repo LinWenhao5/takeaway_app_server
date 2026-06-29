@@ -52,7 +52,7 @@ abstract class AbstractOrderCreationStrategy
                         'email' => $customer->email,
                     ] : [
                         'name'  => 'Walk-in Customer',
-                        'type'  => 'walk-in'
+
                     ],
                     'coupon_id' => $userCoupon ? $userCoupon->coupon_id : null,
                     'coupon_discount_amount' => $couponDiscount,

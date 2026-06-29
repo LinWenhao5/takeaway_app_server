@@ -1,8 +1,11 @@
 <?php
 return [
-    'title' => '欢迎来到管理面板',
-    'dashboard' => '前往仪表盘',
-    'manage' => '轻松管理您的产品、分类、用户和媒体。',
-    'api_doc' => '查看API文档',
+    'title' => 'Zen Sushi 管理系统',
+    'manage' => '专业的门店经营管理平台',
+    'pos_terminal' => 'POS 收银台',
+    'pos_desc' => '快速开单与结算',
+    'dashboard' => '管理后台',
+    'dashboard_desc' => '库存与商品分类管理',
+    'api_doc' => 'API 文档',
+    'api_desc' => '系统技术接口指南',
 ];
-

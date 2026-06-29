@@ -15,6 +15,7 @@
             $typeStates = [
                 'pickup' => ['paid', 'completed'],
                 'delivery' => ['paid', 'delivering', 'completed'],
+                'walk_in' => ['paid', 'completed'],
             ];
             $allowedStates = $typeStates[$type] ?? [];
             $currentIndex = array_search($status, $allowedStates);

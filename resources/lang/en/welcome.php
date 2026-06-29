@@ -1,7 +1,11 @@
 <?php
 return [
-    'title' => 'Welcome to Admin Panel',
-    'dashboard' => 'Go to Dashboard',
-    'manage' => 'Manage your products, categories, users, and media with ease.',
-    'api_doc' => 'View API Documentation',
+    'title' => 'Zen Sushi Management',
+    'manage' => 'Professional management system for your business',
+    'pos_terminal' => 'POS Terminal',
+    'pos_desc' => 'Fast checkout and order management',
+    'dashboard' => 'Dashboard',
+    'dashboard_desc' => 'Inventory and category management',
+    'api_doc' => 'API Documentation',
+    'api_desc' => 'Technical integration guide',
 ];

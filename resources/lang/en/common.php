@@ -2,4 +2,5 @@
 
 return [
     'search' => 'Search',
+    'exit' => 'Exit',
 ];

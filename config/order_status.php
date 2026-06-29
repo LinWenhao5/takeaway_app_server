@@ -9,5 +9,6 @@ return [
     'type_badge_styles' => [
         'delivery' => ['bg' => 'primary', 'text' => 'white'],
         'pickup' => ['bg' => 'warning', 'text' => 'dark'],
+        'walk_in' => ['bg' => 'info', 'text' => 'white'],
     ],
 ];

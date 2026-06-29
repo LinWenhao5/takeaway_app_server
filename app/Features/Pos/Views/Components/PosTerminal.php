@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Features\ProductCategory\Models\ProductCategory;
 use Livewire\Attributes\Layout; 
 use App\Features\Order\Support\OrderCreationStrategies\OrderStrategyFactory;
+use App\Features\Order\Events\OrderCreated;
 use App\Features\Order\DTOs\CreateOrderDto;
 use Illuminate\Support\Facades\Lang;
 
@@ -125,6 +126,8 @@ class PosTerminal extends Component
             );
             
             $order = $strategy->createOrder($dto);
+
+            event(new OrderCreated($order->toArray()));
 
             $this->reset(['cashReceived', 'note', 'paymentMethod']);
             unset($this->cartDetails);
