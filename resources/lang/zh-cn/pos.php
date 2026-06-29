@@ -1,0 +1,24 @@
+<?php
+return [
+    'terminal_title' => 'POS 收银终端',
+    'cart_empty' => '暂无商品，请点击左侧录入',
+    'cart_details' => '当前单据明细',
+    'items' => '件商品',
+    'clear' => '清空',
+    'total_payable' => '应收总计',
+    'cash_payment' => '现金收银',
+    'card_payment' => '线下刷卡',
+    'cash_received' => '实收现金',
+    'change' => '找零',
+    'note_placeholder' => '添加收银备注（如：打包、少辣）...',
+    'checkout_btn' => '确认结账并出单',
+    'success_msg' => '结账成功！订单已发送至后厨。',
+    'empty_error' => '购物车为空，无法结账',
+    'checkout_success' => '结账成功！单据 #:sequence 已建立。',
+    'checkout_failed'  => '结账失败，请稍后再试。',
+    'CART_EMPTY'       => '购物车是空的。',
+    'PRODUCT_NOT_FOUND'=> '找不到指定的商品。',
+    'no_category_products' => '该分类下暂无上架商品',
+    'out_of_stock' => '已售罄',
+    'uncategorized' => '未分类'
+];

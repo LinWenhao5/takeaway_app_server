@@ -75,7 +75,7 @@
                 </td>
                 <td>
                     @foreach ($product->media->take(2) as $media)
-                    <img src="{{ $media->path }}" alt="Image" width="50" style="margin-right: 4px;">
+                    <img src="{{ $media->optimizedUrl }}" alt="Image" width="50" style="margin-right: 4px;">
                     @endforeach
                     @if ($product->media->count() > 2)
                     <span style="font-size: 20px; vertical-align: middle;">...</span>

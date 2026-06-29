@@ -16,4 +16,5 @@ return [
     App\Features\Vat\Providers\VatServiceProvider::class,
     App\Features\Printer\Providers\PrinterServiceProvider::class,
     App\Features\Coupon\Providers\CouponServiceProvider::class,
+    App\Features\Pos\Providers\PosServiceProvider::class,
 ];

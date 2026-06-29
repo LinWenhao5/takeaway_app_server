@@ -18,6 +18,9 @@ class OrderStrategyFactory
                 
             case OrderType::PICKUP:
                 return $this->container->make(PickupOrderStrategy::class);
+
+            case OrderType::WALK_IN:
+                return $this->container->make(WalkInOrderStrategy::class);
                 
             default:
                 throw new \Exception('Unsupported order type');

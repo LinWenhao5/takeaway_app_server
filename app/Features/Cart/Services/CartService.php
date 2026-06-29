@@ -96,7 +96,7 @@ class CartService
                 'price' => (string) $product->price,
                 'final_price' => (string) $product->final_price,
                 'is_discounted' => $product->is_discounted,
-                'image' => $product->media->first()->path ?? null,
+                'image' => $product->media->first()->optimizedUrl ?? null,
                 'quantity' => (string) $quantity,
                 'subtotal' => number_format($subtotal, 2, '.', ''),
                 'is_out_of_stock' => $product->is_out_of_stock,

@@ -40,7 +40,9 @@ abstract class AbstractOrderCreationStrategy
 
             $pricingBreakdown = $this->vatCalculationService->calculateSplitVat($sortedProducts, $subtotal, $couponDiscount);
 
-            $customer = Customer::findOrFail($createOrderDto->customerId);
+            $customer = $createOrderDto->customerId 
+                ? Customer::find($createOrderDto->customerId) 
+                : null;
 
             $orderData = array_merge(
                 $this->buildOrderData($createOrderDto, $finalPriceWithCoupon),
@@ -48,7 +50,10 @@ abstract class AbstractOrderCreationStrategy
                     'customer_snapshot' => $customer ? [
                         'name' => $customer->name,
                         'email' => $customer->email,
-                    ] : null,
+                    ] : [
+                        'name'  => 'Walk-in Customer',
+                        'type'  => 'walk-in'
+                    ],
                     'coupon_id' => $userCoupon ? $userCoupon->coupon_id : null,
                     'coupon_discount_amount' => $couponDiscount,
                     'coupon_snapshot' => $userCoupon ? [
@@ -77,7 +82,8 @@ abstract class AbstractOrderCreationStrategy
                     ]);
             }
 
-            $this->cartService->clearCart($createOrderDto->customerId);
+            $cartId = $this->getCartId($createOrderDto->customerId);
+            $this->cartService->clearCart($cartId);
 
             return $order;
         });
@@ -100,9 +106,10 @@ abstract class AbstractOrderCreationStrategy
     /**
      * Step 1: Prepare cart + products + subtotal
      */
-    protected function prepareCartProducts(int $customerId): array
+    protected function prepareCartProducts(?int $customerId): array
     {
-        $cart = $this->cartService->getCart($customerId);
+        $cartId = $this->getCartId($customerId);
+        $cart = $this->cartService->getCart($cartId);
 
         if (empty($cart)) {
             throw new BusinessException('Cart is empty.', 'CART_EMPTY');
@@ -128,6 +135,11 @@ abstract class AbstractOrderCreationStrategy
         }
 
         return [$cart, $products, $subtotal];
+    }
+
+    protected function getCartId(?int $customerId): string
+    {
+        return (string) $customerId;
     }
 
 

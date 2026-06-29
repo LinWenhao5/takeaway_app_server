@@ -39,7 +39,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>
                             @if($category->media)
-                                <img src="{{ $category->media->path }}"
+                                <img src="{{ $category->media->optimizedUrl }}"
                                      alt="{{ $category->media->name }}"
                                      class="rounded me-2"
                                      style="height:32px;width:32px;object-fit:cover;">
