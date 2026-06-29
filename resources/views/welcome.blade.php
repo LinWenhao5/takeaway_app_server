@@ -32,7 +32,7 @@
             <div class="col-md-3">
                 <a href="{{ route('pos.terminal') }}" class="text-decoration-none">
                     <div class="card hero-card border-0 shadow-sm h-100 p-4 bg-body-tertiary">
-                        <div class="feature-icon mb-3"><i class="bi bi-cart-check"></i></div>
+                        <div class="feature-icon mb-3 text-primary"><i class="bi bi-cart-check"></i></div>
                         <h4 class="fw-bold">@lang('welcome.pos_terminal')</h4>
                         <p class="opacity-75">@lang('welcome.pos_desc')</p>
                     </div>
@@ -54,7 +54,7 @@
             <div class="col-md-3">
                 <a href="{{ route('admin.product-categories.index') }}" class="text-decoration-none">
                     <div class="card hero-card border-0 shadow-sm h-100 p-4 bg-body-tertiary">
-                        <div class="feature-icon mb-3 text-primary"><i class="bi bi-pie-chart"></i></div>
+                        <div class="feature-icon mb-3 text-secondary"><i class="bi bi-pie-chart"></i></div>
                         <h4 class="fw-bold text-body">@lang('welcome.dashboard')</h4>
                         <p class="text-body-secondary">@lang('welcome.dashboard_desc')</p>
                     </div>
@@ -65,9 +65,9 @@
             <div class="col-md-3">
                 <a href="/api/documentation" class="text-decoration-none">
                     <div class="card hero-card border-0 shadow-sm h-100 p-4 bg-body-tertiary">
-                        <div class="feature-icon mb-3 text-secondary"><i class="bi bi-code-square"></i></div>
+                        <div class="feature-icon mb-3 text-tertiary"><i class="bi bi-code-square"></i></div>
                         <h4 class="fw-bold text-body">@lang('welcome.api_doc')</h4>
-                        <p class="text-body-secondary">@lang('welcome.api_desc')</p>
+                        <p class="text-body-tertiary">@lang('welcome.api_desc')</p>
                     </div>
                 </a>
             </div>
