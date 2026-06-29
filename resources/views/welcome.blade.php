@@ -31,10 +31,21 @@
             <!-- POS Terminal -->
             <div class="col-md-3">
                 <a href="{{ route('pos.terminal') }}" class="text-decoration-none">
-                    <div class="card hero-card border-0 shadow h-100 p-4 bg-primary text-white">
+                    <div class="card hero-card border-0 shadow-sm h-100 p-4 bg-body-tertiary">
                         <div class="feature-icon mb-3"><i class="bi bi-cart-check"></i></div>
                         <h4 class="fw-bold">@lang('welcome.pos_terminal')</h4>
                         <p class="opacity-75">@lang('welcome.pos_desc')</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- order Display -->
+            <div class="col-md-3">
+                <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
+                    <div class="card hero-card border-0 shadow-sm h-100 p-4 bg-body-tertiary">
+                        <div class="feature-icon mb-3 text-success"><i class="bi bi-receipt"></i></div>
+                        <h4 class="fw-bold text-body">@lang('welcome.order_display')</h4>
+                        <p class="text-body-secondary">@lang('welcome.order_display_desc')</p>
                     </div>
                 </a>
             </div>
