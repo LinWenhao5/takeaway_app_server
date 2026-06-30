@@ -45,7 +45,7 @@ class Customer extends Authenticatable
     public function coupons()
     {
         return $this->belongsToMany(Coupon::class, 'coupon_customer', 'customer_id', 'coupon_id')
-                ->withPivot(['id', 'is_used', 'expires_at', 'received_at'])
+                ->withPivot(['id', 'is_used', 'expires_at', 'received_at', 'used_at'])
                 ->withTimestamps();
     }
 }

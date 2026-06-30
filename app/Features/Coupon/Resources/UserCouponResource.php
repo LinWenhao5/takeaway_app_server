@@ -39,6 +39,7 @@ class UserCouponResource extends JsonResource
             'is_used' => $isUsed,
             'user_coupon_status' => $status,
             'received_at' => $receivedAtString,
+            'used_at' => $this->pivot ? $this->pivot->used_at : null,
             'expires_at' => $expiresAtString,
         ];
     }
