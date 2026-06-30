@@ -10,8 +10,18 @@
     @livewireStyles
 </head>
 <body class="bg-body text-body overflow-hidden select-none">
-    {{ $slot }}
-    @livewireScripts
+    <div class="portrait-warning">
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 p-4 text-center">
+            <i class="bi bi-phone-landscape display-1 mb-3"></i>
+            
+            <h4 class="fw-bold">@lang('pos.rotate_device')</h4>
+            <p class="text-muted">@lang('pos.rotate_hint')</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        {{ $slot }}
+    </div>
 </body>
 </html>
 
@@ -22,6 +32,26 @@ body {
     touch-action: manipulation;
     -webkit-user-select: none;
     user-select: none;
+}
+
+.portrait-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bs-body-bg);
+    z-index: 9999;
+}
+
+@media (orientation: portrait) and (max-width: 991px) {
+    .portrait-warning {
+        display: block;
+    }
+    .main-content {
+        display: none;
+    }
 }
 
 ::-webkit-scrollbar {

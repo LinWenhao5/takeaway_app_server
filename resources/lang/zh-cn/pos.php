@@ -1,10 +1,13 @@
 <?php
 return [
+    'rotate_device' => '请横屏操作',
+    'rotate_hint'   => '为了获得最佳收银体验，请将设备旋转至横屏模式。',
     'terminal_title' => 'POS 收银终端',
     'cart_empty' => '暂无商品，请点击左侧录入',
     'cart_details' => '当前单据明细',
     'items' => '件商品',
     'clear' => '清空',
+    'confirm_clear_cart' => '确定要清空购物车吗？',
     'total_payable' => '应收总计',
     'cash_payment' => '现金收银',
     'card_payment' => '线下刷卡',
@@ -25,4 +28,5 @@ return [
     'confirm_checkout_desc' => '请核对订单总额，确认后将生成正式订单。',
     'cancel' => '取消',
     'confirm' => '确认支付',
+    'open_collapsed_number_keyboard' => '打开/折叠',
 ];

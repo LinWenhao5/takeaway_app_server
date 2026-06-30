@@ -1,10 +1,13 @@
 <?php
 return [
+    'rotate_device' => 'Rotate to landscape mode.',
+    'rotate_hint'   => 'For the best POS experience, please rotate your device to landscape mode.',
     'terminal_title' => 'POS Terminal',
     'cart_empty' => 'Cart is empty. Click products on the left to add.',
     'cart_details' => 'Current Order Details',
     'items' => 'items',
     'clear' => 'Clear',
+    'confirm_clear_cart' => 'Are you sure you want to clear the cart?',
     'total_payable' => 'Total Payable',
     'cash_payment' => 'Cash',
     'card_payment' => 'Card',
@@ -24,5 +27,6 @@ return [
     'confirm_order' => 'Confirm Order',
     'confirm_checkout_desc' => 'Please verify the total amount. A formal order will be created upon confirmation.',
     'cancel' => 'Cancel',
-    'confirm' => 'Confirm Payment'
+    'confirm' => 'Confirm Payment',
+    'open_collapsed_number_keyboard' => 'Open/Collapsed',
 ];

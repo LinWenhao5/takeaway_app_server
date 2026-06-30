@@ -92,6 +92,29 @@ class PosTerminal extends Component
         $this->cartService->clearCart($this->posCartId);
     }
 
+    public function appendNumber($digit)
+    {
+        if ($this->cashReceived == 0 && $digit === '.') {
+            $this->cashReceived = '0.';
+            return;
+        }
+
+        if ($this->cashReceived == 0 && $digit !== '.') {
+            $this->cashReceived = (string)$digit;
+        } else {
+            if ($digit === '.' && str_contains((string)$this->cashReceived, '.')) return;
+            $this->cashReceived .= $digit;
+        }
+    }
+
+    public function backspace()
+    {
+        $this->cashReceived = (string)$this->cashReceived;
+        $this->cashReceived = strlen($this->cashReceived) > 1 
+            ? substr($this->cashReceived, 0, -1) 
+            : '0';
+    }
+
     /**
      * 业务逻辑 4：实时计算现金找零
      */
