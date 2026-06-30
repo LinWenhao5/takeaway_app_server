@@ -28,6 +28,8 @@ class PosTerminal extends Component
     public $errorMessage = '';
     public $successMessage = '';
 
+    public $showConfirmModal = false;
+
     public function boot(CartService $cartService)
     {
         $this->cartService = $cartService;
@@ -140,6 +142,21 @@ class PosTerminal extends Component
             $this->errorMessage = __('pos.checkout_failed');
             \Log::error('POS checkout error: ' . $e->getMessage(), ['exception' => $e]);
         }
+    }
+
+    public function initiateCheckout()
+    {
+        if (empty($this->cartDetails['cart'])) {
+            $this->errorMessage = __('pos.cart_empty');
+            return;
+        }
+        $this->showConfirmModal = true;
+    }
+
+    public function confirmCheckout(OrderStrategyFactory $factory)
+    {
+        $this->showConfirmModal = false;
+        $this->checkout($factory);
     }
 
     private function clearMessages()

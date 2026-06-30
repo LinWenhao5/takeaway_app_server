@@ -149,10 +149,6 @@
             </div>
             @endcan
         </div>
-
-        <div class="d-flex align-items-center justify-content-between mt-3">
-            <x-logout-button class="btn btn-danger ms-3" />
-        </div>
     </div>
 </nav>
 

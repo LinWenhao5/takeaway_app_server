@@ -24,4 +24,5 @@ return [
     'settings' => 'Settings',
     'printer' => 'Printer Configuration',
     'logout' => 'Logout',
+    'login' => 'Login',
 ];

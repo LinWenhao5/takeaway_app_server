@@ -2,7 +2,7 @@
 <html lang="{{ app()->getLocale() }}" data-bs-theme="{{ $_COOKIE['bs-theme'] ?? 'light' }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>POS Terminal - 收银系统</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -16,6 +16,18 @@
 </html>
 
 <style>
+
+body {
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
 .btn-outline-secondary {
     transition: all 0.2s ease;
 }
@@ -53,7 +65,7 @@
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
-    background-color: var(--bs-gray-700) !important; /* 悬停时稍微变灰，增加质感 */
+    background-color: var(--bs-gray-700) !important;
     border-color: var(--bs-gray-700) !important;
     color: var(--bs-body-bg) !important;
 }

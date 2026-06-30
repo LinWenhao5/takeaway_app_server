@@ -20,5 +20,9 @@ return [
     'PRODUCT_NOT_FOUND'=> '找不到指定的商品。',
     'no_category_products' => '该分类下暂无上架商品',
     'out_of_stock' => '已售罄',
-    'uncategorized' => '未分类'
+    'uncategorized' => '未分类',
+    'confirm_order' => '确认结账',
+    'confirm_checkout_desc' => '请核对订单总额，确认后将生成正式订单。',
+    'cancel' => '取消',
+    'confirm' => '确认支付',
 ];

@@ -24,4 +24,5 @@ return [
     'settings' => '设置',
     'printer' => '打印机配置',
     'logout' => '退出登录',
+    'login' => '登录',
 ];

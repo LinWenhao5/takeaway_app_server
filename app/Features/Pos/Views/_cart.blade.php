@@ -66,5 +66,31 @@
     <div class="mb-3">
         <input type="text" wire:model="note" placeholder="{{ __('pos.note_placeholder') }}" class="form-control form-control-sm bg-body">
     </div>
-    <button wire:click="checkout" @if(empty($cartItems)) disabled @endif class="btn btn-success w-100 py-3 fw-bold fs-5 rounded-3 shadow">@lang('pos.checkout_btn')</button>
+    
+    @if($showConfirmModal)
+    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">@lang('pos.confirm_order')</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="display-6 text-primary mb-2">€{{ $totalPrice }}</div>
+                    <p class="text-muted small">@lang('pos.confirm_checkout_desc')</p>
+                </div>
+                <div class="modal-footer border-0 p-3 pt-0 gap-2">
+                    <button wire:click="$set('showConfirmModal', false)" class="btn btn-light flex-fill rounded-pill">@lang('pos.cancel')</button>
+                    <button wire:click="confirmCheckout" class="btn btn-success flex-fill rounded-pill px-4">@lang('pos.confirm')</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- 修改底部结账按钮 -->
+    <button wire:click="initiateCheckout" 
+            @if(empty($cartItems)) disabled @endif 
+            class="btn btn-success w-100 py-3 fw-bold fs-5 rounded-3 shadow">
+        @lang('pos.checkout_btn')
+    </button>
 </div>

@@ -2,22 +2,9 @@
 <html lang="{{ app()->getLocale() }}" data-bs-theme="{{ $_COOKIE['bs-theme'] ?? 'light' }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>@yield('title', 'Zen Sushi')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        body {
-            background-color: var(--bs-body-bg);
-            min-height: 100vh;
-        }
-        [data-bs-theme="light"] body {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e2e6ea 100%);
-        }
-        .alert {
-            border-radius: 0.75rem !important;
-            border: none;
-        }
-    </style>
 </head>
 <body class="bg-body-tertiary">
     <div class="position-fixed top-0 start-0 p-4">

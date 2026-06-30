@@ -20,5 +20,9 @@ return [
     'PRODUCT_NOT_FOUND'=> 'Product not found.',
     'no_category_products' => 'No products available in this category.',
     'out_of_stock' => 'Out of Stock',
-    'uncategorized' => 'Uncategorized'
+    'uncategorized' => 'Uncategorized',
+    'confirm_order' => 'Confirm Order',
+    'confirm_checkout_desc' => 'Please verify the total amount. A formal order will be created upon confirmation.',
+    'cancel' => 'Cancel',
+    'confirm' => 'Confirm Payment'
 ];

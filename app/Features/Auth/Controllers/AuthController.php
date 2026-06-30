@@ -27,7 +27,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()->intended(
-                route('admin.product-categories.index')
+                route('admin.welcome')
             );
         }
 

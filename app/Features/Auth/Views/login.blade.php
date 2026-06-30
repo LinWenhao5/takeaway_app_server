@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container d-flex align-items-center justify-content-center min-vh-100" data-bs-theme="auto">
-    <div class="col-md-5 col-lg-4">
+    <div class="col-11 col-sm-9 col-md-7 col-lg-5 col-xl-4">
         
         <div class="text-center mb-4">
             <h2 class="fw-bold">Zen Sushi</h2>
@@ -12,7 +12,7 @@
         </div>
 
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-body-tertiary">
-            <div class="card-body p-5">
+            <div class="card-body p-4 p-md-5">
                 <h4 class="fw-bold mb-4 text-center">@lang('auth.login_title')</h4>
                 
                 <form method="POST" action="{{ route('admin.login.submit') }}">

@@ -1,6 +1,8 @@
 <div id="navbar" class="navbar navbar-expand-lg bg-primary navbar-dark d-none d-lg-flex fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="{{ route('admin.welcome') }}">@lang('navigation.admin_panel')</a>
+        <a href="/" class="btn btn-sm btn-icon btn-outline-light rounded-circle shadow-sm" title="@lang('common.exit')" style="--bs-btn-hover-bg: transparent; --bs-btn-hover-color: #fff;">
+            <i class="bi bi-x-lg"></i>
+        </a>
 
         <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -147,11 +149,6 @@
                 </li>
                 @endcan
             </ul>
-
-            <!-- Logout Button -->
-            <div class="d-flex align-items-center">
-                <x-logout-button class="btn btn-danger ms-3" />
-            </div>
         </div>
     </div>
 </div>

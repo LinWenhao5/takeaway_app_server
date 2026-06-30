@@ -24,13 +24,3 @@
 
     </div>
 </div>
-
-<style>
-    [data-bs-theme="dark"] .btn-outline-dark:hover .text-muted,
-    .btn-outline-secondary:hover .text-muted {
-        color: var(--bs-white) !important;
-    }
-    
-    .text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; }
-    .fw-black { font-weight: 900 !important; }
-</style>
